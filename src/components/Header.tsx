@@ -12,7 +12,12 @@ interface HeaderProps {
   setSidebarOpen: (open: boolean) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ earnings, onlineStatus, setOnlineStatus, setSidebarOpen }) => {
+const Header: React.FC<HeaderProps> = ({
+  earnings: _earnings,
+  onlineStatus: _onlineStatus,
+  setOnlineStatus: _setOnlineStatus,
+  setSidebarOpen,
+}) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const { theme, toggleTheme } = useTheme();
@@ -61,9 +66,9 @@ const Header: React.FC<HeaderProps> = ({ earnings, onlineStatus, setOnlineStatus
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center space-x-2 md:space-x-3 hover:bg-slate-700 rounded-lg p-1 transition-colors"
             >
-              <img 
-                src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop" 
-                alt="Profile" 
+              <img
+                src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+                alt="Profile"
                 className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-pink-500"
               />
               <div className="hidden sm:flex flex-col">
@@ -71,9 +76,7 @@ const Header: React.FC<HeaderProps> = ({ earnings, onlineStatus, setOnlineStatus
                 <span className="text-xs text-gray-400">Premium Member</span>
               </div>
             </button>
-            {showUserMenu && (
-              <UserMenu onClose={() => setShowUserMenu(false)} />
-            )}
+            {showUserMenu && <UserMenu onClose={() => setShowUserMenu(false)} />}
           </div>
         </div>
       </div>

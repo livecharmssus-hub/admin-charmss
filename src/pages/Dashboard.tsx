@@ -1,14 +1,19 @@
 import React from 'react';
-import { Users, Eye, Video, DollarSign, TrendingUp, Calendar } from 'lucide-react';
+import { Users, Eye, Video, DollarSign, TrendingUp } from 'lucide-react';
 
 interface DashboardProps {
   earnings: number;
   isStreaming: boolean;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ earnings, isStreaming }) => {
+const Dashboard: React.FC<DashboardProps> = ({ earnings, isStreaming: _isStreaming }) => {
   const stats = [
-    { label: 'Total Earnings', value: `$${earnings.toFixed(2)}`, icon: DollarSign, color: 'bg-green-600' },
+    {
+      label: 'Total Earnings',
+      value: `$${earnings.toFixed(2)}`,
+      icon: DollarSign,
+      color: 'bg-green-600',
+    },
     { label: 'Active Performers', value: '234', icon: Users, color: 'bg-blue-600' },
     { label: 'Total Clients Online', value: '1,234', icon: Eye, color: 'bg-purple-600' },
     { label: 'VideoCalls Today', value: '567', icon: Video, color: 'bg-pink-600' },
@@ -57,7 +62,11 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings, isStreaming }) => {
           </div>
           <div className="h-32 md:h-48 flex items-end justify-between space-x-1 md:space-x-2">
             {[40, 65, 30, 80, 45, 90, 75].map((height, index) => (
-              <div key={index} className="flex-1 bg-pink-600 rounded-t" style={{ height: `${height}%` }}></div>
+              <div
+                key={index}
+                className="flex-1 bg-pink-600 rounded-t"
+                style={{ height: `${height}%` }}
+              ></div>
             ))}
           </div>
           <div className="flex justify-between mt-2 text-xs text-gray-400">
@@ -89,14 +98,15 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings, isStreaming }) => {
                   </div>
                 </div>
                 {activity.amount && (
-                  <span className="text-green-500 font-medium text-xs md:text-sm">{activity.amount}</span>
+                  <span className="text-green-500 font-medium text-xs md:text-sm">
+                    {activity.amount}
+                  </span>
                 )}
               </div>
             ))}
           </div>
         </div>
       </div>
-
     </div>
   );
 };

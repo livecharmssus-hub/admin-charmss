@@ -7,10 +7,10 @@ interface EmailSidebarProps {
   unreadCounts: { [key: string]: number };
 }
 
-const EmailSidebar: React.FC<EmailSidebarProps> = ({ 
-  selectedFolder, 
-  setSelectedFolder, 
-  unreadCounts 
+const EmailSidebar: React.FC<EmailSidebarProps> = ({
+  selectedFolder,
+  setSelectedFolder,
+  unreadCounts,
 }) => {
   const folders = [
     { id: 'inbox', label: 'Inbox', icon: Inbox, count: unreadCounts.inbox || 0 },

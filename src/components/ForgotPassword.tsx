@@ -15,7 +15,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
     if (!email) return;
 
     setIsLoading(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
@@ -33,17 +33,14 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
 
         {/* Success Message */}
         <div className="space-y-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
-            Check your email
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">Check your email</h2>
           <p className="text-white/70 text-sm md:text-base leading-relaxed">
             We've sent a password reset link to
           </p>
-          <p className="text-pink-400 font-medium text-sm md:text-base">
-            {email}
-          </p>
+          <p className="text-pink-400 font-medium text-sm md:text-base">{email}</p>
           <p className="text-white/60 text-xs md:text-sm">
-            If you don't see the email, check your spam folder or try again with a different email address.
+            If you don't see the email, check your spam folder or try again with a different email
+            address.
           </p>
         </div>
 
@@ -55,15 +52,21 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
           </h3>
           <ol className="space-y-2 text-white/70 text-sm">
             <li className="flex items-start">
-              <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-3 mt-0.5 flex-shrink-0">1</span>
+              <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-3 mt-0.5 flex-shrink-0">
+                1
+              </span>
               Check your email inbox for a message from LiveCharmss
             </li>
             <li className="flex items-start">
-              <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-3 mt-0.5 flex-shrink-0">2</span>
+              <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-3 mt-0.5 flex-shrink-0">
+                2
+              </span>
               Click the "Reset Password\" link in the email
             </li>
             <li className="flex items-start">
-              <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-3 mt-0.5 flex-shrink-0">3</span>
+              <span className="bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs mr-3 mt-0.5 flex-shrink-0">
+                3
+              </span>
               Create a new secure password for your account
             </li>
           </ol>
@@ -77,7 +80,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
           >
             Back to Sign In
           </button>
-          
+
           <button
             onClick={() => {
               setIsSubmitted(false);
@@ -110,14 +113,12 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Sign In
         </button>
-        
+
         <div className="w-16 h-16 bg-pink-500/20 rounded-full flex items-center justify-center mx-auto">
           <Mail className="w-8 h-8 text-pink-400" />
         </div>
-        
-        <h2 className="text-2xl md:text-3xl font-bold text-white">
-          Forgot Password?
-        </h2>
+
+        <h2 className="text-2xl md:text-3xl font-bold text-white">Forgot Password?</h2>
         <p className="text-white/70 text-sm md:text-base leading-relaxed">
           No worries! Enter your email address and we'll send you a link to reset your password.
         </p>
@@ -165,7 +166,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack }) => {
           <div>
             <h4 className="text-white font-medium text-sm mb-1">Security Notice</h4>
             <p className="text-white/60 text-xs leading-relaxed">
-              For your security, the reset link will expire in 15 minutes. If you don't receive the email within a few minutes, please check your spam folder.
+              For your security, the reset link will expire in 15 minutes. If you don't receive the
+              email within a few minutes, please check your spam folder.
             </p>
           </div>
         </div>

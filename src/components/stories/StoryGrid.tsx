@@ -24,8 +24,8 @@ interface StoryGridProps {
 }
 
 const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateStory }) => {
-  const activeStories = stories.filter(story => story.isActive);
-  const expiredStories = stories.filter(story => !story.isActive);
+  const activeStories = stories.filter((story) => story.isActive);
+  const expiredStories = stories.filter((story) => !story.isActive);
 
   return (
     <div className="space-y-6">
@@ -46,7 +46,7 @@ const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateSt
               <span className="text-sm font-medium">Nueva Historia</span>
             </button>
 
-            {activeStories.map((story, index) => (
+            {activeStories.map((story, _index) => (
               <div
                 key={story.id}
                 onClick={() => onStoryClick(stories.indexOf(story))}
@@ -55,18 +55,10 @@ const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateSt
                 {/* Story preview */}
                 <div className="absolute inset-0">
                   {story.type === 'photo' ? (
-                    <img
-                      src={story.url}
-                      alt="Story"
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={story.url} alt="Story" className="w-full h-full object-cover" />
                   ) : (
                     <div className="relative w-full h-full">
-                      <video
-                        src={story.url}
-                        className="w-full h-full object-cover"
-                        muted
-                      />
+                      <video src={story.url} className="w-full h-full object-cover" muted />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
                           <Play className="w-6 h-6 text-white ml-1" />
@@ -82,9 +74,11 @@ const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateSt
                 {/* Story info */}
                 <div className="absolute top-3 left-3 right-3">
                   <div className="flex items-center justify-between">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      story.type === 'video' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        story.type === 'video' ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'
+                      }`}
+                    >
                       {story.type === 'video' ? 'Video' : 'Foto'}
                     </span>
                     <div className="flex items-center space-x-1 text-white text-xs">
@@ -96,9 +90,7 @@ const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateSt
 
                 {/* Stats */}
                 <div className="absolute bottom-3 left-3 right-3">
-                  <div className="text-white text-xs mb-2 line-clamp-2">
-                    {story.comment}
-                  </div>
+                  <div className="text-white text-xs mb-2 line-clamp-2">{story.comment}</div>
                   <div className="flex items-center justify-between text-white/80 text-xs">
                     <div className="flex items-center space-x-3">
                       <div className="flex items-center space-x-1">
@@ -129,7 +121,7 @@ const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateSt
             <span>Historias Expiradas ({expiredStories.length})</span>
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {expiredStories.map((story, index) => (
+            {expiredStories.map((story, _index) => (
               <div
                 key={story.id}
                 className="aspect-[9/16] relative rounded-xl overflow-hidden opacity-60"
@@ -170,9 +162,7 @@ const StoryGrid: React.FC<StoryGridProps> = ({ stories, onStoryClick, onCreateSt
 
                 {/* Stats */}
                 <div className="absolute bottom-3 left-3 right-3">
-                  <div className="text-white text-xs mb-2 line-clamp-2">
-                    {story.comment}
-                  </div>
+                  <div className="text-white text-xs mb-2 line-clamp-2">{story.comment}</div>
                   <div className="flex items-center space-x-3 text-white/60 text-xs">
                     <div className="flex items-center space-x-1">
                       <Eye className="w-3 h-3" />

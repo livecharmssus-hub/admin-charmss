@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
-import { Power, Edit, DollarSign, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MapPin, Mail, User, Users, Radio, ArrowUpDown, Building2 } from 'lucide-react';
+import {
+  Power,
+  Edit,
+  DollarSign,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  MapPin,
+  Mail,
+  User,
+  Users,
+  Radio,
+  ArrowUpDown,
+  Building2,
+} from 'lucide-react';
 
 interface Studio {
   id: string;
@@ -22,6 +37,20 @@ interface StudioListProps {
 
 type SortField = 'name' | 'location' | 'active_performers' | 'status';
 type SortDirection = 'asc' | 'desc';
+
+// SortIcon component declared outside render to avoid creating components during render
+const SortIcon = ({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) => {
+  if (sortField !== field) {
+    return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
+  }
+  return (
+    <ArrowUpDown
+      className={`h-4 w-4 ${
+        sortDirection === 'asc' ? 'text-blue-600' : 'text-blue-600 rotate-180'
+      }`}
+    />
+  );
+};
 
 export default function StudioList({
   studios,
@@ -87,14 +116,7 @@ export default function StudioList({
     inactive: studios.filter((s) => s.status === 'inactive').length,
   };
 
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
-    }
-    return (
-      <ArrowUpDown className={`h-4 w-4 ${sortDirection === 'asc' ? 'text-blue-600' : 'text-blue-600 rotate-180'}`} />
-    );
-  };
+  // SortIcon is declared at top-level to avoid recreating components during render
 
   return (
     <div className="space-y-4">
@@ -137,7 +159,7 @@ export default function StudioList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Nombre del Studio
-                  <SortIcon field="name" />
+                  <SortIcon field="name" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -152,7 +174,7 @@ export default function StudioList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Ubicación
-                  <SortIcon field="location" />
+                  <SortIcon field="location" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -161,7 +183,7 @@ export default function StudioList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Performers
-                  <SortIcon field="active_performers" />
+                  <SortIcon field="active_performers" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -170,7 +192,7 @@ export default function StudioList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Estado
-                  <SortIcon field="status" />
+                  <SortIcon field="status" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -299,7 +321,8 @@ export default function StudioList({
               <option value={50}>50</option>
             </select>
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Mostrando {startIndex + 1}-{Math.min(endIndex, sortedStudios.length)} de {sortedStudios.length}
+              Mostrando {startIndex + 1}-{Math.min(endIndex, sortedStudios.length)} de{' '}
+              {sortedStudios.length}
             </span>
           </div>
 
@@ -323,7 +346,7 @@ export default function StudioList({
 
             <div className="flex items-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(page => {
+                .filter((page) => {
                   if (totalPages <= 7) return true;
                   if (page === 1 || page === totalPages) return true;
                   if (page >= currentPage - 1 && page <= currentPage + 1) return true;
@@ -370,14 +393,21 @@ export default function StudioList({
 
       <div className="md:hidden space-y-4">
         {paginatedStudios.map((studio) => (
-          <div key={studio.id} className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 space-y-4">
+          <div
+            key={studio.id}
+            className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 space-y-4"
+          >
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Building2 className="h-8 w-8 text-white" />
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{studio.name}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{studio.legal_representative}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                  {studio.name}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  {studio.legal_representative}
+                </p>
                 <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{studio.email}</p>
               </div>
               <span
@@ -396,7 +426,9 @@ export default function StudioList({
                 <div className="flex items-center justify-center mb-1">
                   <MapPin className="h-4 w-4 text-gray-400" />
                 </div>
-                <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">{studio.location}</div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  {studio.location}
+                </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Ubicación</div>
               </div>
               <div>
@@ -447,8 +479,12 @@ export default function StudioList({
           <div className="text-gray-400 mb-2">
             <Building2 className="h-12 w-12 mx-auto" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">No se encontraron studios</h3>
-          <p className="text-gray-500 dark:text-gray-400">Intenta ajustar los filtros de búsqueda</p>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+            No se encontraron studios
+          </h3>
+          <p className="text-gray-500 dark:text-gray-400">
+            Intenta ajustar los filtros de búsqueda
+          </p>
         </div>
       )}
     </div>

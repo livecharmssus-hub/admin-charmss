@@ -3,7 +3,7 @@ import { Upload, Image, Eye, Heart, Download, Trash2, Edit, Plus } from 'lucide-
 
 const Photos: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  
+
   const categories = [
     { id: 'all', label: 'All Photos', count: 24 },
     { id: 'public', label: 'Public', count: 12 },
@@ -19,8 +19,8 @@ const Photos: React.FC = () => {
       category: 'premium',
       views: 892,
       likes: 156,
-      earnings: 45.50,
-      uploadDate: '2025-01-15'
+      earnings: 45.5,
+      uploadDate: '2025-01-15',
     },
     {
       id: 2,
@@ -30,7 +30,7 @@ const Photos: React.FC = () => {
       views: 456,
       likes: 89,
       earnings: 0,
-      uploadDate: '2025-01-14'
+      uploadDate: '2025-01-14',
     },
     {
       id: 3,
@@ -39,8 +39,8 @@ const Photos: React.FC = () => {
       category: 'premium',
       views: 743,
       likes: 198,
-      earnings: 67.20,
-      uploadDate: '2025-01-13'
+      earnings: 67.2,
+      uploadDate: '2025-01-13',
     },
     {
       id: 4,
@@ -49,14 +49,15 @@ const Photos: React.FC = () => {
       category: 'private',
       views: 234,
       likes: 67,
-      earnings: 89.30,
-      uploadDate: '2025-01-12'
+      earnings: 89.3,
+      uploadDate: '2025-01-12',
     },
   ];
 
-  const filteredPhotos = selectedCategory === 'all' 
-    ? photos 
-    : photos.filter(photo => photo.category === selectedCategory);
+  const filteredPhotos =
+    selectedCategory === 'all'
+      ? photos
+      : photos.filter((photo) => photo.category === selectedCategory);
 
   return (
     <div className="space-y-6">
@@ -143,11 +144,7 @@ const Photos: React.FC = () => {
           {filteredPhotos.map((photo) => (
             <div key={photo.id} className="bg-slate-700 rounded-lg overflow-hidden group">
               <div className="relative aspect-square">
-                <img
-                  src={photo.url}
-                  alt={photo.title}
-                  className="w-full h-full object-cover"
-                />
+                <img src={photo.url} alt={photo.title} className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex items-center space-x-2">
                     <button className="p-1 md:p-2 bg-white bg-opacity-20 rounded-full hover:bg-opacity-30 transition-colors">
@@ -161,16 +158,18 @@ const Photos: React.FC = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 {/* Category Badge */}
                 <div className="absolute top-1 md:top-2 left-1 md:left-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    photo.category === 'premium' 
-                      ? 'bg-yellow-600 text-white'
-                      : photo.category === 'private'
-                      ? 'bg-red-600 text-white'
-                      : 'bg-blue-600 text-white'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      photo.category === 'premium'
+                        ? 'bg-yellow-600 text-white'
+                        : photo.category === 'private'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-blue-600 text-white'
+                    }`}
+                  >
                     {photo.category.charAt(0).toUpperCase() + photo.category.slice(1)}
                   </span>
                 </div>
@@ -184,7 +183,7 @@ const Photos: React.FC = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="p-2 md:p-4">
                 <h3 className="text-white font-medium mb-2 text-sm md:text-base">{photo.title}</h3>
                 <div className="flex items-center justify-between text-xs md:text-sm text-gray-400 mb-2">
@@ -199,20 +198,24 @@ const Photos: React.FC = () => {
                     </div>
                   </div>
                   {photo.earnings > 0 && (
-                    <span className="text-green-500 font-medium text-xs md:text-sm">${photo.earnings}</span>
+                    <span className="text-green-500 font-medium text-xs md:text-sm">
+                      ${photo.earnings}
+                    </span>
                   )}
                 </div>
                 <p className="text-xs text-gray-500">{photo.uploadDate}</p>
               </div>
             </div>
           ))}
-          
+
           {/* Upload New Photo Card */}
           <div className="bg-slate-700 rounded-lg border-2 border-dashed border-slate-600 hover:border-pink-500 transition-colors cursor-pointer group">
             <div className="aspect-square flex items-center justify-center">
               <div className="text-center">
                 <Plus className="w-8 h-8 md:w-12 md:h-12 text-gray-400 group-hover:text-pink-500 mx-auto mb-2 transition-colors" />
-                <p className="text-gray-400 group-hover:text-pink-500 transition-colors text-xs md:text-sm">Upload New Photo</p>
+                <p className="text-gray-400 group-hover:text-pink-500 transition-colors text-xs md:text-sm">
+                  Upload New Photo
+                </p>
               </div>
             </div>
           </div>
@@ -222,10 +225,13 @@ const Photos: React.FC = () => {
       {/* Photo Performance Analytics */}
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
         <h3 className="text-base md:text-lg font-semibold mb-4">Photo Performance</h3>
-        
+
         <div className="space-y-4">
-          {photos.slice(0, 5).map((photo, index) => (
-            <div key={photo.id} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+          {photos.slice(0, 5).map((photo, _index) => (
+            <div
+              key={photo.id}
+              className="flex items-center justify-between p-3 bg-slate-700 rounded-lg"
+            >
               <div className="flex items-center space-x-3">
                 <div className="relative">
                   <img
@@ -234,34 +240,40 @@ const Photos: React.FC = () => {
                     className="w-12 h-12 md:w-16 md:h-16 rounded-lg object-cover"
                   />
                   <div className="absolute top-1 right-1">
-                    <span className={`px-1 py-0.5 rounded text-xs font-medium ${
-                      photo.category === 'premium' 
-                        ? 'bg-yellow-600 text-white'
-                        : photo.category === 'private'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-blue-600 text-white'
-                    }`}>
+                    <span
+                      className={`px-1 py-0.5 rounded text-xs font-medium ${
+                        photo.category === 'premium'
+                          ? 'bg-yellow-600 text-white'
+                          : photo.category === 'private'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-blue-600 text-white'
+                      }`}
+                    >
                       {photo.category.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-white font-medium text-sm md:text-base line-clamp-1">{photo.title}</h4>
+                  <h4 className="text-white font-medium text-sm md:text-base line-clamp-1">
+                    {photo.title}
+                  </h4>
                   <div className="flex items-center space-x-4 text-xs md:text-sm text-gray-400">
                     <span>{photo.uploadDate}</span>
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      photo.category === 'premium' 
-                        ? 'bg-yellow-600 text-white'
-                        : photo.category === 'private'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-blue-600 text-white'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        photo.category === 'premium'
+                          ? 'bg-yellow-600 text-white'
+                          : photo.category === 'private'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-blue-600 text-white'
+                      }`}
+                    >
                       {photo.category}
                     </span>
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <div className="flex items-center space-x-4 text-sm">
                   <div className="text-center">
@@ -289,7 +301,7 @@ const Photos: React.FC = () => {
             </div>
           ))}
         </div>
-        
+
         {/* Performance Summary */}
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-700 rounded-lg">
           <div className="text-center">
@@ -306,13 +318,17 @@ const Photos: React.FC = () => {
           </div>
           <div className="text-center">
             <div className="text-lg md:text-xl font-bold text-green-400">
-              ${(photos.reduce((sum, photo) => sum + photo.earnings, 0) / photos.filter(p => p.earnings > 0).length || 0).toFixed(2)}
+              $
+              {(
+                photos.reduce((sum, photo) => sum + photo.earnings, 0) /
+                  photos.filter((p) => p.earnings > 0).length || 0
+              ).toFixed(2)}
             </div>
             <div className="text-gray-400 text-xs md:text-sm">Avg Earnings</div>
           </div>
           <div className="text-center">
             <div className="text-lg md:text-xl font-bold text-purple-400">
-              {photos.filter(p => p.category === 'premium' || p.category === 'private').length}
+              {photos.filter((p) => p.category === 'premium' || p.category === 'private').length}
             </div>
             <div className="text-gray-400 text-xs md:text-sm">Premium Photos</div>
           </div>

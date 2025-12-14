@@ -1,5 +1,22 @@
 import React, { useState } from 'react';
-import { X, Search, BookOpen, Users, Building2, DollarSign, Mail, Video, Image, Settings, ChevronRight, FileText, CreditCard, BarChart3, Shield, HelpCircle, Menu } from 'lucide-react';
+import {
+  X,
+  Search,
+  BookOpen,
+  Users,
+  Building2,
+  DollarSign,
+  Mail,
+  Video,
+  Image,
+  Settings,
+  ChevronRight,
+  FileText,
+  BarChart3,
+  Shield,
+  HelpCircle,
+  Menu,
+} from 'lucide-react';
 
 interface HelpModalProps {
   onClose: () => void;
@@ -25,25 +42,27 @@ const HELP_SECTIONS: HelpSection[] = [
     content: [
       {
         subtitle: 'Welcome to the Admin Dashboard',
-        description: 'This comprehensive guide will help you navigate and manage your platform effectively.',
+        description:
+          'This comprehensive guide will help you navigate and manage your platform effectively.',
         tips: [
           'Use the sidebar navigation to access different modules',
           'Toggle dark mode using the theme switcher in the header',
           'Your earnings and online status are displayed in the top bar',
-          'Use search and filters to quickly find what you need'
-        ]
+          'Use search and filters to quickly find what you need',
+        ],
       },
       {
         subtitle: 'Dashboard Overview',
-        description: 'The dashboard provides real-time insights into platform performance, including active performers, earnings, and recent activities.',
+        description:
+          'The dashboard provides real-time insights into platform performance, including active performers, earnings, and recent activities.',
         steps: [
           'View total earnings and weekly performance',
           'Monitor active and online performers',
           'Track recent transactions and activities',
-          'Access quick actions for common tasks'
-        ]
-      }
-    ]
+          'Access quick actions for common tasks',
+        ],
+      },
+    ],
   },
   {
     id: 'performers',
@@ -52,13 +71,14 @@ const HELP_SECTIONS: HelpSection[] = [
     content: [
       {
         subtitle: 'Managing Performers',
-        description: 'The Performers module allows you to oversee all talent on your platform, including registration, profile management, and performance tracking.',
+        description:
+          'The Performers module allows you to oversee all talent on your platform, including registration, profile management, and performance tracking.',
         steps: [
           'Click "Performers" in the sidebar to view all registered talent',
           'Use search to find specific performers by name, stage name, or email',
           'Filter by status: Online, Offline, Active, Inactive, Pending, or Suspended',
-          'Click on any performer to view their detailed profile'
-        ]
+          'Click on any performer to view their detailed profile',
+        ],
       },
       {
         subtitle: 'Performer Actions',
@@ -68,25 +88,26 @@ const HELP_SECTIONS: HelpSection[] = [
           'View Profile: Access complete performer information and statistics',
           'Streaming: Monitor or manage live streaming sessions',
           'Upload Assets: Add or manage photos, videos, and other content',
-          'Approve Content: Review and approve submitted content before publishing'
+          'Approve Content: Review and approve submitted content before publishing',
         ],
         tips: [
           'Regularly review pending performers for approval',
           'Monitor performer ratings and show counts',
-          'Use bulk actions for efficient management'
-        ]
+          'Use bulk actions for efficient management',
+        ],
       },
       {
         subtitle: 'Content Approval Process',
-        description: 'All performer-submitted content requires admin approval to ensure quality and compliance.',
+        description:
+          'All performer-submitted content requires admin approval to ensure quality and compliance.',
         steps: [
           'Click "Approve Content" on any performer',
           'Review submitted photos, videos, and stories',
           'Approve or reject content with optional feedback',
-          'Approved content is immediately published to the platform'
-        ]
-      }
-    ]
+          'Approved content is immediately published to the platform',
+        ],
+      },
+    ],
   },
   {
     id: 'studios',
@@ -95,13 +116,14 @@ const HELP_SECTIONS: HelpSection[] = [
     content: [
       {
         subtitle: 'Understanding Studios',
-        description: 'Studios are recruiting agencies that manage multiple performers. They have delegated rights to register and oversee their talent.',
+        description:
+          'Studios are recruiting agencies that manage multiple performers. They have delegated rights to register and oversee their talent.',
         steps: [
           'Navigate to "Studios" in the sidebar',
           'View all registered studios with their metrics',
           'Track active and online performers per studio',
-          'Monitor studio status and performance'
-        ]
+          'Monitor studio status and performance',
+        ],
       },
       {
         subtitle: 'Studio Operations',
@@ -110,26 +132,27 @@ const HELP_SECTIONS: HelpSection[] = [
           'Toggle studio status to activate or deactivate',
           'Click "Edit" to modify studio information',
           'Access "Financial Module" to view earnings and commission structure',
-          'Review legal representative and contact details'
+          'Review legal representative and contact details',
         ],
         tips: [
           'Studios can have their own commission rates',
           'Monitor performer count per studio',
-          'Regularly review studio financial reports'
-        ]
+          'Regularly review studio financial reports',
+        ],
       },
       {
         subtitle: 'Financial Module',
-        description: 'Access detailed financial information for each studio, including performer earnings and payment history.',
+        description:
+          'Access detailed financial information for each studio, including performer earnings and payment history.',
         steps: [
           'Click the financial icon on any studio',
           'View total earnings, commissions, and net payments',
           'Review per-performer earnings breakdown',
           'Access complete payment history with dates and methods',
-          'Filter by payment status and date range'
-        ]
-      }
-    ]
+          'Filter by payment status and date range',
+        ],
+      },
+    ],
   },
   {
     id: 'payments',
@@ -138,13 +161,14 @@ const HELP_SECTIONS: HelpSection[] = [
     content: [
       {
         subtitle: 'Payment Dashboard',
-        description: 'The Payments module provides comprehensive financial oversight for all platform transactions.',
+        description:
+          'The Payments module provides comprehensive financial oversight for all platform transactions.',
         steps: [
           'View total earnings, weekly income, pending and available funds',
           'Monitor weekly payment schedules',
           'Review recent transactions across all revenue streams',
-          'Access payment methods configuration'
-        ]
+          'Access payment methods configuration',
+        ],
       },
       {
         subtitle: 'Payment Methods Drill-Down',
@@ -154,42 +178,43 @@ const HELP_SECTIONS: HelpSection[] = [
           'Click on any model to view detailed payment history',
           'Review total paid, pending amounts, and commission rates',
           'Track payment status and due dates',
-          'Minimum commission rate is 50%'
+          'Minimum commission rate is 50%',
         ],
         tips: [
           'Green indicators show up-to-date payments',
           'Yellow indicates pending payments',
-          'Red signals overdue payments requiring immediate attention'
-        ]
+          'Red signals overdue payments requiring immediate attention',
+        ],
       },
       {
         subtitle: 'Studio Payments',
-        description: 'Process payments to studios for their performers\' earnings.',
+        description: "Process payments to studios for their performers' earnings.",
         steps: [
           'Review pending payments with amounts and due dates',
           'Filter by priority: Low, Medium, High, or Urgent',
           'Click "Transfer Payment" on any studio',
           'Review payment details and commission breakdown',
           'Select payment method and add notes if needed',
-          'Confirm transfer to process payment'
+          'Confirm transfer to process payment',
         ],
         tips: [
           'Urgent payments are highlighted in red',
           'Always verify commission amounts before confirming',
-          'Payment confirmations cannot be reversed'
-        ]
+          'Payment confirmations cannot be reversed',
+        ],
       },
       {
         subtitle: 'Model Payments',
-        description: 'Process direct payments to independent models and studio-affiliated performers.',
+        description:
+          'Process direct payments to independent models and studio-affiliated performers.',
         steps: [
           'View all models requiring payment',
           'Filter by independent or studio-affiliated',
           'Check commission rates (minimum 50%)',
           'Click "Transfer Payment" to process',
           'Review net amount to be paid',
-          'Select payment method and confirm'
-        ]
+          'Select payment method and confirm',
+        ],
       },
       {
         subtitle: 'Payment Methods',
@@ -198,10 +223,10 @@ const HELP_SECTIONS: HelpSection[] = [
           'Bank Transfer: 2% fee, $50 minimum payout',
           'PayPal: 3% fee, $20 minimum payout',
           'Cryptocurrency: 1% fee, $10 minimum payout',
-          'Wire Transfer: $15 flat fee, $100 minimum payout'
-        ]
-      }
-    ]
+          'Wire Transfer: $15 flat fee, $100 minimum payout',
+        ],
+      },
+    ],
   },
   {
     id: 'inbox',
@@ -216,8 +241,8 @@ const HELP_SECTIONS: HelpSection[] = [
           'View folders: Inbox, Sent, Drafts, Trash',
           'Compose new messages with rich text editor',
           'Organize emails with labels and filters',
-          'Search messages by sender, subject, or content'
-        ]
+          'Search messages by sender, subject, or content',
+        ],
       },
       {
         subtitle: 'Composing Messages',
@@ -227,10 +252,10 @@ const HELP_SECTIONS: HelpSection[] = [
           'Enter recipient email addresses',
           'Add subject line and message body',
           'Attach files if needed',
-          'Send immediately or save as draft'
-        ]
-      }
-    ]
+          'Send immediately or save as draft',
+        ],
+      },
+    ],
   },
   {
     id: 'content',
@@ -245,8 +270,8 @@ const HELP_SECTIONS: HelpSection[] = [
           'View all submitted photos by performers',
           'Filter by approval status',
           'Review photo quality and compliance',
-          'Approve or reject with feedback'
-        ]
+          'Approve or reject with feedback',
+        ],
       },
       {
         subtitle: 'Videos Management',
@@ -256,8 +281,8 @@ const HELP_SECTIONS: HelpSection[] = [
           'Review video submissions',
           'Check content compliance and quality',
           'Approve suitable videos for publishing',
-          'Monitor video performance metrics'
-        ]
+          'Monitor video performance metrics',
+        ],
       },
       {
         subtitle: 'Stories Management',
@@ -266,10 +291,10 @@ const HELP_SECTIONS: HelpSection[] = [
           'View active and expired stories',
           'Review story content before publishing',
           'Monitor story views and engagement',
-          'Remove inappropriate content'
-        ]
-      }
-    ]
+          'Remove inappropriate content',
+        ],
+      },
+    ],
   },
   {
     id: 'streaming',
@@ -284,13 +309,13 @@ const HELP_SECTIONS: HelpSection[] = [
           'View all active streams',
           'Monitor viewer counts and engagement',
           'Review stream quality and compliance',
-          'End streams if necessary for violations'
+          'End streams if necessary for violations',
         ],
         tips: [
           'Set streaming quality standards',
           'Monitor for terms of service violations',
-          'Review stream analytics regularly'
-        ]
+          'Review stream analytics regularly',
+        ],
       },
       {
         subtitle: 'Video Calls',
@@ -299,10 +324,10 @@ const HELP_SECTIONS: HelpSection[] = [
           'Monitor active video calls',
           'Track call duration and pricing',
           'Review call history and earnings',
-          'Handle reported issues or complaints'
-        ]
-      }
-    ]
+          'Handle reported issues or complaints',
+        ],
+      },
+    ],
   },
   {
     id: 'analytics',
@@ -317,8 +342,8 @@ const HELP_SECTIONS: HelpSection[] = [
           'Monitor revenue trends and growth',
           'Track user engagement metrics',
           'Analyze performer performance',
-          'Generate custom reports'
-        ]
+          'Generate custom reports',
+        ],
       },
       {
         subtitle: 'Financial Reports',
@@ -328,10 +353,10 @@ const HELP_SECTIONS: HelpSection[] = [
           'Choose report type: Revenue, Commissions, Payouts',
           'Filter by studio, performer, or payment method',
           'Export reports in CSV or PDF format',
-          'Schedule automated report delivery'
-        ]
-      }
-    ]
+          'Schedule automated report delivery',
+        ],
+      },
+    ],
   },
   {
     id: 'security',
@@ -346,14 +371,14 @@ const HELP_SECTIONS: HelpSection[] = [
           'Review security logs regularly',
           'Enforce password policies',
           'Manage user permissions',
-          'Respond to security incidents'
+          'Respond to security incidents',
         ],
         tips: [
           'Enable two-factor authentication',
           'Regularly update security settings',
           'Review access logs weekly',
-          'Maintain data backup procedures'
-        ]
+          'Maintain data backup procedures',
+        ],
       },
       {
         subtitle: 'Compliance Management',
@@ -363,10 +388,10 @@ const HELP_SECTIONS: HelpSection[] = [
           'Verify performer age and identity',
           'Maintain compliance documentation',
           'Handle legal requests appropriately',
-          'Keep terms of service updated'
-        ]
-      }
-    ]
+          'Keep terms of service updated',
+        ],
+      },
+    ],
   },
   {
     id: 'settings',
@@ -381,8 +406,8 @@ const HELP_SECTIONS: HelpSection[] = [
           'Configure payment thresholds and schedules',
           'Set commission rates and fee structures',
           'Manage notification preferences',
-          'Update platform branding and appearance'
-        ]
+          'Update platform branding and appearance',
+        ],
       },
       {
         subtitle: 'User Account Settings',
@@ -392,11 +417,11 @@ const HELP_SECTIONS: HelpSection[] = [
           'Change password and security settings',
           'Configure email notifications',
           'Set timezone and language preferences',
-          'Manage API access tokens'
-        ]
-      }
-    ]
-  }
+          'Manage API access tokens',
+        ],
+      },
+    ],
+  },
 ];
 
 export default function HelpModal({ onClose }: HelpModalProps) {
@@ -404,15 +429,17 @@ export default function HelpModal({ onClose }: HelpModalProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const filteredSections = HELP_SECTIONS.filter(section =>
-    section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    section.content.some(item =>
-      item.subtitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+  const filteredSections = HELP_SECTIONS.filter(
+    (section) =>
+      section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      section.content.some(
+        (item) =>
+          item.subtitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
   );
 
-  const currentSection = HELP_SECTIONS.find(s => s.id === selectedSection);
+  const currentSection = HELP_SECTIONS.find((s) => s.id === selectedSection);
 
   const handleSectionSelect = (sectionId: string) => {
     setSelectedSection(sectionId);
@@ -476,11 +503,13 @@ export default function HelpModal({ onClose }: HelpModalProps) {
           )}
 
           {/* Sidebar */}
-          <div className={`
+          <div
+            className={`
             fixed md:relative inset-y-0 left-0 z-[6] w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 overflow-y-auto
             transform transition-transform duration-300 ease-in-out
             ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-          `}>
+          `}
+          >
             <nav className="p-4 space-y-2">
               {filteredSections.map((section) => {
                 const Icon = section.icon;
@@ -508,7 +537,7 @@ export default function HelpModal({ onClose }: HelpModalProps) {
               <div className="space-y-8">
                 <div className="flex items-center gap-3 mb-6">
                   {React.createElement(currentSection.icon, {
-                    className: "h-8 w-8 text-blue-600 dark:text-blue-400"
+                    className: 'h-8 w-8 text-blue-600 dark:text-blue-400',
                   })}
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
                     {currentSection.title}
@@ -534,7 +563,10 @@ export default function HelpModal({ onClose }: HelpModalProps) {
                         </h5>
                         <ol className="space-y-2">
                           {item.steps.map((step, stepIndex) => (
-                            <li key={stepIndex} className="flex gap-3 text-sm text-blue-800 dark:text-blue-400">
+                            <li
+                              key={stepIndex}
+                              className="flex gap-3 text-sm text-blue-800 dark:text-blue-400"
+                            >
                               <span className="flex-shrink-0 w-6 h-6 bg-blue-600 dark:bg-blue-700 text-white rounded-full flex items-center justify-center text-xs font-medium">
                                 {stepIndex + 1}
                               </span>
@@ -553,7 +585,10 @@ export default function HelpModal({ onClose }: HelpModalProps) {
                         </h5>
                         <ul className="space-y-2">
                           {item.tips.map((tip, tipIndex) => (
-                            <li key={tipIndex} className="flex gap-3 text-sm text-amber-800 dark:text-amber-400">
+                            <li
+                              key={tipIndex}
+                              className="flex gap-3 text-sm text-amber-800 dark:text-amber-400"
+                            >
                               <span className="flex-shrink-0 w-1.5 h-1.5 bg-amber-600 dark:bg-amber-500 rounded-full mt-2"></span>
                               <span className="flex-1">{tip}</span>
                             </li>
@@ -584,7 +619,10 @@ export default function HelpModal({ onClose }: HelpModalProps) {
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Need additional help? Contact support at{' '}
-              <a href="mailto:support@platform.com" className="text-blue-600 dark:text-blue-400 hover:underline">
+              <a
+                href="mailto:support@platform.com"
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
                 support@platform.com
               </a>
             </p>

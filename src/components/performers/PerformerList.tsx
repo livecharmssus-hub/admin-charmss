@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Power, User, Video, Upload, Star, MapPin, Clock, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, CheckSquare } from 'lucide-react';
+import {
+  Power,
+  User,
+  Video,
+  Upload,
+  Star,
+  MapPin,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  ArrowUpDown,
+  CheckSquare,
+} from 'lucide-react';
 
 interface Performer {
   id: string;
@@ -32,6 +45,20 @@ interface PerformerListProps {
 type SortField = 'stage_name' | 'rating' | 'total_shows' | 'country' | 'status';
 type SortDirection = 'asc' | 'desc';
 
+// SortIcon component declared outside render to satisfy lint rule react-hooks/static-components
+const SortIcon = ({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) => {
+  if (sortField !== field) {
+    return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
+  }
+  return (
+    <ArrowUpDown
+      className={`h-4 w-4 ${
+        sortDirection === 'asc' ? 'text-blue-600' : 'text-blue-600 rotate-180'
+      }`}
+    />
+  );
+};
+
 export default function PerformerList({
   performers,
   onToggleStatus,
@@ -57,7 +84,7 @@ export default function PerformerList({
     setCurrentPage(1);
   };
 
-  const filteredPerformers = performers.filter(performer => {
+  const filteredPerformers = performers.filter((performer) => {
     const matchesSearch =
       performer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       performer.stage_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -93,36 +120,43 @@ export default function PerformerList({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'bg-green-500 text-white';
-      case 'offline': return 'bg-red-500 text-white';
-      case 'active': return 'bg-transparent border border-gray-300 text-gray-700';
-      case 'inactive': return 'bg-gray-400 text-white';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'suspended': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'online':
+        return 'bg-green-500 text-white';
+      case 'offline':
+        return 'bg-red-500 text-white';
+      case 'active':
+        return 'bg-transparent border border-gray-300 text-gray-700';
+      case 'inactive':
+        return 'bg-gray-400 text-white';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'suspended':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'online': return 'Online';
-      case 'offline': return 'Offline';
-      case 'active': return 'Active';
-      case 'inactive': return 'Inactive';
-      case 'pending': return 'Pendiente';
-      case 'suspended': return 'Suspendido';
-      default: return status;
+      case 'online':
+        return 'Online';
+      case 'offline':
+        return 'Offline';
+      case 'active':
+        return 'Active';
+      case 'inactive':
+        return 'Inactive';
+      case 'pending':
+        return 'Pendiente';
+      case 'suspended':
+        return 'Suspendido';
+      default:
+        return status;
     }
   };
 
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
-    }
-    return (
-      <ArrowUpDown className={`h-4 w-4 ${sortDirection === 'asc' ? 'text-blue-600' : 'text-blue-600 rotate-180'}`} />
-    );
-  };
+  // SortIcon is declared at top-level to avoid recreating components during render
 
   return (
     <div className="space-y-4">
@@ -166,7 +200,7 @@ export default function PerformerList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Información
-                  <SortIcon field="stage_name" />
+                  <SortIcon field="stage_name" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -175,7 +209,7 @@ export default function PerformerList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Rating
-                  <SortIcon field="rating" />
+                  <SortIcon field="rating" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -184,7 +218,7 @@ export default function PerformerList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Shows
-                  <SortIcon field="total_shows" />
+                  <SortIcon field="total_shows" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -193,7 +227,7 @@ export default function PerformerList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Estado
-                  <SortIcon field="status" />
+                  <SortIcon field="status" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -202,7 +236,7 @@ export default function PerformerList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Ubicación
-                  <SortIcon field="country" />
+                  <SortIcon field="country" sortField={sortField} sortDirection={sortDirection} />
                 </button>
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -212,32 +246,52 @@ export default function PerformerList({
           </thead>
           <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
             {paginatedPerformers.map((performer) => (
-              <tr key={performer.id} className="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+              <tr
+                key={performer.id}
+                className="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+              >
                 <td className="px-6 py-4 whitespace-nowrap">
                   <img
-                    src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'}
+                    src={
+                      performer.avatar_url ||
+                      'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'
+                    }
                     alt={performer.full_name}
                     className="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
                   />
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">{performer.stage_name}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">{performer.full_name}</div>
-                    <div className="text-xs text-gray-400 dark:text-gray-500">{performer.email}</div>
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      {performer.stage_name}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {performer.full_name}
+                    </div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500">
+                      {performer.email}
+                    </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">{performer.rating.toFixed(1)}</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      {performer.rating.toFixed(1)}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="text-sm text-gray-900 dark:text-white">{performer.total_shows}</span>
+                  <span className="text-sm text-gray-900 dark:text-white">
+                    {performer.total_shows}
+                  </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(performer.status)}`}>
+                  <span
+                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                      performer.status
+                    )}`}
+                  >
                     {getStatusText(performer.status)}
                   </span>
                 </td>
@@ -314,7 +368,8 @@ export default function PerformerList({
               <option value={50}>50</option>
             </select>
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Mostrando {startIndex + 1}-{Math.min(endIndex, sortedPerformers.length)} de {sortedPerformers.length}
+              Mostrando {startIndex + 1}-{Math.min(endIndex, sortedPerformers.length)} de{' '}
+              {sortedPerformers.length}
             </span>
           </div>
 
@@ -338,7 +393,7 @@ export default function PerformerList({
 
             <div className="flex items-center gap-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter(page => {
+                .filter((page) => {
                   if (totalPages <= 7) return true;
                   if (page === 1 || page === totalPages) return true;
                   if (page >= currentPage - 1 && page <= currentPage + 1) return true;
@@ -385,19 +440,35 @@ export default function PerformerList({
 
       <div className="md:hidden space-y-4">
         {paginatedPerformers.map((performer) => (
-          <div key={performer.id} className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 space-y-4">
+          <div
+            key={performer.id}
+            className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 space-y-4"
+          >
             <div className="flex items-start gap-4">
               <img
-                src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'}
+                src={
+                  performer.avatar_url ||
+                  'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'
+                }
                 alt={performer.full_name}
                 className="h-16 w-16 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
               />
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{performer.stage_name}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{performer.full_name}</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{performer.email}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">
+                  {performer.stage_name}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                  {performer.full_name}
+                </p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                  {performer.email}
+                </p>
               </div>
-              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(performer.status)}`}>
+              <span
+                className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+                  performer.status
+                )}`}
+              >
                 {getStatusText(performer.status)}
               </span>
             </div>
@@ -407,21 +478,27 @@ export default function PerformerList({
                 <div className="flex items-center justify-center mb-1">
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
                 </div>
-                <div className="text-sm font-semibold text-gray-900 dark:text-white">{performer.rating.toFixed(1)}</div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {performer.rating.toFixed(1)}
+                </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Rating</div>
               </div>
               <div>
                 <div className="flex items-center justify-center mb-1">
                   <Video className="h-4 w-4 text-gray-400" />
                 </div>
-                <div className="text-sm font-semibold text-gray-900 dark:text-white">{performer.total_shows}</div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                  {performer.total_shows}
+                </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Shows</div>
               </div>
               <div>
                 <div className="flex items-center justify-center mb-1">
                   <MapPin className="h-4 w-4 text-gray-400" />
                 </div>
-                <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">{performer.country}</div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                  {performer.country}
+                </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">País</div>
               </div>
             </div>

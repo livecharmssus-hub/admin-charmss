@@ -1,5 +1,16 @@
 import React from 'react';
-import { X, Mail, Phone, MapPin, Calendar, Clock, Star, Video, DollarSign, Globe } from 'lucide-react';
+import {
+  X,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  Clock,
+  Star,
+  Video,
+  DollarSign,
+  Globe,
+} from 'lucide-react';
 
 interface Performer {
   id: string;
@@ -30,21 +41,31 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'bg-green-100 text-green-800';
-      case 'inactive': return 'bg-gray-100 text-gray-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'suspended': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'inactive':
+        return 'bg-gray-100 text-gray-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'suspended':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'active': return 'Activo';
-      case 'inactive': return 'Inactivo';
-      case 'pending': return 'Pendiente';
-      case 'suspended': return 'Suspendido';
-      default: return status;
+      case 'active':
+        return 'Activo';
+      case 'inactive':
+        return 'Inactivo';
+      case 'pending':
+        return 'Pendiente';
+      case 'suspended':
+        return 'Suspendido';
+      default:
+        return status;
     }
   };
 
@@ -52,17 +73,7 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
-    });
-  };
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('es-ES', {
-      year: 'numeric',
-      month: 'long',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
     });
   };
 
@@ -83,7 +94,10 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
           <div className="flex flex-col md:flex-row gap-6">
             <div className="flex-shrink-0">
               <img
-                src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400'}
+                src={
+                  performer.avatar_url ||
+                  'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400'
+                }
                 alt={performer.full_name}
                 className="w-32 h-32 md:w-48 md:h-48 rounded-lg object-cover ring-4 ring-gray-200"
               />
@@ -93,7 +107,11 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
               <div>
                 <div className="flex flex-wrap items-center gap-3 mb-2">
                   <h3 className="text-3xl font-bold text-gray-900">{performer.stage_name}</h3>
-                  <span className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(performer.status)}`}>
+                  <span
+                    className={`px-3 py-1 text-sm font-semibold rounded-full ${getStatusColor(
+                      performer.status
+                    )}`}
+                  >
                     {getStatusText(performer.status)}
                   </span>
                 </div>
@@ -165,7 +183,9 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
               <div className="flex items-center justify-center mb-2">
                 <Calendar className="h-6 w-6 text-purple-600" />
               </div>
-              <div className="text-sm font-bold text-gray-900">{formatDate(performer.joined_date)}</div>
+              <div className="text-sm font-bold text-gray-900">
+                {formatDate(performer.joined_date)}
+              </div>
               <div className="text-sm text-gray-600">Fecha de ingreso</div>
             </div>
 
@@ -173,7 +193,9 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
               <div className="flex items-center justify-center mb-2">
                 <Clock className="h-6 w-6 text-orange-600" />
               </div>
-              <div className="text-sm font-bold text-gray-900">{formatDate(performer.last_active)}</div>
+              <div className="text-sm font-bold text-gray-900">
+                {formatDate(performer.last_active)}
+              </div>
               <div className="text-sm text-gray-600">Última actividad</div>
             </div>
           </div>

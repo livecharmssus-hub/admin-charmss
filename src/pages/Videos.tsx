@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Upload, Video, Eye, Heart, Download, Trash2, Edit, Plus, Play, Pause, MoreVertical, Filter, Calendar, DollarSign } from 'lucide-react';
+import { Upload, Video, Eye, Heart, Download, Edit, Plus, Play, Calendar, DollarSign, MoreVertical } from 'lucide-react';
 
 const Videos: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   
+
   const categories = [
     { id: 'all', label: 'All Videos', count: 18 },
     { id: 'public', label: 'Public', count: 8 },
@@ -17,21 +17,24 @@ const Videos: React.FC = () => {
     {
       id: 1,
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-      thumbnail: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
+      thumbnail:
+        'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
       title: 'Morning Routine ✨',
-      description: 'Starting my day with positive energy and good vibes! Join me in my morning routine.',
+      description:
+        'Starting my day with positive energy and good vibes! Join me in my morning routine.',
       category: 'premium',
       duration: '2:45',
       views: 1234,
       likes: 189,
-      earnings: 67.50,
+      earnings: 67.5,
       uploadDate: '2025-01-15',
-      size: '15.2 MB'
+      size: '15.2 MB',
     },
     {
       id: 2,
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
-      thumbnail: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
+      thumbnail:
+        'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
       title: 'Dance Challenge 💃',
       description: 'Learning the latest dance trend! What do you think of my moves?',
       category: 'public',
@@ -40,40 +43,43 @@ const Videos: React.FC = () => {
       likes: 156,
       earnings: 0,
       uploadDate: '2025-01-14',
-      size: '8.7 MB'
+      size: '8.7 MB',
     },
     {
       id: 3,
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-      thumbnail: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
+      thumbnail:
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
       title: 'Behind the Scenes 🎬',
       description: 'Exclusive look at my photoshoot preparation. Premium members only!',
       category: 'premium',
       duration: '4:12',
       views: 567,
       likes: 98,
-      earnings: 89.30,
+      earnings: 89.3,
       uploadDate: '2025-01-13',
-      size: '22.1 MB'
+      size: '22.1 MB',
     },
     {
       id: 4,
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
-      thumbnail: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
+      thumbnail:
+        'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
       title: 'Personal Message 💕',
       description: 'Special thank you message for my most loyal supporters.',
       category: 'private',
       duration: '3:20',
       views: 234,
       likes: 67,
-      earnings: 125.00,
+      earnings: 125.0,
       uploadDate: '2025-01-12',
-      size: '18.5 MB'
+      size: '18.5 MB',
     },
     {
       id: 5,
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-      thumbnail: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
+      thumbnail:
+        'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
       title: 'Workout Session 💪',
       description: 'Join me for my daily workout routine! Stay fit and healthy together.',
       category: 'public',
@@ -82,27 +88,29 @@ const Videos: React.FC = () => {
       likes: 234,
       earnings: 0,
       uploadDate: '2025-01-11',
-      size: '31.2 MB'
+      size: '31.2 MB',
     },
     {
       id: 6,
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4',
-      thumbnail: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
+      thumbnail:
+        'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
       title: 'Cooking Tutorial 👩‍🍳',
       description: 'Making my favorite healthy recipe! Perfect for a cozy evening.',
       category: 'premium',
       duration: '6:30',
       views: 789,
       likes: 145,
-      earnings: 45.80,
+      earnings: 45.8,
       uploadDate: '2025-01-10',
-      size: '28.9 MB'
-    }
+      size: '28.9 MB',
+    },
   ];
 
-  const filteredVideos = selectedCategory === 'all' 
-    ? videos 
-    : videos.filter(video => video.category === selectedCategory);
+  const filteredVideos =
+    selectedCategory === 'all'
+      ? videos
+      : videos.filter((video) => video.category === selectedCategory);
 
   const totalViews = videos.reduce((sum, video) => sum + video.views, 0);
   const totalEarnings = videos.reduce((sum, video) => sum + video.earnings, 0);
@@ -112,13 +120,8 @@ const Videos: React.FC = () => {
     setSelectedVideo(videoId);
   };
 
-  const formatDuration = (duration: string) => {
-    return duration;
-  };
-
-  const formatFileSize = (size: string) => {
-    return size;
-  };
+  const formatDuration = (duration: string) => duration;
+  const formatFileSize = (size: string) => size;
 
   return (
     <div className="space-y-6">
@@ -149,7 +152,9 @@ const Videos: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-xs md:text-sm">Total Views</p>
-              <p className="text-lg md:text-2xl font-bold text-white">{totalViews.toLocaleString()}</p>
+              <p className="text-lg md:text-2xl font-bold text-white">
+                {totalViews.toLocaleString()}
+              </p>
             </div>
             <div className="p-2 md:p-3 rounded-lg bg-green-600">
               <Eye className="w-4 h-4 md:w-6 md:h-6 text-white" />
@@ -173,7 +178,9 @@ const Videos: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-xs md:text-sm">Video Earnings</p>
-              <p className="text-lg md:text-2xl font-bold text-white">${totalEarnings.toFixed(2)}</p>
+              <p className="text-lg md:text-2xl font-bold text-white">
+                ${totalEarnings.toFixed(2)}
+              </p>
             </div>
             <div className="p-2 md:p-3 rounded-lg bg-purple-600">
               <DollarSign className="w-4 h-4 md:w-6 md:h-6 text-white" />
@@ -201,7 +208,7 @@ const Videos: React.FC = () => {
               </button>
             ))}
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <button className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-lg flex items-center space-x-2 transition-colors text-sm">
               <Filter className="w-4 h-4" />
@@ -217,14 +224,17 @@ const Videos: React.FC = () => {
         {/* Video Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {filteredVideos.map((video) => (
-            <div key={video.id} className="bg-slate-700 rounded-lg overflow-hidden group hover:bg-slate-600 transition-colors">
+            <div
+              key={video.id}
+              className="bg-slate-700 rounded-lg overflow-hidden group hover:bg-slate-600 transition-colors"
+            >
               <div className="relative aspect-video">
                 <img
                   src={video.thumbnail}
                   alt={video.title}
                   className="w-full h-full object-cover"
                 />
-                
+
                 {/* Play overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <button
@@ -237,18 +247,20 @@ const Videos: React.FC = () => {
 
                 {/* Duration badge */}
                 <div className="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs font-medium">
-                  {video.duration}
+                  {formatDuration(video.duration)}
                 </div>
 
                 {/* Category badge */}
                 <div className="absolute top-2 left-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    video.category === 'premium' 
-                      ? 'bg-yellow-600 text-white'
-                      : video.category === 'private'
-                      ? 'bg-red-600 text-white'
-                      : 'bg-blue-600 text-white'
-                  }`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      video.category === 'premium'
+                        ? 'bg-yellow-600 text-white'
+                        : video.category === 'private'
+                        ? 'bg-red-600 text-white'
+                        : 'bg-blue-600 text-white'
+                    }`}
+                  >
                     {video.category.charAt(0).toUpperCase() + video.category.slice(1)}
                   </span>
                 </div>
@@ -277,11 +289,15 @@ const Videos: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-3 md:p-4">
-                <h3 className="text-white font-medium mb-2 text-sm md:text-base line-clamp-1">{video.title}</h3>
-                <p className="text-gray-400 text-xs md:text-sm mb-3 line-clamp-2">{video.description}</p>
-                
+                <h3 className="text-white font-medium mb-2 text-sm md:text-base line-clamp-1">
+                  {video.title}
+                </h3>
+                <p className="text-gray-400 text-xs md:text-sm mb-3 line-clamp-2">
+                  {video.description}
+                </p>
+
                 <div className="flex items-center justify-between text-xs md:text-sm text-gray-400 mb-2">
                   <div className="flex items-center space-x-3">
                     <div className="flex items-center space-x-1">
@@ -297,21 +313,23 @@ const Videos: React.FC = () => {
                     <span className="text-green-500 font-medium">${video.earnings}</span>
                   )}
                 </div>
-                
+
                 <div className="flex items-center justify-between text-xs text-gray-500">
                   <span>{video.uploadDate}</span>
-                  <span>{video.size}</span>
+                  <span>{formatFileSize(video.size)}</span>
                 </div>
               </div>
             </div>
           ))}
-          
+
           {/* Upload New Video Card */}
           <div className="bg-slate-700 rounded-lg border-2 border-dashed border-slate-600 hover:border-pink-500 transition-colors cursor-pointer group">
             <div className="aspect-video flex items-center justify-center">
               <div className="text-center">
                 <Plus className="w-8 h-8 md:w-12 md:h-12 text-gray-400 group-hover:text-pink-500 mx-auto mb-2 transition-colors" />
-                <p className="text-gray-400 group-hover:text-pink-500 transition-colors text-xs md:text-sm">Upload New Video</p>
+                <p className="text-gray-400 group-hover:text-pink-500 transition-colors text-xs md:text-sm">
+                  Upload New Video
+                </p>
                 <p className="text-gray-500 text-xs mt-1">Max 100MB • MP4, MOV, AVI</p>
               </div>
             </div>
@@ -322,10 +340,13 @@ const Videos: React.FC = () => {
       {/* Video Analytics */}
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
         <h3 className="text-base md:text-lg font-semibold mb-4">Video Performance</h3>
-        
+
         <div className="space-y-4">
-          {videos.slice(0, 5).map((video, index) => (
-            <div key={video.id} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+          {videos.slice(0, 5).map((video, _index) => (
+            <div
+              key={video.id}
+              className="flex items-center justify-between p-3 bg-slate-700 rounded-lg"
+            >
               <div className="flex items-center space-x-3">
                 <div className="relative">
                   <img
@@ -338,23 +359,27 @@ const Videos: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <h4 className="text-white font-medium text-sm md:text-base line-clamp-1">{video.title}</h4>
+                  <h4 className="text-white font-medium text-sm md:text-base line-clamp-1">
+                    {video.title}
+                  </h4>
                   <div className="flex items-center space-x-4 text-xs md:text-sm text-gray-400">
-                    <span>{video.duration}</span>
+                    <span>{formatDuration(video.duration)}</span>
                     <span>{video.uploadDate}</span>
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      video.category === 'premium' 
-                        ? 'bg-yellow-600 text-white'
-                        : video.category === 'private'
-                        ? 'bg-red-600 text-white'
-                        : 'bg-blue-600 text-white'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        video.category === 'premium'
+                          ? 'bg-yellow-600 text-white'
+                          : video.category === 'private'
+                          ? 'bg-red-600 text-white'
+                          : 'bg-blue-600 text-white'
+                      }`}
+                    >
                       {video.category}
                     </span>
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <div className="flex items-center space-x-4 text-sm">
                   <div className="text-center">
@@ -396,15 +421,15 @@ const Videos: React.FC = () => {
                 className="w-full h-full"
                 controls
                 autoPlay
-                src={videos.find(v => v.id.toString() === selectedVideo)?.url}
+                src={videos.find((v) => v.id.toString() === selectedVideo)?.url}
               />
             </div>
             <div className="p-4">
               <h4 className="text-white font-medium mb-2">
-                {videos.find(v => v.id.toString() === selectedVideo)?.title}
+                {videos.find((v) => v.id.toString() === selectedVideo)?.title}
               </h4>
               <p className="text-gray-400 text-sm">
-                {videos.find(v => v.id.toString() === selectedVideo)?.description}
+                {videos.find((v) => v.id.toString() === selectedVideo)?.description}
               </p>
             </div>
           </div>

@@ -1,35 +1,46 @@
 import React, { useState } from 'react';
-import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, Camera, Settings, Users } from 'lucide-react';
+import {
+  Video,
+  VideoOff,
+  Mic,
+  MicOff,
+  Phone,
+  PhoneOff,
+  Camera,
+  Settings,
+} from 'lucide-react';
 import ChatComponent from '../components/ChatComponent';
 
 const VideoCall: React.FC = () => {
   const [isInCall, setIsInCall] = useState(false);
   const [cameraEnabled, setCameraEnabled] = useState(true);
   const [micEnabled, setMicEnabled] = useState(true);
-  const [callDuration, setCallDuration] = useState('00:00');
+  const [callDuration, _setCallDuration] = useState('00:00');
 
   const incomingCalls = [
     {
       id: 1,
       user: 'premium_fan',
-      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       rate: '$2.7/min',
-      waiting: '2 min'
+      waiting: '2 min',
     },
     {
       id: 2,
       user: 'viewer123',
-      avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       rate: '$2.7/min',
-      waiting: '1 min'
-    }
+      waiting: '1 min',
+    },
   ];
 
-  const handleAcceptCall = (callId: number) => {
+  const handleAcceptCall = (_callId: number) => {
     setIsInCall(true);
   };
 
-  const handleRejectCall = (callId: number) => {
+  const handleRejectCall = (_callId: number) => {
     // Handle call rejection
   };
 
@@ -42,100 +53,102 @@ const VideoCall: React.FC = () => {
       <div className="h-[calc(100vh-6rem)] md:h-[calc(100vh-8rem)] flex flex-col lg:flex-row">
         {/* Video Call Area */}
         <div className="flex-1 flex flex-col">
-        <div className="flex items-center justify-between p-3 md:p-4 bg-slate-800 border-b border-slate-700">
-          <div className="flex items-center space-x-3">
-            <img
-              src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
-              alt="User"
-              className="w-8 h-8 md:w-10 md:h-10 rounded-full"
-            />
-            <div>
-              <h3 className="text-white font-medium text-sm md:text-base">premium_fan</h3>
-              <p className="text-xs md:text-sm text-gray-400">Private Video Call • {callDuration}</p>
+          <div className="flex items-center justify-between p-3 md:p-4 bg-slate-800 border-b border-slate-700">
+            <div className="flex items-center space-x-3">
+              <img
+                src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
+                alt="User"
+                className="w-8 h-8 md:w-10 md:h-10 rounded-full"
+              />
+              <div>
+                <h3 className="text-white font-medium text-sm md:text-base">premium_fan</h3>
+                <p className="text-xs md:text-sm text-gray-400">
+                  Private Video Call • {callDuration}
+                </p>
+              </div>
             </div>
+            <div className="text-green-500 font-medium text-sm md:text-base">$2.7/min</div>
           </div>
-          <div className="text-green-500 font-medium text-sm md:text-base">$2.7/min</div>
-        </div>
 
           <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 p-3 md:p-4">
-          {/* User Video */}
-          <div className="bg-slate-800 rounded-lg aspect-video relative overflow-hidden">
-            <div className="w-full h-full bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 md:mb-4">
-                  <span className="text-xl md:text-2xl font-bold text-white">PF</span>
+            {/* User Video */}
+            <div className="bg-slate-800 rounded-lg aspect-video relative overflow-hidden">
+              <div className="w-full h-full bg-gradient-to-br from-blue-900 to-purple-900 flex items-center justify-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 md:w-20 md:h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-2 md:mb-4">
+                    <span className="text-xl md:text-2xl font-bold text-white">PF</span>
+                  </div>
+                  <p className="text-white text-base md:text-lg">premium_fan</p>
                 </div>
-                <p className="text-white text-base md:text-lg">premium_fan</p>
               </div>
+            </div>
+
+            {/* Your Video */}
+            <div className="bg-slate-800 rounded-lg aspect-video relative overflow-hidden">
+              {cameraEnabled ? (
+                <div className="w-full h-full bg-gradient-to-br from-pink-900 to-purple-900 flex items-center justify-center">
+                  <div className="text-center">
+                    <Camera className="w-12 h-12 md:w-16 md:h-16 text-white mx-auto mb-2 md:mb-4" />
+                    <p className="text-white text-base md:text-lg">Your Camera</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-full bg-slate-700 flex items-center justify-center">
+                  <div className="text-center">
+                    <VideoOff className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-2 md:mb-4" />
+                    <p className="text-gray-400 text-base md:text-lg">Camera Off</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Your Video */}
-          <div className="bg-slate-800 rounded-lg aspect-video relative overflow-hidden">
-            {cameraEnabled ? (
-              <div className="w-full h-full bg-gradient-to-br from-pink-900 to-purple-900 flex items-center justify-center">
-                <div className="text-center">
-                  <Camera className="w-12 h-12 md:w-16 md:h-16 text-white mx-auto mb-2 md:mb-4" />
-                  <p className="text-white text-base md:text-lg">Your Camera</p>
-                </div>
-              </div>
-            ) : (
-              <div className="w-full h-full bg-slate-700 flex items-center justify-center">
-                <div className="text-center">
-                  <VideoOff className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-2 md:mb-4" />
-                  <p className="text-gray-400 text-base md:text-lg">Camera Off</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Call Controls */}
+          {/* Call Controls */}
           <div className="bg-slate-800 border-t border-slate-700 p-3 md:p-4">
-          <div className="flex items-center justify-center space-x-3 md:space-x-4">
-            <button
-              onClick={() => setCameraEnabled(!cameraEnabled)}
-              className={`p-2 md:p-3 rounded-full transition-colors ${
-                cameraEnabled 
-                  ? 'bg-slate-700 hover:bg-slate-600' 
-                  : 'bg-red-600 hover:bg-red-700'
-              }`}
-            >
-              {cameraEnabled ? <Video className="w-5 h-5 md:w-6 md:h-6 text-white" /> : <VideoOff className="w-5 h-5 md:w-6 md:h-6 text-white" />}
-            </button>
-            
-            <button
-              onClick={() => setMicEnabled(!micEnabled)}
-              className={`p-2 md:p-3 rounded-full transition-colors ${
-                micEnabled 
-                  ? 'bg-slate-700 hover:bg-slate-600' 
-                  : 'bg-red-600 hover:bg-red-700'
-              }`}
-            >
-              {micEnabled ? <Mic className="w-5 h-5 md:w-6 md:h-6 text-white" /> : <MicOff className="w-5 h-5 md:w-6 md:h-6 text-white" />}
-            </button>
+            <div className="flex items-center justify-center space-x-3 md:space-x-4">
+              <button
+                onClick={() => setCameraEnabled(!cameraEnabled)}
+                className={`p-2 md:p-3 rounded-full transition-colors ${
+                  cameraEnabled ? 'bg-slate-700 hover:bg-slate-600' : 'bg-red-600 hover:bg-red-700'
+                }`}
+              >
+                {cameraEnabled ? (
+                  <Video className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                ) : (
+                  <VideoOff className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                )}
+              </button>
 
-            <button className="hidden md:block p-2 md:p-3 bg-slate-700 hover:bg-slate-600 rounded-full transition-colors">
-              <Settings className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </button>
+              <button
+                onClick={() => setMicEnabled(!micEnabled)}
+                className={`p-2 md:p-3 rounded-full transition-colors ${
+                  micEnabled ? 'bg-slate-700 hover:bg-slate-600' : 'bg-red-600 hover:bg-red-700'
+                }`}
+              >
+                {micEnabled ? (
+                  <Mic className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                ) : (
+                  <MicOff className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                )}
+              </button>
 
-            <button
-              onClick={handleEndCall}
-              className="p-2 md:p-3 bg-red-600 hover:bg-red-700 rounded-full transition-colors"
-            >
-              <PhoneOff className="w-5 h-5 md:w-6 md:h-6 text-white" />
-            </button>
+              <button className="hidden md:block p-2 md:p-3 bg-slate-700 hover:bg-slate-600 rounded-full transition-colors">
+                <Settings className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </button>
+
+              <button
+                onClick={handleEndCall}
+                className="p-2 md:p-3 bg-red-600 hover:bg-red-700 rounded-full transition-colors"
+              >
+                <PhoneOff className="w-5 h-5 md:w-6 md:h-6 text-white" />
+              </button>
+            </div>
           </div>
         </div>
-        </div>
-        
+
         {/* Chat Sidebar */}
         <div className="w-full lg:w-80 h-64 lg:h-full border-t lg:border-t-0 lg:border-l border-slate-700">
-          <ChatComponent 
-            title="Private Chat"
-            isPublic={false}
-            className="h-full"
-          />
+          <ChatComponent title="Private Chat" isPublic={false} className="h-full" />
         </div>
       </div>
     );
@@ -157,9 +170,11 @@ const VideoCall: React.FC = () => {
           <h3 className="text-base md:text-lg font-semibold mb-4 flex items-center space-x-2">
             <Phone className="w-5 h-5" />
             <span>Incoming Calls</span>
-            <span className="bg-pink-600 text-white text-xs px-2 py-1 rounded-full">{incomingCalls.length}</span>
+            <span className="bg-pink-600 text-white text-xs px-2 py-1 rounded-full">
+              {incomingCalls.length}
+            </span>
           </h3>
-          
+
           <div className="space-y-4">
             {incomingCalls.map((call) => (
               <div key={call.id} className="bg-slate-700 p-3 md:p-4 rounded-lg">
@@ -177,7 +192,7 @@ const VideoCall: React.FC = () => {
                   </div>
                   <div className="text-green-500 font-medium text-sm">{call.rate}</div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2 md:space-x-3">
                   <button
                     onClick={() => handleAcceptCall(call.id)}
@@ -202,10 +217,12 @@ const VideoCall: React.FC = () => {
         {/* Call Settings */}
         <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
           <h3 className="text-base md:text-lg font-semibold mb-4">Call Settings</h3>
-          
+
           <div className="space-y-4">
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Video Call Rate</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                Video Call Rate
+              </label>
               <div className="flex items-center space-x-2">
                 <input
                   type="number"
@@ -218,15 +235,21 @@ const VideoCall: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Auto-accept calls</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                Auto-accept calls
+              </label>
               <div className="flex items-center space-x-3">
                 <input type="checkbox" className="rounded" />
-                <span className="text-gray-300 text-sm">Automatically accept calls from premium members</span>
+                <span className="text-gray-300 text-sm">
+                  Automatically accept calls from premium members
+                </span>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Call Quality</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                Call Quality
+              </label>
               <select className="w-full bg-slate-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                 <option value="hd">HD (720p)</option>
                 <option value="fhd">Full HD (1080p)</option>
@@ -235,7 +258,9 @@ const VideoCall: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Availability</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                Availability
+              </label>
               <div className="space-y-2">
                 <div className="flex items-center space-x-3">
                   <input type="checkbox" defaultChecked className="rounded" />
@@ -258,7 +283,7 @@ const VideoCall: React.FC = () => {
       {/* Call History */}
       <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
         <h3 className="text-base md:text-lg font-semibold mb-4">Recent Calls</h3>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -277,7 +302,9 @@ const VideoCall: React.FC = () => {
                 <td className="py-3 text-green-500 font-medium text-xs md:text-sm">$41.85</td>
                 <td className="py-3 text-gray-300 text-xs md:text-sm">2025-01-15</td>
                 <td className="py-3">
-                  <span className="px-2 py-1 bg-green-600 text-white rounded-full text-xs">Completed</span>
+                  <span className="px-2 py-1 bg-green-600 text-white rounded-full text-xs">
+                    Completed
+                  </span>
                 </td>
               </tr>
               <tr className="border-b border-slate-700">
@@ -286,7 +313,9 @@ const VideoCall: React.FC = () => {
                 <td className="py-3 text-green-500 font-medium text-xs md:text-sm">$23.63</td>
                 <td className="py-3 text-gray-300 text-xs md:text-sm">2025-01-14</td>
                 <td className="py-3">
-                  <span className="px-2 py-1 bg-green-600 text-white rounded-full text-xs">Completed</span>
+                  <span className="px-2 py-1 bg-green-600 text-white rounded-full text-xs">
+                    Completed
+                  </span>
                 </td>
               </tr>
             </tbody>

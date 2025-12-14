@@ -21,13 +21,13 @@ const PAYMENT_METHODS = [
   { id: 'bank_transfer', name: 'Transferencia Bancaria', fee: '2%' },
   { id: 'paypal', name: 'PayPal', fee: '3%' },
   { id: 'wire_transfer', name: 'Wire Transfer', fee: '$15' },
-  { id: 'cryptocurrency', name: 'Criptomoneda', fee: '1%' }
+  { id: 'cryptocurrency', name: 'Criptomoneda', fee: '1%' },
 ];
 
 export default function PaymentConfirmationDialog({
   payment,
   onConfirm,
-  onCancel
+  onCancel,
 }: PaymentConfirmationDialogProps) {
   const [selectedMethod, setSelectedMethod] = useState('bank_transfer');
   const [notes, setNotes] = useState('');
@@ -102,8 +102,8 @@ export default function PaymentConfirmationDialog({
                   Advertencia Importante
                 </h4>
                 <p className="text-sm text-amber-800 dark:text-amber-400">
-                  Esta acción iniciará una transferencia de fondos. Una vez procesada, no se puede revertir.
-                  Asegúrate de que toda la información sea correcta.
+                  Esta acción iniciará una transferencia de fondos. Una vez procesada, no se puede
+                  revertir. Asegúrate de que toda la información sea correcta.
                 </p>
               </div>
             </div>
@@ -123,7 +123,9 @@ export default function PaymentConfirmationDialog({
                 )}
                 <div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">Destinatario</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">{payment.recipient_name}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">
+                    {payment.recipient_name}
+                  </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     {payment.recipient_type === 'studio' ? 'Studio' : 'Modelo Independiente'}
                   </p>
@@ -184,7 +186,9 @@ export default function PaymentConfirmationDialog({
                       />
                       <div>
                         <p className="font-medium text-gray-900 dark:text-white">{method.name}</p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Comisión: {method.fee}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Comisión: {method.fee}
+                        </p>
                       </div>
                     </div>
                     {selectedMethod === method.id && (

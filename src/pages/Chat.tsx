@@ -1,54 +1,57 @@
 import React, { useState } from 'react';
-import { MoreVertical, Phone, Video, Search, Plus } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import ChatComponent from '../components/ChatComponent';
 
 const Chat: React.FC = () => {
-  const [message, setMessage] = useState('');
   const [selectedChat, setSelectedChat] = useState(0);
 
   const chats = [
     {
       id: 1,
       name: 'dancequeen',
-      avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       lastMessage: 'Thanks for the amazing show! 💕',
       time: '10:32 AM',
       unread: 2,
       online: true,
       isGroup: true,
-      members: 234
+      members: 234,
     },
     {
       id: 2,
       name: 'viewer123',
-      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       lastMessage: 'Are you available for a private show?',
       time: '10:33 AM',
       unread: 0,
       online: true,
-      isGroup: false
+      isGroup: false,
     },
     {
       id: 3,
       name: 'premium_fan',
-      avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       lastMessage: 'Can we schedule another session?',
       time: '9:45 AM',
       unread: 1,
       online: false,
-      isGroup: false
+      isGroup: false,
     },
     {
       id: 4,
       name: 'Live Stream Chat',
-      avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       lastMessage: 'Welcome everyone! 🎉',
       time: '9:30 AM',
       unread: 15,
       online: true,
       isGroup: true,
-      members: 156
-    }
+      members: 156,
+    },
   ];
 
   return (
@@ -71,7 +74,7 @@ const Chat: React.FC = () => {
             />
           </div>
         </div>
-        
+
         <div className="flex-1 overflow-y-auto">
           {chats.map((chat, index) => (
             <div
@@ -95,7 +98,9 @@ const Chat: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <h3 className="text-white font-medium truncate text-sm md:text-base">{chat.name}</h3>
+                      <h3 className="text-white font-medium truncate text-sm md:text-base">
+                        {chat.name}
+                      </h3>
                       {chat.isGroup && (
                         <span className="text-xs text-gray-400">({chat.members})</span>
                       )}
@@ -118,11 +123,7 @@ const Chat: React.FC = () => {
       {/* Chat Window */}
       <div className="flex-1 flex flex-col">
         {chats[selectedChat]?.isGroup ? (
-          <ChatComponent 
-            title={chats[selectedChat]?.name}
-            isPublic={true}
-            className="h-full"
-          />
+          <ChatComponent title={chats[selectedChat]?.name} isPublic={true} className="h-full" />
         ) : (
           <>
             {/* Private Chat Header */}
@@ -135,7 +136,9 @@ const Chat: React.FC = () => {
                     className="w-8 h-8 md:w-10 md:h-10 rounded-full"
                   />
                   <div>
-                    <h3 className="text-white font-medium text-sm md:text-base">{chats[selectedChat]?.name}</h3>
+                    <h3 className="text-white font-medium text-sm md:text-base">
+                      {chats[selectedChat]?.name}
+                    </h3>
                     <p className="text-xs md:text-sm text-gray-400">
                       {chats[selectedChat]?.online ? 'Online' : 'Last seen 2h ago'}
                     </p>
@@ -155,11 +158,7 @@ const Chat: React.FC = () => {
               </div>
             </div>
 
-            <ChatComponent 
-              title={chats[selectedChat]?.name}
-              isPublic={false}
-              className="flex-1"
-            />
+            <ChatComponent title={chats[selectedChat]?.name} isPublic={false} className="flex-1" />
           </>
         )}
       </div>

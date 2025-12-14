@@ -21,54 +21,54 @@ const MOCK_STUDIO_PAYMENTS: StudioPayment[] = [
   {
     id: '1',
     studio_name: 'Dreamscape Productions',
-    pending_amount: 15000.00,
-    commission_amount: 9000.00,
-    net_amount: 6000.00,
+    pending_amount: 15000.0,
+    commission_amount: 9000.0,
+    net_amount: 6000.0,
     due_date: '2024-10-15',
     priority: 'high',
     models_count: 15,
-    last_payment_date: '2024-09-15'
+    last_payment_date: '2024-09-15',
   },
   {
     id: '2',
     studio_name: 'Starlight Entertainment',
-    pending_amount: 22000.00,
-    commission_amount: 12760.00,
-    net_amount: 9240.00,
+    pending_amount: 22000.0,
+    commission_amount: 12760.0,
+    net_amount: 9240.0,
     due_date: '2024-10-20',
     priority: 'urgent',
     models_count: 22,
-    last_payment_date: '2024-09-20'
+    last_payment_date: '2024-09-20',
   },
   {
     id: '3',
     studio_name: 'Platinum Models Agency',
-    pending_amount: 8500.00,
-    commission_amount: 4675.00,
-    net_amount: 3825.00,
+    pending_amount: 8500.0,
+    commission_amount: 4675.0,
+    net_amount: 3825.0,
     due_date: '2024-10-25',
     priority: 'medium',
     models_count: 18,
-    last_payment_date: '2024-09-25'
+    last_payment_date: '2024-09-25',
   },
   {
     id: '4',
     studio_name: 'Diamond Entertainment Group',
-    pending_amount: 18000.00,
-    commission_amount: 10800.00,
-    net_amount: 7200.00,
+    pending_amount: 18000.0,
+    commission_amount: 10800.0,
+    net_amount: 7200.0,
     due_date: '2024-10-10',
     priority: 'urgent',
     models_count: 25,
-    last_payment_date: '2024-09-10'
-  }
+    last_payment_date: '2024-09-10',
+  },
 ];
 
 export default function StudioPayments({ onTransferPayment }: StudioPaymentsProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
 
-  const filteredPayments = MOCK_STUDIO_PAYMENTS.filter(payment => {
+  const filteredPayments = MOCK_STUDIO_PAYMENTS.filter((payment) => {
     const matchesSearch = payment.studio_name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesPriority = priorityFilter === 'all' || payment.priority === priorityFilter;
     return matchesSearch && matchesPriority;
@@ -110,7 +110,7 @@ export default function StudioPayments({ onTransferPayment }: StudioPaymentsProp
 
   const totalPending = filteredPayments.reduce((sum, p) => sum + p.pending_amount, 0);
   const totalCommission = filteredPayments.reduce((sum, p) => sum + p.commission_amount, 0);
-  const urgentCount = filteredPayments.filter(p => p.priority === 'urgent').length;
+  const urgentCount = filteredPayments.filter((p) => p.priority === 'urgent').length;
 
   return (
     <div className="space-y-4">
@@ -204,7 +204,11 @@ export default function StudioPayments({ onTransferPayment }: StudioPaymentsProp
                       <h4 className="font-semibold text-gray-900 dark:text-white truncate">
                         {payment.studio_name}
                       </h4>
-                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getPriorityColor(payment.priority)}`}>
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded-full ${getPriorityColor(
+                          payment.priority
+                        )}`}
+                      >
                         {getPriorityText(payment.priority)}
                       </span>
                     </div>
@@ -237,11 +241,13 @@ export default function StudioPayments({ onTransferPayment }: StudioPaymentsProp
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Fecha Límite</p>
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3 text-gray-400" />
-                      <p className={`text-sm font-medium ${
-                        isOverdue(payment.due_date)
-                          ? 'text-red-600 dark:text-red-400'
-                          : 'text-gray-900 dark:text-white'
-                      }`}>
+                      <p
+                        className={`text-sm font-medium ${
+                          isOverdue(payment.due_date)
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-gray-900 dark:text-white'
+                        }`}
+                      >
                         {new Date(payment.due_date).toLocaleDateString()}
                       </p>
                     </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Upload, Image, Video, File, Trash2, Eye, CheckCircle } from 'lucide-react';
+import { X, Upload, Image, Video, Trash2, Eye, CheckCircle } from 'lucide-react';
 
 interface Performer {
   id: string;
@@ -92,7 +92,7 @@ export default function AssetUploader({ performer, onClose }: AssetUploaderProps
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
   const handleDelete = (id: string) => {
@@ -107,7 +107,9 @@ export default function AssetUploader({ performer, onClose }: AssetUploaderProps
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'uploading':
-        return <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>;
+        return (
+          <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+        );
       case 'completed':
         return <CheckCircle className="h-4 w-4 text-green-600" />;
       case 'failed':
@@ -123,7 +125,10 @@ export default function AssetUploader({ performer, onClose }: AssetUploaderProps
         <div className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
-              src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100'}
+              src={
+                performer.avatar_url ||
+                'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100'
+              }
               alt={performer.stage_name}
               className="h-10 w-10 rounded-full object-cover ring-2 ring-white"
             />
@@ -253,9 +258,7 @@ export default function AssetUploader({ performer, onClose }: AssetUploaderProps
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {asset.name}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900 truncate">{asset.name}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs text-gray-500">{asset.size}</span>
                         <span className="text-gray-300">•</span>

@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { X, DollarSign, TrendingUp, Calendar, User, Filter, Download, CheckCircle, XCircle, Clock } from 'lucide-react';
+import {
+  X,
+  DollarSign,
+  TrendingUp,
+  Calendar,
+  User,
+  Filter,
+  Download,
+  CheckCircle,
+  XCircle,
+  Clock,
+} from 'lucide-react';
 
 interface Studio {
   id: string;
@@ -46,86 +57,160 @@ const MOCK_PERFORMER_FINANCIALS: PerformerFinancial[] = [
     id: '1',
     performer_name: 'Diana Herrera',
     stage_name: 'Di Goddess',
-    total_earnings: 12500.00,
+    total_earnings: 12500.0,
     commission_rate: 20,
-    commission_amount: 2500.00,
-    net_earnings: 10000.00,
+    commission_amount: 2500.0,
+    net_earnings: 10000.0,
     total_payments: 5,
     last_payment_date: '2024-10-01',
-    payment_status: 'completed'
+    payment_status: 'completed',
   },
   {
     id: '2',
     performer_name: 'Isabella Martinez',
     stage_name: 'Bella Charm',
-    total_earnings: 9800.00,
+    total_earnings: 9800.0,
     commission_rate: 20,
-    commission_amount: 1960.00,
-    net_earnings: 7840.00,
+    commission_amount: 1960.0,
+    net_earnings: 7840.0,
     total_payments: 4,
     last_payment_date: '2024-09-28',
-    payment_status: 'completed'
+    payment_status: 'completed',
   },
   {
     id: '3',
     performer_name: 'Sofia Lopez',
     stage_name: 'Sofi Angel',
-    total_earnings: 11200.00,
+    total_earnings: 11200.0,
     commission_rate: 20,
-    commission_amount: 2240.00,
-    net_earnings: 8960.00,
+    commission_amount: 2240.0,
+    net_earnings: 8960.0,
     total_payments: 6,
     last_payment_date: '2024-10-03',
-    payment_status: 'completed'
+    payment_status: 'completed',
   },
   {
     id: '4',
     performer_name: 'Camila Torres',
     stage_name: 'Cami Dream',
-    total_earnings: 8500.00,
+    total_earnings: 8500.0,
     commission_rate: 20,
-    commission_amount: 1700.00,
-    net_earnings: 6800.00,
+    commission_amount: 1700.0,
+    net_earnings: 6800.0,
     total_payments: 3,
     last_payment_date: '2024-09-25',
-    payment_status: 'pending'
+    payment_status: 'pending',
   },
   {
     id: '5',
     performer_name: 'Valentina Ruiz',
     stage_name: 'Vale Fantasy',
-    total_earnings: 10300.00,
+    total_earnings: 10300.0,
     commission_rate: 20,
-    commission_amount: 2060.00,
-    net_earnings: 8240.00,
+    commission_amount: 2060.0,
+    net_earnings: 8240.0,
     total_payments: 5,
     last_payment_date: '2024-10-05',
-    payment_status: 'completed'
-  }
+    payment_status: 'completed',
+  },
 ];
 
 const MOCK_PAYMENT_HISTORY: { [key: string]: PaymentHistory[] } = {
   '1': [
-    { id: 'p1', payment_date: '2024-10-01', amount: 2500.00, commission: 500.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p2', payment_date: '2024-09-01', amount: 2300.00, commission: 460.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p3', payment_date: '2024-08-01', amount: 2100.00, commission: 420.00, payment_method: 'PayPal', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p4', payment_date: '2024-07-01', amount: 2800.00, commission: 560.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p5', payment_date: '2024-06-01', amount: 2800.00, commission: 560.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' }
+    {
+      id: 'p1',
+      payment_date: '2024-10-01',
+      amount: 2500.0,
+      commission: 500.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p2',
+      payment_date: '2024-09-01',
+      amount: 2300.0,
+      commission: 460.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p3',
+      payment_date: '2024-08-01',
+      amount: 2100.0,
+      commission: 420.0,
+      payment_method: 'PayPal',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p4',
+      payment_date: '2024-07-01',
+      amount: 2800.0,
+      commission: 560.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p5',
+      payment_date: '2024-06-01',
+      amount: 2800.0,
+      commission: 560.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
   ],
   '2': [
-    { id: 'p6', payment_date: '2024-09-28', amount: 2450.00, commission: 490.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p7', payment_date: '2024-08-28', amount: 2350.00, commission: 470.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p8', payment_date: '2024-07-28', amount: 2500.00, commission: 500.00, payment_method: 'PayPal', status: 'completed', notes: 'Monthly payment' },
-    { id: 'p9', payment_date: '2024-06-28', amount: 2500.00, commission: 500.00, payment_method: 'Bank Transfer', status: 'completed', notes: 'Monthly payment' }
-  ]
+    {
+      id: 'p6',
+      payment_date: '2024-09-28',
+      amount: 2450.0,
+      commission: 490.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p7',
+      payment_date: '2024-08-28',
+      amount: 2350.0,
+      commission: 470.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p8',
+      payment_date: '2024-07-28',
+      amount: 2500.0,
+      commission: 500.0,
+      payment_method: 'PayPal',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+    {
+      id: 'p9',
+      payment_date: '2024-06-28',
+      amount: 2500.0,
+      commission: 500.0,
+      payment_method: 'Bank Transfer',
+      status: 'completed',
+      notes: 'Monthly payment',
+    },
+  ],
 };
 
 export default function FinancialModule({ studio, onClose }: FinancialModuleProps) {
   const [performers] = useState<PerformerFinancial[]>(MOCK_PERFORMER_FINANCIALS);
   const [selectedPerformer, setSelectedPerformer] = useState<PerformerFinancial | null>(null);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'completed' | 'failed'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'completed' | 'failed'>(
+    'all'
+  );
 
-  const filteredPerformers = performers.filter(p => {
+  const filteredPerformers = performers.filter((p) => {
     if (statusFilter === 'all') return true;
     return p.payment_status === statusFilter;
   });
@@ -149,9 +234,7 @@ export default function FinancialModule({ studio, onClose }: FinancialModuleProp
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                   Módulo Financiero
                 </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {studio.name}
-                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{studio.name}</p>
               </div>
             </div>
             <button
@@ -224,9 +307,7 @@ export default function FinancialModule({ studio, onClose }: FinancialModuleProp
                     key={performer.id}
                     onClick={() => setSelectedPerformer(performer)}
                     className={`bg-gray-50 dark:bg-slate-700 rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
-                      selectedPerformer?.id === performer.id
-                        ? 'ring-2 ring-blue-500 shadow-md'
-                        : ''
+                      selectedPerformer?.id === performer.id ? 'ring-2 ring-blue-500 shadow-md' : ''
                     }`}
                   >
                     <div className="flex items-start justify-between mb-3">
@@ -262,7 +343,9 @@ export default function FinancialModule({ studio, onClose }: FinancialModuleProp
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Comisión ({performer.commission_rate}%)</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Comisión ({performer.commission_rate}%)
+                        </p>
                         <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
                           ${performer.commission_amount.toLocaleString()}
                         </p>
@@ -271,7 +354,9 @@ export default function FinancialModule({ studio, onClose }: FinancialModuleProp
 
                     <div className="mt-3 pt-3 border-t border-gray-200 dark:border-slate-600">
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-600 dark:text-gray-400">Neto para performer:</span>
+                        <span className="text-gray-600 dark:text-gray-400">
+                          Neto para performer:
+                        </span>
                         <span className="font-semibold text-gray-900 dark:text-white">
                           ${performer.net_earnings.toLocaleString()}
                         </span>
@@ -315,7 +400,8 @@ export default function FinancialModule({ studio, onClose }: FinancialModuleProp
                       {selectedPerformer.stage_name}
                     </h4>
                     <p className="text-sm text-blue-800 dark:text-blue-400">
-                      Último pago: {new Date(selectedPerformer.last_payment_date).toLocaleDateString()}
+                      Último pago:{' '}
+                      {new Date(selectedPerformer.last_payment_date).toLocaleDateString()}
                     </p>
                   </div>
 
@@ -340,7 +426,11 @@ export default function FinancialModule({ studio, onClose }: FinancialModuleProp
                               : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                           }`}
                         >
-                          {payment.status === 'completed' ? 'Completado' : payment.status === 'pending' ? 'Pendiente' : 'Fallido'}
+                          {payment.status === 'completed'
+                            ? 'Completado'
+                            : payment.status === 'pending'
+                            ? 'Pendiente'
+                            : 'Fallido'}
                         </span>
                       </div>
 

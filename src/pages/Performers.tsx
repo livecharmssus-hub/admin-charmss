@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Users, RefreshCw } from 'lucide-react';
 import PerformerList from '../components/performers/PerformerList';
-import PerformerDetail from '../components/performers/PerformerDetail';
 import PerformerProfile from '../components/performers/PerformerProfile';
 import AssetUploader from '../components/performers/AssetUploader';
 import StreamingModal from '../components/performers/StreamingModal';
@@ -33,7 +32,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Di Goddess',
     email: 'diana@example.com',
     phone: '+1234567806',
-    avatar_url: 'https://images.pexels.com/photos/1752806/pexels-photo-1752806.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1752806/pexels-photo-1752806.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Premium performer with exclusive content',
     status: 'online',
     rating: 4.9,
@@ -43,7 +43,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Dominican Republic',
     languages: ['Spanish', 'English'],
     categories: ['Music', 'Theater', 'Dance'],
-    hourly_rate: 62
+    hourly_rate: 62,
   },
   {
     id: '2',
@@ -51,7 +51,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Bella Charm',
     email: 'isabella@example.com',
     phone: '+1234567891',
-    avatar_url: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'International performer with captivating presence',
     status: 'online',
     rating: 4.9,
@@ -61,7 +62,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Colombia',
     languages: ['Spanish', 'English', 'Portuguese'],
     categories: ['Dance', 'Music', 'Theater'],
-    hourly_rate: 60
+    hourly_rate: 60,
   },
   {
     id: '3',
@@ -69,7 +70,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Maria Star',
     email: 'maria@example.com',
     phone: '+1234567890',
-    avatar_url: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Experienced entertainer with professional approach',
     status: 'online',
     rating: 4.8,
@@ -79,7 +81,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Spain',
     languages: ['Spanish', 'English'],
     categories: ['Dance', 'Music'],
-    hourly_rate: 50
+    hourly_rate: 50,
   },
   {
     id: '4',
@@ -87,7 +89,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Nat Angel',
     email: 'natalia@example.com',
     phone: '+1234567899',
-    avatar_url: 'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1181519/pexels-photo-1181519.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Professional entertainer with dedication to craft',
     status: 'online',
     rating: 4.8,
@@ -97,7 +100,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Costa Rica',
     languages: ['Spanish', 'English'],
     categories: ['Theater', 'Performance'],
-    hourly_rate: 58
+    hourly_rate: 58,
   },
   {
     id: '5',
@@ -105,7 +108,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Cami Love',
     email: 'camila@example.com',
     phone: '+1234567896',
-    avatar_url: 'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1181424/pexels-photo-1181424.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Creative artist with unique style and energy',
     status: 'active',
     rating: 4.7,
@@ -115,7 +119,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Peru',
     languages: ['Spanish', 'English'],
     categories: ['Music', 'Performance'],
-    hourly_rate: 52
+    hourly_rate: 52,
   },
   {
     id: '6',
@@ -123,7 +127,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Patty Flame',
     email: 'patricia@example.com',
     phone: '+1234567803',
-    avatar_url: 'https://images.pexels.com/photos/1239288/pexels-photo-1239288.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1239288/pexels-photo-1239288.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Charismatic performer with natural talent',
     status: 'active',
     rating: 4.7,
@@ -133,7 +138,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Guatemala',
     languages: ['Spanish', 'English'],
     categories: ['Theater', 'Dance'],
-    hourly_rate: 54
+    hourly_rate: 54,
   },
   {
     id: '7',
@@ -141,7 +146,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Lucia Fire',
     email: 'lucia@example.com',
     phone: '+1234567893',
-    avatar_url: 'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1468379/pexels-photo-1468379.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Versatile artist with passionate performances',
     status: 'offline',
     rating: 4.7,
@@ -151,7 +157,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Chile',
     languages: ['Spanish', 'English'],
     categories: ['Music', 'Art'],
-    hourly_rate: 55
+    hourly_rate: 55,
   },
   {
     id: '8',
@@ -159,7 +165,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Sofia Dreams',
     email: 'sofia@example.com',
     phone: '+1234567894',
-    avatar_url: 'https://images.pexels.com/photos/1382731/pexels-photo-1382731.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1382731/pexels-photo-1382731.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Artistic performer with creative vision',
     status: 'active',
     rating: 4.6,
@@ -169,7 +176,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Mexico',
     languages: ['Spanish', 'English'],
     categories: ['Art', 'Performance'],
-    hourly_rate: 45
+    hourly_rate: 45,
   },
   {
     id: '9',
@@ -177,7 +184,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Lau Mystique',
     email: 'laura@example.com',
     phone: '+1234567808',
-    avatar_url: 'https://images.pexels.com/photos/935835/pexels-photo-935835.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/935835/pexels-photo-935835.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Versatile entertainer with broad appeal',
     status: 'active',
     rating: 4.6,
@@ -187,7 +195,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Bolivia',
     languages: ['Spanish', 'English'],
     categories: ['Dance', 'Music'],
-    hourly_rate: 51
+    hourly_rate: 51,
   },
   {
     id: '10',
@@ -195,7 +203,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Carol Shine',
     email: 'carolina@example.com',
     phone: '+1234567800',
-    avatar_url: 'https://images.pexels.com/photos/1431282/pexels-photo-1431282.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1431282/pexels-photo-1431282.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Talented artist with diverse performance skills',
     status: 'active',
     rating: 4.6,
@@ -205,7 +214,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Uruguay',
     languages: ['Spanish', 'English'],
     categories: ['Dance', 'Music'],
-    hourly_rate: 49
+    hourly_rate: 49,
   },
   {
     id: '11',
@@ -213,7 +222,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Valen Queen',
     email: 'valentina@example.com',
     phone: '+1234567895',
-    avatar_url: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Passionate performer with expertise in entertainment',
     status: 'active',
     rating: 4.5,
@@ -223,7 +233,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Venezuela',
     languages: ['Spanish', 'English'],
     categories: ['Dance', 'Theater'],
-    hourly_rate: 48
+    hourly_rate: 48,
   },
   {
     id: '12',
@@ -231,7 +241,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Mari Fantasy',
     email: 'mariana@example.com',
     phone: '+1234567807',
-    avatar_url: 'https://images.pexels.com/photos/1181695/pexels-photo-1181695.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1181695/pexels-photo-1181695.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Creative artist with innovative performances',
     status: 'active',
     rating: 4.5,
@@ -241,7 +252,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Paraguay',
     languages: ['Spanish', 'Portuguese'],
     categories: ['Art', 'Performance'],
-    hourly_rate: 50
+    hourly_rate: 50,
   },
   {
     id: '13',
@@ -249,7 +260,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Mel Wonder',
     email: 'melissa@example.com',
     phone: '+1234567802',
-    avatar_url: 'https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Experienced entertainer with loyal following',
     status: 'offline',
     rating: 4.5,
@@ -259,7 +271,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Honduras',
     languages: ['Spanish'],
     categories: ['Dance', 'Music'],
-    hourly_rate: 46
+    hourly_rate: 46,
   },
   {
     id: '14',
@@ -267,7 +279,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Dani Star',
     email: 'daniela@example.com',
     phone: '+1234567897',
-    avatar_url: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Versatile entertainer with international appeal',
     status: 'active',
     rating: 4.4,
@@ -277,7 +290,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Ecuador',
     languages: ['Spanish', 'English', 'French'],
     categories: ['Dance', 'Art'],
-    hourly_rate: 47
+    hourly_rate: 47,
   },
   {
     id: '15',
@@ -285,7 +298,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Vero Moon',
     email: 'veronica@example.com',
     phone: '+1234567804',
-    avatar_url: 'https://images.pexels.com/photos/718978/pexels-photo-718978.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/718978/pexels-photo-718978.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Skilled entertainer with artistic vision',
     status: 'active',
     rating: 4.4,
@@ -295,7 +309,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Nicaragua',
     languages: ['Spanish', 'English'],
     categories: ['Music', 'Performance'],
-    hourly_rate: 45
+    hourly_rate: 45,
   },
   {
     id: '16',
@@ -303,7 +317,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Andy Magic',
     email: 'andrea@example.com',
     phone: '+1234567801',
-    avatar_url: 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Dynamic performer with captivating shows',
     status: 'active',
     rating: 4.3,
@@ -313,7 +328,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Panama',
     languages: ['Spanish', 'English'],
     categories: ['Performance', 'Art'],
-    hourly_rate: 44
+    hourly_rate: 44,
   },
   {
     id: '17',
@@ -321,7 +336,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Ana Luz',
     email: 'ana@example.com',
     phone: '+1234567892',
-    avatar_url: 'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1542085/pexels-photo-1542085.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Emerging talent with fresh energy',
     status: 'pending',
     rating: 4.2,
@@ -331,7 +347,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Argentina',
     languages: ['Spanish'],
     categories: ['Dance'],
-    hourly_rate: 35
+    hourly_rate: 35,
   },
   {
     id: '18',
@@ -339,7 +355,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Jess Enchant',
     email: 'jessica@example.com',
     phone: '+1234567809',
-    avatar_url: 'https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1858175/pexels-photo-1858175.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Professional performer with extensive experience',
     status: 'suspended',
     rating: 4.2,
@@ -349,7 +366,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Puerto Rico',
     languages: ['Spanish', 'English'],
     categories: ['Theater', 'Performance'],
-    hourly_rate: 43
+    hourly_rate: 43,
   },
   {
     id: '19',
@@ -357,7 +374,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Gaby Dreams',
     email: 'gabriela@example.com',
     phone: '+1234567898',
-    avatar_url: 'https://images.pexels.com/photos/1024311/pexels-photo-1024311.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1024311/pexels-photo-1024311.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Energetic performer with charismatic presence',
     status: 'pending',
     rating: 4.1,
@@ -367,7 +385,7 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'Brazil',
     languages: ['Portuguese', 'Spanish', 'English'],
     categories: ['Music', 'Dance'],
-    hourly_rate: 42
+    hourly_rate: 42,
   },
   {
     id: '20',
@@ -375,7 +393,8 @@ const MOCK_PERFORMERS: Performer[] = [
     stage_name: 'Ale Passion',
     email: 'alejandra@example.com',
     phone: '+1234567805',
-    avatar_url: 'https://images.pexels.com/photos/1181391/pexels-photo-1181391.jpeg?auto=compress&cs=tinysrgb&w=200',
+    avatar_url:
+      'https://images.pexels.com/photos/1181391/pexels-photo-1181391.jpeg?auto=compress&cs=tinysrgb&w=200',
     bio: 'Rising star with promising career ahead',
     status: 'pending',
     rating: 4.0,
@@ -385,15 +404,17 @@ const MOCK_PERFORMERS: Performer[] = [
     country: 'El Salvador',
     languages: ['Spanish'],
     categories: ['Dance'],
-    hourly_rate: 38
-  }
+    hourly_rate: 38,
+  },
 ];
 
 export default function Performers() {
   const [performers, setPerformers] = useState<Performer[]>(MOCK_PERFORMERS);
-  const [loading, setLoading] = useState(false);
+  const [loading, _setLoading] = useState(false);
   const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null);
-  const [activeModal, setActiveModal] = useState<'detail' | 'profile' | 'upload' | 'streaming' | 'approval' | null>(null);
+  const [activeModal, setActiveModal] = useState<
+    'detail' | 'profile' | 'upload' | 'streaming' | 'approval' | null
+  >(null);
 
   const fetchPerformers = () => {
     setPerformers(MOCK_PERFORMERS);
@@ -405,7 +426,6 @@ export default function Performers() {
       prev.map((p) => (p.id === id ? { ...p, status: newStatus as any } : p))
     );
   };
-
 
   const handleViewProfile = (performer: Performer) => {
     setSelectedPerformer(performer);

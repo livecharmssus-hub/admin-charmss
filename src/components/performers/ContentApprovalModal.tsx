@@ -30,7 +30,7 @@ const MOCK_MEDIA: MediaItem[] = [
     url: 'https://images.pexels.com/photos/1024311/pexels-photo-1024311.jpeg',
     uploaded_date: '2024-10-08',
     status: 'pending',
-    title: 'Performance Photo 1'
+    title: 'Performance Photo 1',
   },
   {
     id: '2',
@@ -38,7 +38,7 @@ const MOCK_MEDIA: MediaItem[] = [
     url: 'https://images.pexels.com/photos/1181391/pexels-photo-1181391.jpeg',
     uploaded_date: '2024-10-07',
     status: 'pending',
-    title: 'Performance Photo 2'
+    title: 'Performance Photo 2',
   },
   {
     id: '3',
@@ -47,7 +47,7 @@ const MOCK_MEDIA: MediaItem[] = [
     thumbnail: 'https://images.pexels.com/photos/1181695/pexels-photo-1181695.jpeg',
     uploaded_date: '2024-10-06',
     status: 'pending',
-    title: 'Performance Video 1'
+    title: 'Performance Video 1',
   },
   {
     id: '4',
@@ -55,7 +55,7 @@ const MOCK_MEDIA: MediaItem[] = [
     url: 'https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg',
     uploaded_date: '2024-10-05',
     status: 'approved',
-    title: 'Performance Photo 3'
+    title: 'Performance Photo 3',
   },
   {
     id: '5',
@@ -64,7 +64,7 @@ const MOCK_MEDIA: MediaItem[] = [
     thumbnail: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg',
     uploaded_date: '2024-10-04',
     status: 'rejected',
-    title: 'Performance Video 2'
+    title: 'Performance Video 2',
   },
   {
     id: '6',
@@ -72,38 +72,40 @@ const MOCK_MEDIA: MediaItem[] = [
     url: 'https://images.pexels.com/photos/718978/pexels-photo-718978.jpeg',
     uploaded_date: '2024-10-03',
     status: 'pending',
-    title: 'Performance Photo 4'
-  }
+    title: 'Performance Photo 4',
+  },
 ];
 
 export default function ContentApprovalModal({ performer, onClose }: ContentApprovalModalProps) {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>(MOCK_MEDIA);
   const [filterType, setFilterType] = useState<'all' | 'photo' | 'video'>('all');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>(
+    'all'
+  );
 
   if (!performer) return null;
 
   const handleApprove = (id: string) => {
-    setMediaItems(prev =>
-      prev.map(item => item.id === id ? { ...item, status: 'approved' as const } : item)
+    setMediaItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, status: 'approved' as const } : item))
     );
   };
 
   const handleReject = (id: string) => {
-    setMediaItems(prev =>
-      prev.map(item => item.id === id ? { ...item, status: 'rejected' as const } : item)
+    setMediaItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, status: 'rejected' as const } : item))
     );
   };
 
-  const filteredMedia = mediaItems.filter(item => {
+  const filteredMedia = mediaItems.filter((item) => {
     const typeMatch = filterType === 'all' || item.type === filterType;
     const statusMatch = filterStatus === 'all' || item.status === filterStatus;
     return typeMatch && statusMatch;
   });
 
-  const pendingCount = mediaItems.filter(item => item.status === 'pending').length;
-  const approvedCount = mediaItems.filter(item => item.status === 'approved').length;
-  const rejectedCount = mediaItems.filter(item => item.status === 'rejected').length;
+  const pendingCount = mediaItems.filter((item) => item.status === 'pending').length;
+  const approvedCount = mediaItems.filter((item) => item.status === 'approved').length;
+  const rejectedCount = mediaItems.filter((item) => item.status === 'rejected').length;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
@@ -177,11 +179,7 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                 >
                   <div className="relative aspect-video">
                     {item.type === 'photo' ? (
-                      <img
-                        src={item.url}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
+                      <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
                     ) : (
                       <div className="relative w-full h-full">
                         <img
@@ -229,9 +227,7 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                   </div>
 
                   <div className="p-4">
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                      {item.title}
-                    </h3>
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">{item.title}</h3>
                     <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
                       <Calendar className="h-4 w-4" />
                       <span>{new Date(item.uploaded_date).toLocaleDateString()}</span>
@@ -288,19 +284,22 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-yellow-500 rounded"></div>
                 <span className="text-gray-600 dark:text-gray-400">
-                  Pendientes: <strong className="text-gray-900 dark:text-white">{pendingCount}</strong>
+                  Pendientes:{' '}
+                  <strong className="text-gray-900 dark:text-white">{pendingCount}</strong>
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-green-500 rounded"></div>
                 <span className="text-gray-600 dark:text-gray-400">
-                  Aprobados: <strong className="text-gray-900 dark:text-white">{approvedCount}</strong>
+                  Aprobados:{' '}
+                  <strong className="text-gray-900 dark:text-white">{approvedCount}</strong>
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-red-500 rounded"></div>
                 <span className="text-gray-600 dark:text-gray-400">
-                  Rechazados: <strong className="text-gray-900 dark:text-white">{rejectedCount}</strong>
+                  Rechazados:{' '}
+                  <strong className="text-gray-900 dark:text-white">{rejectedCount}</strong>
                 </span>
               </div>
             </div>

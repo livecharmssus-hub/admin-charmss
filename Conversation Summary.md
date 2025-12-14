@@ -1,4 +1,3 @@
-
 I've been working with you on a React-based application called LiveCharms - an adult content platform for performers and studios. Here's what exists in the project:
 
 **Core Infrastructure:**

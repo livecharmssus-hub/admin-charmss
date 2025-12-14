@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Square, Camera, Mic, MicOff, CameraOff, Settings, Users, Eye } from 'lucide-react';
+import { Play, Square, Camera, Mic, MicOff, CameraOff, Settings, Eye } from 'lucide-react';
 import ChatComponent from '../components/ChatComponent';
 
 interface StreamingProps {
@@ -12,7 +12,7 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
   const [micEnabled, setMicEnabled] = useState(true);
   const [streamType, setStreamType] = useState('public');
   const [viewers, setViewers] = useState(0);
-  const [streamingTime, setStreamingTime] = useState('0:00');
+  const [streamingTime, _setStreamingTime] = useState('0:00');
 
   const handleStartStream = () => {
     setIsStreaming(true);
@@ -30,7 +30,9 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
         <h1 className="text-2xl md:text-3xl font-bold">Live Streaming</h1>
         <div className="flex flex-col md:flex-row items-end md:items-center space-y-2 md:space-y-0 md:space-x-4">
           <div className="flex items-center space-x-2">
-            <div className={`w-3 h-3 rounded-full ${isStreaming ? 'bg-red-500' : 'bg-gray-500'}`}></div>
+            <div
+              className={`w-3 h-3 rounded-full ${isStreaming ? 'bg-red-500' : 'bg-gray-500'}`}
+            ></div>
             <span className="text-xs md:text-sm text-gray-400">
               Status: {isStreaming ? 'Live' : 'Offline'}
             </span>
@@ -57,7 +59,9 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
                 <div className="text-center">
                   <Camera className="w-12 h-12 md:w-16 md:h-16 text-white mx-auto mb-2 md:mb-4" />
                   <p className="text-white text-base md:text-lg">Camera Preview</p>
-                  <p className="text-gray-300 text-xs md:text-sm">Your live stream will appear here</p>
+                  <p className="text-gray-300 text-xs md:text-sm">
+                    Your live stream will appear here
+                  </p>
                 </div>
               </div>
             ) : (
@@ -68,7 +72,7 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
                 </div>
               </div>
             )}
-            
+
             {isStreaming && (
               <div className="absolute top-2 md:top-4 left-2 md:left-4 bg-red-600 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-bold flex items-center space-x-1 md:space-x-2">
                 <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
@@ -80,29 +84,35 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
           {/* Stream Controls */}
           <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
             <h3 className="text-base md:text-lg font-semibold mb-4">Stream Controls</h3>
-            
+
             <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-6 space-y-4 md:space-y-0">
               <div className="flex items-center space-x-2 md:space-x-4">
                 <button
                   onClick={() => setCameraEnabled(!cameraEnabled)}
                   className={`p-2 md:p-3 rounded-lg transition-colors ${
-                    cameraEnabled 
-                      ? 'bg-green-600 hover:bg-green-700' 
+                    cameraEnabled
+                      ? 'bg-green-600 hover:bg-green-700'
                       : 'bg-red-600 hover:bg-red-700'
                   }`}
                 >
-                  {cameraEnabled ? <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" /> : <CameraOff className="w-4 h-4 md:w-5 md:h-5 text-white" />}
+                  {cameraEnabled ? (
+                    <Camera className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                  ) : (
+                    <CameraOff className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                  )}
                 </button>
-                
+
                 <button
                   onClick={() => setMicEnabled(!micEnabled)}
                   className={`p-2 md:p-3 rounded-lg transition-colors ${
-                    micEnabled 
-                      ? 'bg-green-600 hover:bg-green-700' 
-                      : 'bg-red-600 hover:bg-red-700'
+                    micEnabled ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'
                   }`}
                 >
-                  {micEnabled ? <Mic className="w-4 h-4 md:w-5 md:h-5 text-white" /> : <MicOff className="w-4 h-4 md:w-5 md:h-5 text-white" />}
+                  {micEnabled ? (
+                    <Mic className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                  ) : (
+                    <MicOff className="w-4 h-4 md:w-5 md:h-5 text-white" />
+                  )}
                 </button>
 
                 <button className="p-2 md:p-3 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors">
@@ -157,20 +167,18 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
         <div className="space-y-3 md:space-y-4">
           {/* Live Chat */}
           <div className="h-64 md:h-80">
-            <ChatComponent 
-              title="Live Chat"
-              isPublic={true}
-              className="h-full"
-            />
+            <ChatComponent title="Live Chat" isPublic={true} className="h-full" />
           </div>
-          
+
           {/* Stream Settings */}
           <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
             <h3 className="text-base md:text-lg font-semibold mb-4">Stream Settings</h3>
-            
+
             <div className="space-y-4">
               <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Streaming Type:</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                  Streaming Type:
+                </label>
                 <select
                   value={streamType}
                   onChange={(e) => setStreamType(e.target.value)}
@@ -183,7 +191,9 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
               </div>
 
               <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Quality:</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                  Quality:
+                </label>
                 <select className="w-full bg-slate-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                   <option value="hd">HD (720p)</option>
                   <option value="fhd">Full HD (1080p)</option>
@@ -192,7 +202,9 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
               </div>
 
               <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Language:</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+                  Language:
+                </label>
                 <select className="w-full bg-slate-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                   <option value="en">English</option>
                   <option value="es">Spanish</option>
@@ -207,7 +219,7 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
           {isStreaming && (
             <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
               <h3 className="text-base md:text-lg font-semibold mb-4">Live Stats</h3>
-              
+
               <div className="space-y-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-400">Current Viewers:</span>
@@ -232,7 +244,7 @@ const Streaming: React.FC<StreamingProps> = ({ isStreaming, setIsStreaming }) =>
           {/* Quick Actions */}
           <div className="bg-slate-800 rounded-lg border border-slate-700 p-3 md:p-6">
             <h3 className="text-base md:text-lg font-semibold mb-4">Quick Actions</h3>
-            
+
             <div className="space-y-3">
               <button className="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition-colors text-sm">
                 Send Notification

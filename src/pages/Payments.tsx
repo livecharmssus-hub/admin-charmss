@@ -22,12 +22,11 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
   ];
 
   const recentTransactions = [
-    { date: '2025-01-15', type: 'Private Show', amount: 45.50, status: 'Completed' },
+    { date: '2025-01-15', type: 'Private Show', amount: 45.5, status: 'Completed' },
     { date: '2025-01-14', type: 'Tips', amount: 23.75, status: 'Completed' },
-    { date: '2025-01-14', type: 'Video Call', amount: 67.20, status: 'Completed' },
-    { date: '2025-01-13', type: 'Gifts', amount: 12.30, status: 'Pending' },
+    { date: '2025-01-14', type: 'Video Call', amount: 67.2, status: 'Completed' },
+    { date: '2025-01-13', type: 'Gifts', amount: 12.3, status: 'Pending' },
   ];
-
 
   const handleModelPayment = (model: any) => {
     setSelectedPayment({
@@ -37,7 +36,7 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
       amount: model.pending_amount,
       commission_amount: model.commission_amount,
       net_amount: model.net_amount,
-      commission_rate: model.commission_rate
+      commission_rate: model.commission_rate,
     });
     setShowConfirmation(true);
   };
@@ -51,7 +50,9 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Payments & Earnings</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+          Payments & Earnings
+        </h1>
         <div className="flex items-center space-x-2 md:space-x-3">
           <button className="bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors text-sm">
             <Download className="w-4 h-4" />
@@ -69,7 +70,9 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm">Total Earnings</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">${earnings.toFixed(2)}</p>
+              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
+                ${earnings.toFixed(2)}
+              </p>
             </div>
             <div className="p-2 md:p-3 rounded-lg bg-green-600">
               <DollarSign className="w-4 h-4 md:w-6 md:h-6 text-white" />
@@ -117,7 +120,9 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
         <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 md:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white">Weekly Payments</h3>
+            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white">
+              Weekly Payments
+            </h3>
             <div className="flex items-center space-x-2">
               <Calendar className="w-4 h-4 text-gray-400" />
               <select
@@ -143,7 +148,10 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
               </div>
 
               {weeklyData.map((payment, index) => (
-                <div key={index} className="grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm py-2 border-t border-gray-200 dark:border-slate-600">
+                <div
+                  key={index}
+                  className="grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm py-2 border-t border-gray-200 dark:border-slate-600"
+                >
                   <div className="text-gray-900 dark:text-white">{payment.week}</div>
                   <div className="text-gray-900 dark:text-white">{payment.amount.toFixed(2)}</div>
                   <div className="text-gray-500 dark:text-gray-400">-</div>
@@ -176,7 +184,9 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
       </div>
 
       <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 md:p-6">
-        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Transactions</h3>
+        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Recent Transactions
+        </h3>
 
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -192,15 +202,23 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
             <tbody>
               {recentTransactions.map((transaction, index) => (
                 <tr key={index} className="border-b border-gray-200 dark:border-slate-700">
-                  <td className="py-3 text-gray-900 dark:text-white text-xs md:text-sm">{transaction.date}</td>
-                  <td className="py-3 text-gray-600 dark:text-gray-300 text-xs md:text-sm">{transaction.type}</td>
-                  <td className="py-3 text-green-600 dark:text-green-400 font-medium text-xs md:text-sm">${transaction.amount.toFixed(2)}</td>
+                  <td className="py-3 text-gray-900 dark:text-white text-xs md:text-sm">
+                    {transaction.date}
+                  </td>
+                  <td className="py-3 text-gray-600 dark:text-gray-300 text-xs md:text-sm">
+                    {transaction.type}
+                  </td>
+                  <td className="py-3 text-green-600 dark:text-green-400 font-medium text-xs md:text-sm">
+                    ${transaction.amount.toFixed(2)}
+                  </td>
                   <td className="py-3">
-                    <span className={`px-2 py-1 rounded-full text-xs ${
-                      transaction.status === 'Completed'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${
+                        transaction.status === 'Completed'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      }`}
+                    >
                       {transaction.status}
                     </span>
                   </td>

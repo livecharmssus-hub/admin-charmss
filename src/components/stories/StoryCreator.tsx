@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Camera, Video, Upload, Calendar, Clock, X, Play, Pause, RotateCcw } from 'lucide-react';
+import { Camera, Video, Upload, Calendar, Clock, X, RotateCcw } from 'lucide-react';
 
 interface StoryCreatorProps {
   onClose: () => void;
@@ -16,8 +16,8 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
   const [duration, setDuration] = useState('24');
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  
+  const [isStreaming, setIsStreaming] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -30,7 +30,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
     { value: '24', label: '24 horas' },
     { value: '48', label: '2 días' },
     { value: '72', label: '3 días' },
-    { value: '168', label: '1 semana' }
+    { value: '168', label: '1 semana' },
   ];
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,14 +44,15 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
 
   const startCamera = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: true, 
-        audio: contentType === 'video' 
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: contentType === 'video',
       });
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
+      setIsStreaming(true);
     } catch (error) {
       console.error('Error accessing camera:', error);
     }
@@ -63,7 +64,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
       const context = canvas.getContext('2d');
       canvas.width = videoRef.current.videoWidth;
       canvas.height = videoRef.current.videoHeight;
-      
+
       if (context) {
         context.drawImage(videoRef.current, 0, 0);
         canvas.toBlob((blob) => {
@@ -102,7 +103,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
 
       // Timer for recording
       const timer = setInterval(() => {
-        setRecordingTime(prev => {
+        setRecordingTime((prev) => {
           if (prev >= 15) {
             stopRecording();
             clearInterval(timer);
@@ -124,8 +125,9 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
 
   const stopCamera = () => {
     if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
+      setIsStreaming(false);
     }
   };
 
@@ -140,7 +142,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
       publishDate: publishDate || new Date().toISOString().split('T')[0],
       publishTime: publishTime || new Date().toTimeString().split(' ')[0].slice(0, 5),
       duration: parseInt(duration),
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     onPublish(story);
@@ -210,18 +212,9 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
             {previewUrl ? (
               <div className="relative w-full h-full">
                 {contentType === 'photo' ? (
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                 ) : (
-                  <video
-                    src={previewUrl}
-                    className="w-full h-full object-cover"
-                    controls
-                    muted
-                  />
+                  <video src={previewUrl} className="w-full h-full object-cover" controls muted />
                 )}
                 <button
                   onClick={resetContent}
@@ -230,14 +223,9 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
                   <RotateCcw className="w-4 h-4" />
                 </button>
               </div>
-            ) : streamRef.current ? (
+            ) : isStreaming ? (
               <div className="relative w-full h-full">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  className="w-full h-full object-cover"
-                />
+                <video ref={videoRef} autoPlay muted className="w-full h-full object-cover" />
                 {isRecording && (
                   <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">
                     REC {recordingTime}s / 15s
@@ -256,7 +244,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
 
           {/* Action Buttons */}
           <div className="space-y-3">
-            {!selectedFile && !streamRef.current && (
+            {!selectedFile && !isStreaming && (
               <>
                 <button
                   onClick={startCamera}
@@ -275,7 +263,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
               </>
             )}
 
-            {streamRef.current && !selectedFile && (
+            {isStreaming && !selectedFile && (
               <div className="flex space-x-3">
                 {contentType === 'photo' ? (
                   <button
@@ -319,9 +307,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
               className="w-full bg-white/10 border border-white/20 text-white placeholder-white/50 rounded-xl p-4 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
               maxLength={200}
             />
-            <div className="text-right text-white/50 text-xs mt-1">
-              {comment.length}/200
-            </div>
+            <div className="text-right text-white/50 text-xs mt-1">{comment.length}/200</div>
           </div>
 
           {/* Scheduling Section */}
@@ -330,7 +316,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
               <Calendar className="w-5 h-5 text-white" />
               <h3 className="text-white font-semibold">Programación</h3>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className="block text-white/70 text-sm mb-2">Publicar el:</label>
@@ -342,7 +328,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
                   min={new Date().toISOString().split('T')[0]}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-white/70 text-sm mb-2">Hora:</label>
                 <input
@@ -352,7 +338,7 @@ const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {
                   className="w-full bg-white/10 border border-white/20 text-white rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-pink-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-white/70 text-sm mb-2">Duración:</label>
                 <select

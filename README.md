@@ -8,12 +8,12 @@ The Charmss platform allows influencers to interact with their audience, manage 
 
 ## Tech Stack
 
-*   **Framework:** [React.js](https://reactjs.org/)
-*   **Bundler:** [Vite](https://vitejs.dev/)
-*   **Language:** [TypeScript](https://www.typescriptlang.org/)
-*   **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-*   **Routing:** [React Router](https://reactrouter.com/)
-*   **Icons:** [Lucide React](https://lucide.dev/)
+- **Framework:** [React.js](https://reactjs.org/)
+- **Bundler:** [Vite](https://vitejs.dev/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Routing:** [React Router](https://reactrouter.com/)
+- **Icons:** [Lucide React](https://lucide.dev/)
 
 ## Getting Started
 
@@ -23,7 +23,7 @@ Follow these instructions to get a copy of the project running on your local mac
 
 You need to have Node.js and npm (or yarn/pnpm) installed on your machine.
 
-*   [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
 
 ### Installation
 
@@ -44,10 +44,10 @@ You need to have Node.js and npm (or yarn/pnpm) installed on your machine.
 
 In the project directory, you can run:
 
-*   `npm run dev`: Starts the application in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
-*   `npm run build`: Compiles the application for production in the `dist` folder.
-*   `npm run lint`: Runs the ESLint linter to identify and fix problems in the code.
-*   `npm run preview`: Serves the production build locally for preview.
+- `npm run dev`: Starts the application in development mode. Open [http://localhost:5173](http://localhost:5173) to view it in your browser.
+- `npm run build`: Compiles the application for production in the `dist` folder.
+- `npm run lint`: Runs the ESLint linter to identify and fix problems in the code.
+- `npm run preview`: Serves the production build locally for preview.
 
 ## Troubleshooting
 

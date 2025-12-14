@@ -26,7 +26,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'active',
     active_performers: 15,
     online_performers: 8,
-    created_at: '2023-01-15'
+    created_at: '2023-01-15',
   },
   {
     id: '2',
@@ -37,7 +37,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'active',
     active_performers: 22,
     online_performers: 12,
-    created_at: '2023-02-20'
+    created_at: '2023-02-20',
   },
   {
     id: '3',
@@ -48,7 +48,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'active',
     active_performers: 18,
     online_performers: 9,
-    created_at: '2023-03-10'
+    created_at: '2023-03-10',
   },
   {
     id: '4',
@@ -59,7 +59,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'inactive',
     active_performers: 10,
     online_performers: 0,
-    created_at: '2023-04-05'
+    created_at: '2023-04-05',
   },
   {
     id: '5',
@@ -70,7 +70,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'active',
     active_performers: 25,
     online_performers: 14,
-    created_at: '2023-05-12'
+    created_at: '2023-05-12',
   },
   {
     id: '6',
@@ -81,7 +81,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'active',
     active_performers: 12,
     online_performers: 6,
-    created_at: '2023-06-18'
+    created_at: '2023-06-18',
   },
   {
     id: '7',
@@ -92,7 +92,7 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'active',
     active_performers: 16,
     online_performers: 7,
-    created_at: '2023-07-22'
+    created_at: '2023-07-22',
   },
   {
     id: '8',
@@ -103,8 +103,8 @@ const MOCK_STUDIOS: Studio[] = [
     status: 'inactive',
     active_performers: 8,
     online_performers: 0,
-    created_at: '2023-08-14'
-  }
+    created_at: '2023-08-14',
+  },
 ];
 
 export default function Studios() {
@@ -123,9 +123,7 @@ export default function Studios() {
 
   const handleToggleStatus = (id: string, currentStatus: string) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    setStudios((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, status: newStatus as any } : s))
-    );
+    setStudios((prev) => prev.map((s) => (s.id === id ? { ...s, status: newStatus as any } : s)));
   };
 
   const handleViewDetail = (studio: Studio) => {
@@ -144,9 +142,7 @@ export default function Studios() {
   };
 
   const handleSaveStudio = (updatedStudio: Studio) => {
-    setStudios((prev) =>
-      prev.map((s) => (s.id === updatedStudio.id ? updatedStudio : s))
-    );
+    setStudios((prev) => prev.map((s) => (s.id === updatedStudio.id ? updatedStudio : s)));
     handleCloseModal();
   };
 

@@ -10,7 +10,7 @@ interface Email {
   to: string;
   subject: string;
   message: string;
-  preview: string;
+  preview?: string;
   date: string;
   time: string;
   isRead: boolean;
@@ -33,7 +33,8 @@ const Inbox: React.FC = () => {
       from: 'lgabrielcor',
       to: 'Zafira',
       subject: 'Message from lgabrielcor',
-      message: 'Hi Zafira! I really enjoyed your last stream. You have such amazing energy and I love your personality. I was wondering if you might be available for a private show sometime this week? I\'d love to spend some quality time with you. Let me know what works best for your schedule. Looking forward to hearing from you! 💕',
+      message:
+        "Hi Zafira! I really enjoyed your last stream. You have such amazing energy and I love your personality. I was wondering if you might be available for a private show sometime this week? I'd love to spend some quality time with you. Let me know what works best for your schedule. Looking forward to hearing from you! 💕",
       preview: 'Hi Zafira! I really enjoyed your last stream...',
       date: '2024-09-08',
       time: '1:28:39 AM',
@@ -41,15 +42,17 @@ const Inbox: React.FC = () => {
       isStarred: true,
       hasAttachment: false,
       type: 'message',
-      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-      priority: 'normal'
+      avatar:
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      priority: 'normal',
     },
     {
       id: '2',
       from: 'lgabrielcor',
       to: 'Zafira',
       subject: 'VideoCall from lgabrielcor',
-      message: 'Hey beautiful! I had such an amazing time during our video call yesterday. You really know how to make someone feel special. I\'ve been thinking about you all day and I can\'t wait for our next session. Would you be available for another call this weekend? I have some exciting ideas for what we could do together. Can\'t wait to see your gorgeous smile again! 😘',
+      message:
+        "Hey beautiful! I had such an amazing time during our video call yesterday. You really know how to make someone feel special. I've been thinking about you all day and I can't wait for our next session. Would you be available for another call this weekend? I have some exciting ideas for what we could do together. Can't wait to see your gorgeous smile again! 😘",
       preview: 'Hey beautiful! I had such an amazing time during our video call...',
       date: '2024-09-08',
       time: '2:00:02 AM',
@@ -57,36 +60,40 @@ const Inbox: React.FC = () => {
       isStarred: false,
       hasAttachment: true,
       type: 'videocall',
-      avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      avatar:
+        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
       priority: 'high',
       attachments: [
         { name: 'video_call_receipt.pdf', size: '245 KB', type: 'pdf' },
-        { name: 'session_photos.zip', size: '1.2 MB', type: 'zip' }
-      ]
+        { name: 'session_photos.zip', size: '1.2 MB', type: 'zip' },
+      ],
     },
     {
       id: '3',
       from: 'monitor1',
       to: 'Zafira',
       subject: 'VideoCall from monitor1',
-      message: 'Hello Zafira, I hope you\'re having a wonderful day! I\'ve been following your content for a while now and I\'m really impressed with your professionalism and creativity. I would love to schedule a video call with you to discuss some potential collaboration opportunities. I think we could create some amazing content together. Please let me know your availability and rates. Looking forward to working with you!',
-      preview: 'Hello Zafira, I hope you\'re having a wonderful day!...',
+      message:
+        "Hello Zafira, I hope you're having a wonderful day! I've been following your content for a while now and I'm really impressed with your professionalism and creativity. I would love to schedule a video call with you to discuss some potential collaboration opportunities. I think we could create some amazing content together. Please let me know your availability and rates. Looking forward to working with you!",
+      preview: "Hello Zafira, I hope you're having a wonderful day!...",
       date: '2024-09-13',
       time: '9:47:01 PM',
       isRead: false,
       isStarred: true,
       hasAttachment: false,
       type: 'videocall',
-      avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-      priority: 'normal'
+      avatar:
+        'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      priority: 'normal',
     },
     {
       id: '4',
       from: 'admin@livecharmss.com',
       to: 'Zafira',
       subject: 'Welcome to LiveCharmss - Important Account Information',
-      message: 'Welcome to LiveCharmss, Zafira! We\'re excited to have you join our community of talented performers. This email contains important information about your account setup and platform guidelines. Please review the attached performer handbook and complete your profile verification within 48 hours. Our support team is here to help you succeed - don\'t hesitate to reach out if you have any questions. We look forward to seeing your amazing content!',
-      preview: 'Welcome to LiveCharmss, Zafira! We\'re excited to have you join...',
+      message:
+        "Welcome to LiveCharmss, Zafira! We're excited to have you join our community of talented performers. This email contains important information about your account setup and platform guidelines. Please review the attached performer handbook and complete your profile verification within 48 hours. Our support team is here to help you succeed - don't hesitate to reach out if you have any questions. We look forward to seeing your amazing content!",
+      preview: "Welcome to LiveCharmss, Zafira! We're excited to have you join...",
       date: '2024-10-22',
       time: '3:49:29 AM',
       isRead: true,
@@ -96,53 +103,55 @@ const Inbox: React.FC = () => {
       priority: 'high',
       attachments: [
         { name: 'performer_handbook.pdf', size: '2.1 MB', type: 'pdf' },
-        { name: 'tax_forms.pdf', size: '156 KB', type: 'pdf' }
-      ]
+        { name: 'tax_forms.pdf', size: '156 KB', type: 'pdf' },
+      ],
     },
     {
       id: '5',
       from: 'sophia_model',
       to: 'Zafira',
-      subject: 'Collaboration Opportunity - Let\'s Work Together!',
-      message: 'Hey girl! I\'m Sophia, another model on the platform. I\'ve seen your streams and you\'re absolutely killing it! I was thinking we could do some collaborative content together - maybe a joint stream or some photo shoots? I think our audiences would love to see us together and it could be great for both of our businesses. I have some really creative ideas that could help us both grow our followings and increase our earnings. What do you think? Would love to chat more about this!',
-      preview: 'Hey girl! I\'m Sophia, another model on the platform...',
+      subject: "Collaboration Opportunity - Let's Work Together!",
+      message:
+        "Hey girl! I'm Sophia, another model on the platform. I've seen your streams and you're absolutely killing it! I was thinking we could do some collaborative content together - maybe a joint stream or some photo shoots? I think our audiences would love to see us together and it could be great for both of our businesses. I have some really creative ideas that could help us both grow our followings and increase our earnings. What do you think? Would love to chat more about this!",
+      preview: "Hey girl! I'm Sophia, another model on the platform...",
       date: '2024-10-25',
       time: '1:07:51 AM',
       isRead: false,
       isStarred: false,
       hasAttachment: false,
       type: 'model',
-      avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
-      priority: 'normal'
-    }
+      avatar:
+        'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+      priority: 'normal',
+    },
   ]);
 
   const unreadCounts = {
-    inbox: emails.filter(email => !email.isRead).length,
-    starred: emails.filter(email => email.isStarred).length,
+    inbox: emails.filter((email) => !email.isRead).length,
+    starred: emails.filter((email) => email.isStarred).length,
   };
 
   const getFilteredEmails = () => {
     switch (selectedFolder) {
       case 'starred':
-        return emails.filter(email => email.isStarred);
+        return emails.filter((email) => email.isStarred);
       case 'sent':
-        return emails.filter(email => email.from === 'Zafira');
+        return emails.filter((email) => email.from === 'Zafira');
       case 'trash':
-        return emails.filter(email => email.id === 'deleted');
+        return emails.filter((email) => email.id === 'deleted');
       default:
         return emails;
     }
   };
 
   const handleToggleStar = (id: string) => {
-    setEmails(emails.map(email => 
-      email.id === id ? { ...email, isStarred: !email.isStarred } : email
-    ));
+    setEmails(
+      emails.map((email) => (email.id === id ? { ...email, isStarred: !email.isStarred } : email))
+    );
   };
 
   const handleDelete = (id: string) => {
-    setEmails(emails.filter(email => email.id !== id));
+    setEmails(emails.filter((email) => email.id !== id));
     if (selectedEmail === id) {
       setSelectedEmail(null);
     }
@@ -167,8 +176,8 @@ const Inbox: React.FC = () => {
       attachments: newEmail.attachments?.map((file: File) => ({
         name: file.name,
         size: `${(file.size / 1024).toFixed(1)} KB`,
-        type: file.name.split('.').pop() || 'file'
-      }))
+        type: file.name.split('.').pop() || 'file',
+      })),
     };
     setEmails([email, ...emails]);
   };
@@ -178,15 +187,15 @@ const Inbox: React.FC = () => {
     setSelectedFolder('compose');
   };
 
-  const currentEmail = selectedEmail ? emails.find(e => e.id === selectedEmail) : null;
+  const currentEmail = selectedEmail ? emails.find((e) => e.id === selectedEmail) : null;
   const filteredEmails = getFilteredEmails();
 
   // Mark email as read when selected
   React.useEffect(() => {
     if (selectedEmail) {
-      setEmails(emails.map(email => 
-        email.id === selectedEmail ? { ...email, isRead: true } : email
-      ));
+      setEmails(
+        emails.map((email) => (email.id === selectedEmail ? { ...email, isRead: true } : email))
+      );
     }
   }, [selectedEmail]);
 
@@ -198,7 +207,11 @@ const Inbox: React.FC = () => {
       </div>
 
       {/* Sidebar */}
-      <div className={`${selectedEmail || selectedFolder === 'compose' ? 'hidden lg:flex' : 'flex'} lg:flex`}>
+      <div
+        className={`${
+          selectedEmail || selectedFolder === 'compose' ? 'hidden lg:flex' : 'flex'
+        } lg:flex`}
+      >
         <EmailSidebar
           selectedFolder={selectedFolder}
           setSelectedFolder={(folder) => {

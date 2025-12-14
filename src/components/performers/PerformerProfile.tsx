@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { X, Save, Upload, Link as LinkIcon, Calendar, DollarSign, TrendingUp, Download, Star } from 'lucide-react';
+import {
+  X,
+  Save,
+  Upload,
+  Link as LinkIcon,
+  Calendar,
+  DollarSign,
+  TrendingUp,
+  Star,
+} from 'lucide-react';
 
 interface Performer {
   id: string;
@@ -23,12 +32,10 @@ interface PerformerProfileProps {
 export default function PerformerProfile({ performer, onClose }: PerformerProfileProps) {
   const [activeTab, setActiveTab] = useState('personal');
 
-  if (!performer) return null;
-
   const [profileData, setProfileData] = useState({
-    nickname: performer.stage_name,
-    headline: performer.bio,
-    myLive: 'With me you will always find new adventures, some humor, company, fun and above all a girl who likes to enjoy life, as well as meeting interesting people from all over the world.',
+    nickname: performer?.stage_name ?? '',
+    headline: performer?.bio ?? '',
+    myLive: 'Welcome! Share your story and connect with fans.',
     age: 26,
     height: 165,
     weight: 60,
@@ -38,12 +45,14 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
     hairColor: 'Brown',
     eyeColor: 'Green',
     build: 'Slender',
-    country: performer.country,
+    country: performer?.country ?? '',
     twitterLink: '',
     instagramLink: '',
     videoCallRate: 18,
-    streamingRate: 30
+    streamingRate: 30,
   });
+
+  // Render even when performer is null; individual fields use optional chaining
 
   const tabs = [
     { id: 'personal', label: 'Personal Information' },
@@ -52,11 +61,11 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
     { id: 'pricing', label: 'Pricing' },
     { id: 'media', label: 'Media profile' },
     { id: 'payments', label: 'Payments' },
-    { id: 'sales', label: 'Sales' }
+    { id: 'sales', label: 'Sales' },
   ];
 
   const handleInputChange = (field: string, value: any) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
+    setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
   const renderPersonalInfo = () => (
@@ -64,7 +73,10 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
       <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
         <div className="relative">
           <img
-            src={performer.avatar_url || 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'}
+            src={
+              performer.avatar_url ||
+              'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
+            }
             alt="Profile"
             className="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover"
           />
@@ -73,7 +85,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
           </button>
         </div>
         <div className="flex-1 text-center md:text-left">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">{performer.stage_name}</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+            {performer.stage_name}
+          </h2>
           <p className="text-gray-600 text-sm md:text-base flex items-center justify-center md:justify-start gap-2">
             <Star className="h-4 w-4 text-yellow-400 fill-current" />
             {performer.rating.toFixed(1)} • {performer.total_shows} shows
@@ -83,7 +97,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">NickName</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            NickName
+          </label>
           <input
             type="text"
             value={profileData.nickname}
@@ -119,9 +135,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
           <span className="text-sm md:text-base">Enable your telegram</span>
         </button>
         <p className="text-xs md:text-sm text-blue-100 mt-2">
-          You must have telegram on your phone, Android, iPhone. When you press the button,
-          open the telegram, click start, with this register your telegram to receive notifications
-          from LiveCharmss
+          You must have telegram on your phone, Android, iPhone. When you press the button, open the
+          telegram, click start, with this register your telegram to receive notifications from
+          LiveCharmss
         </p>
       </div>
     </div>
@@ -141,7 +157,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
               onChange={(e) => handleInputChange('age', parseInt(e.target.value))}
               className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="text-center mt-2 text-gray-900 font-medium text-sm md:text-base">{profileData.age} years</div>
+            <div className="text-center mt-2 text-gray-900 font-medium text-sm md:text-base">
+              {profileData.age} years
+            </div>
           </div>
         </div>
 
@@ -156,7 +174,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
               onChange={(e) => handleInputChange('height', parseInt(e.target.value))}
               className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="text-center mt-2 text-gray-900 font-medium text-sm md:text-base">{profileData.height} cms</div>
+            <div className="text-center mt-2 text-gray-900 font-medium text-sm md:text-base">
+              {profileData.height} cms
+            </div>
           </div>
         </div>
 
@@ -171,7 +191,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
               onChange={(e) => handleInputChange('weight', parseInt(e.target.value))}
               className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="text-center mt-2 text-gray-900 font-medium text-sm md:text-base">{profileData.weight} kl</div>
+            <div className="text-center mt-2 text-gray-900 font-medium text-sm md:text-base">
+              {profileData.weight} kl
+            </div>
           </div>
         </div>
 
@@ -198,7 +220,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Ethnicity</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            Ethnicity
+          </label>
           <select
             value={profileData.ethnicity}
             onChange={(e) => handleInputChange('ethnicity', e.target.value)}
@@ -213,7 +237,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Sexual Preference</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            Sexual Preference
+          </label>
           <select
             value={profileData.sexualPreference}
             onChange={(e) => handleInputChange('sexualPreference', e.target.value)}
@@ -227,7 +253,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Hair Color</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            Hair Color
+          </label>
           <select
             value={profileData.hairColor}
             onChange={(e) => handleInputChange('hairColor', e.target.value)}
@@ -242,7 +270,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Eye Color</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            Eye Color
+          </label>
           <select
             value={profileData.eyeColor}
             onChange={(e) => handleInputChange('eyeColor', e.target.value)}
@@ -272,7 +302,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Display Country</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            Display Country
+          </label>
           <select
             value={profileData.country}
             onChange={(e) => handleInputChange('country', e.target.value)}
@@ -286,7 +318,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">TwitterLink</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            TwitterLink
+          </label>
           <input
             type="text"
             value={profileData.twitterLink}
@@ -296,7 +330,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">InstagramLink</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            InstagramLink
+          </label>
           <input
             type="text"
             value={profileData.instagramLink}
@@ -312,7 +348,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">VideoCallMinute</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            VideoCallMinute
+          </label>
           <div className="relative">
             <input
               type="range"
@@ -329,7 +367,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">Streaming_Minute</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+            Streaming_Minute
+          </label>
           <div className="relative">
             <input
               type="range"
@@ -365,10 +405,10 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
     ];
 
     const recentTransactions = [
-      { date: '2025-01-15', type: 'Private Show', amount: 45.50, status: 'Completed' },
+      { date: '2025-01-15', type: 'Private Show', amount: 45.5, status: 'Completed' },
       { date: '2025-01-14', type: 'Tips', amount: 23.75, status: 'Completed' },
-      { date: '2025-01-14', type: 'Video Call', amount: 67.20, status: 'Completed' },
-      { date: '2025-01-13', type: 'Gifts', amount: 12.30, status: 'Pending' },
+      { date: '2025-01-14', type: 'Video Call', amount: 67.2, status: 'Completed' },
+      { date: '2025-01-13', type: 'Gifts', amount: 12.3, status: 'Pending' },
     ];
 
     return (
@@ -466,7 +506,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="text-gray-900 font-medium text-sm">{method.name}</div>
-                      <div className="text-gray-600 text-xs">Fee: {method.fee} | Min: {method.minPayout}</div>
+                      <div className="text-gray-600 text-xs">
+                        Fee: {method.fee} | Min: {method.minPayout}
+                      </div>
                     </div>
                     <button className="text-pink-600 hover:text-pink-700 text-xs">Configure</button>
                   </div>
@@ -495,11 +537,13 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
                     <td className="py-2">{transaction.type}</td>
                     <td className="py-2 text-right">${transaction.amount.toFixed(2)}</td>
                     <td className="py-2 text-center">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        transaction.status === 'Completed'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          transaction.status === 'Completed'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-yellow-100 text-yellow-800'
+                        }`}
+                      >
                         {transaction.status}
                       </span>
                     </td>
@@ -528,7 +572,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
       <div className="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
           <div className="flex items-center justify-between p-4">
-            <h2 className="text-xl font-bold text-gray-900">Profile Management - {performer.stage_name}</h2>
+            <h2 className="text-xl font-bold text-gray-900">
+              Profile Management - {performer.stage_name}
+            </h2>
             <button
               onClick={onClose}
               className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"

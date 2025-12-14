@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, Heart, MessageCircle, Share, Eye, Clock, X } from 'lucide-react';
+import { Play, Pause, Heart, MessageCircle, Share, Eye, X } from 'lucide-react';
 
 interface Story {
   id: string;
@@ -30,7 +30,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
   currentIndex,
   onClose,
   onNext,
-  onPrevious
+  onPrevious,
 }) => {
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -42,12 +42,12 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
     if (!currentStory || currentStory.type !== 'photo') return;
 
     const timer = setInterval(() => {
-      setProgress(prev => {
+      setProgress((prev) => {
         if (prev >= 100) {
           onNext();
           return 0;
         }
-        return prev + (100 / 50); // 5 seconds for photos
+        return prev + 100 / 50; // 5 seconds for photos
       });
     }, 100);
 
@@ -76,7 +76,8 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
             <div
               className="h-full bg-white transition-all duration-100"
               style={{
-                width: index < currentIndex ? '100%' : index === currentIndex ? `${progress}%` : '0%'
+                width:
+                  index < currentIndex ? '100%' : index === currentIndex ? `${progress}%` : '0%',
               }}
             />
           </div>
@@ -103,10 +104,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
           >
             <Eye className="w-5 h-5" />
           </button>
-          <button
-            onClick={onClose}
-            className="text-white/70 hover:text-white p-2"
-          >
+          <button onClick={onClose} className="text-white/70 hover:text-white p-2">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -115,11 +113,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
       {/* Story Content */}
       <div className="relative w-full h-full max-w-md mx-auto">
         {currentStory.type === 'photo' ? (
-          <img
-            src={currentStory.url}
-            alt="Story"
-            className="w-full h-full object-cover"
-          />
+          <img src={currentStory.url} alt="Story" className="w-full h-full object-cover" />
         ) : (
           <video
             src={currentStory.url}
@@ -134,22 +128,14 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
 
         {/* Navigation areas */}
         <div className="absolute inset-0 flex">
-          <div
-            className="flex-1 cursor-pointer"
-            onClick={onPrevious}
-          />
-          <div
-            className="flex-1 cursor-pointer"
-            onClick={onNext}
-          />
+          <div className="flex-1 cursor-pointer" onClick={onPrevious} />
+          <div className="flex-1 cursor-pointer" onClick={onNext} />
         </div>
 
         {/* Story text */}
         {currentStory.comment && (
           <div className="absolute bottom-20 left-4 right-4">
-            <p className="text-white text-lg font-medium leading-relaxed">
-              {currentStory.comment}
-            </p>
+            <p className="text-white text-lg font-medium leading-relaxed">{currentStory.comment}</p>
           </div>
         )}
 
@@ -186,7 +172,7 @@ const StoryViewer: React.FC<StoryViewerProps> = ({
               <Share className="w-6 h-6" />
             </button>
           </div>
-          
+
           {currentStory.type === 'video' && (
             <button
               onClick={() => setIsPlaying(!isPlaying)}

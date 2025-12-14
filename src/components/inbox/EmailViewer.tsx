@@ -1,5 +1,15 @@
 import React from 'react';
-import { Reply, ReplyAll, Forward, Star, Archive, Trash2, Printer as Print, Download, MoreVertical } from 'lucide-react';
+import {
+  Reply,
+  ReplyAll,
+  Forward,
+  Star,
+  Archive,
+  Trash2,
+  Printer as Print,
+  Download,
+  MoreVertical,
+} from 'lucide-react';
 
 interface Email {
   id: string;
@@ -7,6 +17,7 @@ interface Email {
   to: string;
   subject: string;
   message: string;
+  preview?: string;
   date: string;
   time: string;
   isRead: boolean;
@@ -31,7 +42,7 @@ const EmailViewer: React.FC<EmailViewerProps> = ({
   onReply,
   onToggleStar,
   onDelete,
-  onArchive
+  onArchive,
 }) => {
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -63,7 +74,9 @@ const EmailViewer: React.FC<EmailViewerProps> = ({
       <div className="bg-slate-800 border-b border-slate-700 p-3 md:p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <span className={`px-3 py-1 rounded-full text-xs text-white ${getTypeColor(email.type)}`}>
+            <span
+              className={`px-3 py-1 rounded-full text-xs text-white ${getTypeColor(email.type)}`}
+            >
               {email.type.toUpperCase()}
             </span>
             <span className={`text-sm font-medium ${getPriorityColor(email.priority)}`}>
@@ -74,7 +87,9 @@ const EmailViewer: React.FC<EmailViewerProps> = ({
             <button
               onClick={() => onToggleStar(email.id)}
               className={`p-2 rounded-lg transition-colors ${
-                email.isStarred ? 'text-yellow-500 bg-slate-700' : 'text-gray-400 hover:text-yellow-500'
+                email.isStarred
+                  ? 'text-yellow-500 bg-slate-700'
+                  : 'text-gray-400 hover:text-yellow-500'
               }`}
             >
               <Star className="w-5 h-5" fill={email.isStarred ? 'currentColor' : 'none'} />
@@ -89,15 +104,11 @@ const EmailViewer: React.FC<EmailViewerProps> = ({
         </div>
 
         <h1 className="text-xl md:text-2xl font-bold text-white mb-2">{email.subject}</h1>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {email.avatar && (
-              <img
-                src={email.avatar}
-                alt={email.from}
-                className="w-10 h-10 rounded-full"
-              />
+              <img src={email.avatar} alt={email.from} className="w-10 h-10 rounded-full" />
             )}
             <div>
               <div className="text-sm font-medium text-white">From: {email.from}</div>
@@ -152,10 +163,15 @@ const EmailViewer: React.FC<EmailViewerProps> = ({
           {/* Attachments */}
           {email.attachments && email.attachments.length > 0 && (
             <div className="mb-6 p-4 bg-slate-800 rounded-lg">
-              <h3 className="text-sm font-medium text-white mb-3">Attachments ({email.attachments.length})</h3>
+              <h3 className="text-sm font-medium text-white mb-3">
+                Attachments ({email.attachments.length})
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {email.attachments.map((attachment, index) => (
-                  <div key={index} className="flex items-center justify-between bg-slate-700 p-3 rounded border border-slate-600">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between bg-slate-700 p-3 rounded border border-slate-600"
+                  >
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-pink-600 rounded flex items-center justify-center">
                         <span className="text-xs font-medium text-white">
@@ -202,7 +218,8 @@ const EmailViewer: React.FC<EmailViewerProps> = ({
                 </div>
               </div>
               <div className="mt-3 text-xs text-gray-400">
-                💡 This user has high engagement. Consider sending personalized content or exclusive offers.
+                💡 This user has high engagement. Consider sending personalized content or exclusive
+                offers.
               </div>
             </div>
           )}

@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
-import { Save, Upload, Link as LinkIcon, Calendar, DollarSign, TrendingUp, Download, Filter } from 'lucide-react';
+import {
+  Save,
+  Upload,
+  Link as LinkIcon,
+  Calendar,
+  DollarSign,
+  TrendingUp,
+  Download,
+} from 'lucide-react';
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState('personal');
   const [profileData, setProfileData] = useState({
     nickname: 'Zafira',
-    headline: 'Hello, welcome, I am an influencer and I love that you follow me on my social networks so that you are updated on all my daily activities, which by the way are very fun.',
-    myLive: 'With me you will always find new adventures, some humor, company, fun and above all a girl who likes to enjoy life, as well as meeting interesting people from all over the world.',
+    headline:
+      'Hello, welcome, I am an influencer and I love that you follow me on my social networks so that you are updated on all my daily activities, which by the way are very fun.',
+    myLive:
+      'With me you will always find new adventures, some humor, company, fun and above all a girl who likes to enjoy life, as well as meeting interesting people from all over the world.',
     age: 26,
     height: 165,
     weight: 60,
@@ -20,7 +30,7 @@ const Profile: React.FC = () => {
     twitterLink: '',
     instagramLink: '',
     videoCallRate: 18,
-    streamingRate: 30
+    streamingRate: 30,
   });
 
   const tabs = [
@@ -30,11 +40,11 @@ const Profile: React.FC = () => {
     { id: 'pricing', label: 'Pricing' },
     { id: 'media', label: 'Media profile' },
     { id: 'payments', label: 'Payments' },
-    { id: 'sales', label: 'Sales' }
+    { id: 'sales', label: 'Sales' },
   ];
 
   const handleInputChange = (field: string, value: any) => {
-    setProfileData(prev => ({ ...prev, [field]: value }));
+    setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
   const renderPersonalInfo = () => (
@@ -52,13 +62,17 @@ const Profile: React.FC = () => {
         </div>
         <div className="flex-1 text-center md:text-left">
           <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Zafira</h2>
-          <p className="text-gray-400 text-sm md:text-base">Your profile - English show information</p>
+          <p className="text-gray-400 text-sm md:text-base">
+            Your profile - English show information
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">NickName</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            NickName
+          </label>
           <input
             type="text"
             value={profileData.nickname}
@@ -94,9 +108,9 @@ const Profile: React.FC = () => {
           <span className="text-sm md:text-base">Enable your telegram</span>
         </button>
         <p className="text-xs md:text-sm text-blue-100 mt-2">
-          You must have telegram on your phone, Android, iPhone. When you press the button,
-          open the telegram, click start, with this register your telegram to receive notifications
-          from LiveCharmss
+          You must have telegram on your phone, Android, iPhone. When you press the button, open the
+          telegram, click start, with this register your telegram to receive notifications from
+          LiveCharmss
         </p>
       </div>
     </div>
@@ -116,7 +130,9 @@ const Profile: React.FC = () => {
               onChange={(e) => handleInputChange('age', parseInt(e.target.value))}
               className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="text-center mt-2 text-white font-medium text-sm md:text-base">{profileData.age} years</div>
+            <div className="text-center mt-2 text-white font-medium text-sm md:text-base">
+              {profileData.age} years
+            </div>
           </div>
         </div>
 
@@ -131,7 +147,9 @@ const Profile: React.FC = () => {
               onChange={(e) => handleInputChange('height', parseInt(e.target.value))}
               className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="text-center mt-2 text-white font-medium text-sm md:text-base">{profileData.height} cms</div>
+            <div className="text-center mt-2 text-white font-medium text-sm md:text-base">
+              {profileData.height} cms
+            </div>
           </div>
         </div>
 
@@ -146,7 +164,9 @@ const Profile: React.FC = () => {
               onChange={(e) => handleInputChange('weight', parseInt(e.target.value))}
               className="w-full h-2 bg-slate-600 rounded-lg appearance-none cursor-pointer slider"
             />
-            <div className="text-center mt-2 text-white font-medium text-sm md:text-base">{profileData.weight} kl</div>
+            <div className="text-center mt-2 text-white font-medium text-sm md:text-base">
+              {profileData.weight} kl
+            </div>
           </div>
         </div>
 
@@ -173,7 +193,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Ethnicity</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            Ethnicity
+          </label>
           <select
             value={profileData.ethnicity}
             onChange={(e) => handleInputChange('ethnicity', e.target.value)}
@@ -188,7 +210,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Sexual Preference</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            Sexual Preference
+          </label>
           <select
             value={profileData.sexualPreference}
             onChange={(e) => handleInputChange('sexualPreference', e.target.value)}
@@ -202,7 +226,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Hair Color</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            Hair Color
+          </label>
           <select
             value={profileData.hairColor}
             onChange={(e) => handleInputChange('hairColor', e.target.value)}
@@ -217,7 +243,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Eye Color</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            Eye Color
+          </label>
           <select
             value={profileData.eyeColor}
             onChange={(e) => handleInputChange('eyeColor', e.target.value)}
@@ -247,7 +275,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Display Country</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            Display Country
+          </label>
           <select
             value={profileData.country}
             onChange={(e) => handleInputChange('country', e.target.value)}
@@ -261,7 +291,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">TwitterLink</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            TwitterLink
+          </label>
           <input
             type="text"
             value={profileData.twitterLink}
@@ -271,7 +303,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">InstagramLink</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            InstagramLink
+          </label>
           <input
             type="text"
             value={profileData.instagramLink}
@@ -287,7 +321,9 @@ const Profile: React.FC = () => {
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">VideoCallMinute</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            VideoCallMinute
+          </label>
           <div className="relative">
             <input
               type="range"
@@ -304,7 +340,9 @@ const Profile: React.FC = () => {
         </div>
 
         <div>
-          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">Streaming_Minute</label>
+          <label className="block text-xs md:text-sm font-medium text-gray-300 mb-2">
+            Streaming_Minute
+          </label>
           <div className="relative">
             <input
               type="range"
@@ -340,10 +378,10 @@ const Profile: React.FC = () => {
     ];
 
     const recentTransactions = [
-      { date: '2025-01-15', type: 'Private Show', amount: 45.50, status: 'Completed' },
+      { date: '2025-01-15', type: 'Private Show', amount: 45.5, status: 'Completed' },
       { date: '2025-01-14', type: 'Tips', amount: 23.75, status: 'Completed' },
-      { date: '2025-01-14', type: 'Video Call', amount: 67.20, status: 'Completed' },
-      { date: '2025-01-13', type: 'Gifts', amount: 12.30, status: 'Pending' },
+      { date: '2025-01-14', type: 'Video Call', amount: 67.2, status: 'Completed' },
+      { date: '2025-01-13', type: 'Gifts', amount: 12.3, status: 'Pending' },
     ];
 
     return (
@@ -422,7 +460,7 @@ const Profile: React.FC = () => {
                   <div>Method</div>
                   <div>Status</div>
                 </div>
-                
+
                 {weeklyData.map((payment, index) => (
                   <div key={index} className="grid grid-cols-4 gap-2 text-xs text-white py-1">
                     <div>{payment.week}</div>
@@ -444,7 +482,9 @@ const Profile: React.FC = () => {
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="text-white font-medium text-sm">{method.name}</div>
-                      <div className="text-gray-400 text-xs">Fee: {method.fee} | Min: {method.minPayout}</div>
+                      <div className="text-gray-400 text-xs">
+                        Fee: {method.fee} | Min: {method.minPayout}
+                      </div>
                     </div>
                     <button className="text-pink-400 hover:text-pink-300 text-xs">Configure</button>
                   </div>
@@ -474,11 +514,13 @@ const Profile: React.FC = () => {
                     <td className="py-2">{transaction.type}</td>
                     <td className="py-2 text-right">${transaction.amount.toFixed(2)}</td>
                     <td className="py-2 text-center">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        transaction.status === 'Completed' 
-                          ? 'bg-green-600 text-green-100' 
-                          : 'bg-yellow-600 text-yellow-100'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          transaction.status === 'Completed'
+                            ? 'bg-green-600 text-green-100'
+                            : 'bg-yellow-600 text-yellow-100'
+                        }`}
+                      >
                         {transaction.status}
                       </span>
                     </td>
@@ -500,23 +542,23 @@ const Profile: React.FC = () => {
       {
         week: '33',
         period: 'Aug 14-20, 2025',
-        totalEarnings: 234.50,
-        privateShows: { amount: 120.30, count: 8, avgDuration: 15 },
-        tips: { amount: 45.20, count: 23, avgAmount: 1.97 },
-        videos: { amount: 35.00, count: 5, avgPrice: 7.00 },
-        photos: { amount: 18.50, count: 12, avgPrice: 1.54 },
-        gifts: { amount: 15.50, count: 7, avgValue: 2.21 }
+        totalEarnings: 234.5,
+        privateShows: { amount: 120.3, count: 8, avgDuration: 15 },
+        tips: { amount: 45.2, count: 23, avgAmount: 1.97 },
+        videos: { amount: 35.0, count: 5, avgPrice: 7.0 },
+        photos: { amount: 18.5, count: 12, avgPrice: 1.54 },
+        gifts: { amount: 15.5, count: 7, avgValue: 2.21 },
       },
       {
         week: '32',
         period: 'Aug 7-13, 2025',
         totalEarnings: 189.75,
-        privateShows: { amount: 95.20, count: 6, avgDuration: 12 },
-        tips: { amount: 52.30, count: 28, avgAmount: 1.87 },
-        videos: { amount: 28.00, count: 4, avgPrice: 7.00 },
+        privateShows: { amount: 95.2, count: 6, avgDuration: 12 },
+        tips: { amount: 52.3, count: 28, avgAmount: 1.87 },
+        videos: { amount: 28.0, count: 4, avgPrice: 7.0 },
         photos: { amount: 14.25, count: 9, avgPrice: 1.58 },
-        gifts: { amount: 0.00, count: 0, avgValue: 0 }
-      }
+        gifts: { amount: 0.0, count: 0, avgValue: 0 },
+      },
     ];
 
     const categories = [
@@ -525,22 +567,26 @@ const Profile: React.FC = () => {
       { id: 'tips', label: 'Tips', icon: '💰' },
       { id: 'videos', label: 'Videos', icon: '📹' },
       { id: 'photos', label: 'Photos', icon: '📸' },
-      { id: 'gifts', label: 'Gifts', icon: '🎁' }
+      { id: 'gifts', label: 'Gifts', icon: '🎁' },
     ];
 
-    const currentWeekData = weeklyData.find(week => week.week === selectedWeek) || weeklyData[0];
-    const previousWeekData = weeklyData.find(week => week.week === (parseInt(selectedWeek) - 1).toString()) || weeklyData[1];
+    const currentWeekData = weeklyData.find((week) => week.week === selectedWeek) || weeklyData[0];
+    const previousWeekData =
+      weeklyData.find((week) => week.week === (parseInt(selectedWeek) - 1).toString()) ||
+      weeklyData[1];
 
     const calculateTrend = (category: string) => {
-      const currentValue = category === 'total' 
-        ? currentWeekData.totalEarnings 
-        : (currentWeekData as any)[category]?.amount || 0;
-      const previousValue = category === 'total' 
-        ? previousWeekData.totalEarnings 
-        : (previousWeekData as any)[category]?.amount || 0;
-      
+      const currentValue =
+        category === 'total'
+          ? currentWeekData.totalEarnings
+          : (currentWeekData as any)[category]?.amount || 0;
+      const previousValue =
+        category === 'total'
+          ? previousWeekData.totalEarnings
+          : (previousWeekData as any)[category]?.amount || 0;
+
       if (previousValue === 0) return { change: '0.0', isPositive: true };
-      
+
       const change = ((currentValue - previousValue) / previousValue) * 100;
       return { change: change.toFixed(1), isPositive: change >= 0 };
     };
@@ -550,27 +596,30 @@ const Profile: React.FC = () => {
       const avgEarnings = last7Weeks.reduce((sum, week) => sum + week.totalEarnings, 0) / 7;
       const bestCategory = Object.entries(currentWeekData)
         .filter(([key]) => !['week', 'period', 'totalEarnings'].includes(key))
-        .sort(([,a], [,b]) => (b as any).amount - (a as any).amount)[0];
-      
+        .sort(([, a], [, b]) => (b as any).amount - (a as any).amount)[0];
+
       return [
         {
           type: 'success',
           title: 'Top Performer',
           message: `${bestCategory[0]} generated $${(bestCategory[1] as any).amount} this week`,
-          action: 'Focus more time on this category'
+          action: 'Focus more time on this category',
         },
         {
           type: 'info',
           title: 'Weekly Average',
           message: `Your 7-week average is $${avgEarnings.toFixed(2)}`,
-          action: currentWeekData.totalEarnings > avgEarnings ? 'Great job! Above average' : 'Try to increase engagement'
+          action:
+            currentWeekData.totalEarnings > avgEarnings
+              ? 'Great job! Above average'
+              : 'Try to increase engagement',
         },
         {
           type: 'warning',
           title: 'Growth Opportunity',
           message: 'Videos have the highest per-item value',
-          action: 'Consider creating more premium video content'
-        }
+          action: 'Consider creating more premium video content',
+        },
       ];
     };
 
@@ -580,7 +629,9 @@ const Profile: React.FC = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
           <div>
             <h3 className="text-lg md:text-xl font-bold text-white">Sales Analytics</h3>
-            <p className="text-gray-400 text-sm">Detailed breakdown of your earnings and performance</p>
+            <p className="text-gray-400 text-sm">
+              Detailed breakdown of your earnings and performance
+            </p>
           </div>
           <div className="flex items-center space-x-2">
             <select
@@ -609,10 +660,14 @@ const Profile: React.FC = () => {
               <p className="text-pink-300 text-sm">{currentWeekData.period}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl md:text-3xl font-bold text-white">${currentWeekData.totalEarnings.toFixed(2)}</div>
-              <div className={`text-sm flex items-center justify-end space-x-1 ${
-                calculateTrend('total').isPositive ? 'text-green-400' : 'text-red-400'
-              }`}>
+              <div className="text-2xl md:text-3xl font-bold text-white">
+                ${currentWeekData.totalEarnings.toFixed(2)}
+              </div>
+              <div
+                className={`text-sm flex items-center justify-end space-x-1 ${
+                  calculateTrend('total').isPositive ? 'text-green-400' : 'text-red-400'
+                }`}
+              >
                 <span>{calculateTrend('total').isPositive ? '↗' : '↘'}</span>
                 <span>{calculateTrend('total').change}% vs last week</span>
               </div>
@@ -646,24 +701,31 @@ const Profile: React.FC = () => {
             .map(([category, data]) => {
               const categoryData = data as any;
               const trend = calculateTrend(category);
-              
+
               return (
                 <div key={category} className="bg-slate-700 rounded-lg border border-slate-600 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h4 className="text-white font-medium capitalize text-sm">
                       {category.replace(/([A-Z])/g, ' $1').trim()}
                     </h4>
-                    <div className={`text-xs px-2 py-1 rounded ${
-                      trend.isPositive ? 'bg-green-600/20 text-green-400' : 'bg-red-600/20 text-red-400'
-                    }`}>
-                      {trend.isPositive ? '+' : ''}{trend.change}%
+                    <div
+                      className={`text-xs px-2 py-1 rounded ${
+                        trend.isPositive
+                          ? 'bg-green-600/20 text-green-400'
+                          : 'bg-red-600/20 text-red-400'
+                      }`}
+                    >
+                      {trend.isPositive ? '+' : ''}
+                      {trend.change}%
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span className="text-gray-400 text-xs">Revenue</span>
-                      <span className="text-white font-semibold">${categoryData.amount.toFixed(2)}</span>
+                      <span className="text-white font-semibold">
+                        ${categoryData.amount.toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400 text-xs">Count</span>
@@ -674,9 +736,14 @@ const Profile: React.FC = () => {
                         {category === 'privateShows' ? 'Avg Duration' : 'Avg Value'}
                       </span>
                       <span className="text-gray-300">
-                        {category === 'privateShows' 
-                          ? `${categoryData.avgDuration}min` 
-                          : `$${categoryData.avgAmount || categoryData.avgPrice || categoryData.avgValue || 0}`}
+                        {category === 'privateShows'
+                          ? `${categoryData.avgDuration}min`
+                          : `$${
+                              categoryData.avgAmount ||
+                              categoryData.avgPrice ||
+                              categoryData.avgValue ||
+                              0
+                            }`}
                       </span>
                     </div>
                   </div>
@@ -693,11 +760,16 @@ const Profile: React.FC = () => {
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {getRecommendations().map((rec, index) => (
-              <div key={index} className={`p-3 rounded-lg border-l-4 ${
-                rec.type === 'success' ? 'bg-green-900/20 border-green-500' :
-                rec.type === 'info' ? 'bg-blue-900/20 border-blue-500' :
-                'bg-yellow-900/20 border-yellow-500'
-              }`}>
+              <div
+                key={index}
+                className={`p-3 rounded-lg border-l-4 ${
+                  rec.type === 'success'
+                    ? 'bg-green-900/20 border-green-500'
+                    : rec.type === 'info'
+                    ? 'bg-blue-900/20 border-blue-500'
+                    : 'bg-yellow-900/20 border-yellow-500'
+                }`}
+              >
                 <h5 className="text-white font-medium text-sm mb-1">{rec.title}</h5>
                 <p className="text-gray-300 text-xs mb-2">{rec.message}</p>
                 <p className="text-gray-400 text-xs italic">{rec.action}</p>

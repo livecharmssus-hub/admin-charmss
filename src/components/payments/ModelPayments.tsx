@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { User, DollarSign, Calendar, ArrowRight, AlertCircle, Search, Building2 } from 'lucide-react';
+import {
+  User,
+  DollarSign,
+  Calendar,
+  ArrowRight,
+  AlertCircle,
+  Search,
+  Building2,
+} from 'lucide-react';
 
 interface ModelPayment {
   id: string;
@@ -26,71 +34,71 @@ const MOCK_MODEL_PAYMENTS: ModelPayment[] = [
     model_name: 'Camila Torres',
     stage_name: 'Cami Dream',
     studio_name: 'Dreamscape Productions',
-    pending_amount: 4500.00,
+    pending_amount: 4500.0,
     commission_rate: 60,
-    commission_amount: 2700.00,
-    net_amount: 1800.00,
+    commission_amount: 2700.0,
+    net_amount: 1800.0,
     due_date: '2024-10-12',
     priority: 'high',
     last_payment_date: '2024-09-12',
-    payment_type: 'studio_affiliated'
+    payment_type: 'studio_affiliated',
   },
   {
     id: '2',
     model_name: 'Lucia Fernandez',
     stage_name: 'Lucy Fire',
     studio_name: null,
-    pending_amount: 3200.00,
+    pending_amount: 3200.0,
     commission_rate: 50,
-    commission_amount: 1600.00,
-    net_amount: 1600.00,
+    commission_amount: 1600.0,
+    net_amount: 1600.0,
     due_date: '2024-10-18',
     priority: 'medium',
     last_payment_date: '2024-09-18',
-    payment_type: 'independent'
+    payment_type: 'independent',
   },
   {
     id: '3',
     model_name: 'Natalia Gomez',
     stage_name: 'Nati Paradise',
     studio_name: null,
-    pending_amount: 5800.00,
+    pending_amount: 5800.0,
     commission_rate: 50,
-    commission_amount: 2900.00,
-    net_amount: 2900.00,
+    commission_amount: 2900.0,
+    net_amount: 2900.0,
     due_date: '2024-10-08',
     priority: 'urgent',
     last_payment_date: '2024-09-08',
-    payment_type: 'independent'
+    payment_type: 'independent',
   },
   {
     id: '4',
     model_name: 'Daniela Morales',
     stage_name: 'Dani Star',
     studio_name: 'Starlight Entertainment',
-    pending_amount: 3800.00,
+    pending_amount: 3800.0,
     commission_rate: 58,
-    commission_amount: 2204.00,
-    net_amount: 1596.00,
+    commission_amount: 2204.0,
+    net_amount: 1596.0,
     due_date: '2024-10-22',
     priority: 'medium',
     last_payment_date: '2024-09-22',
-    payment_type: 'studio_affiliated'
+    payment_type: 'studio_affiliated',
   },
   {
     id: '5',
     model_name: 'Andrea Silva',
     stage_name: 'Andy Temptation',
     studio_name: null,
-    pending_amount: 6200.00,
+    pending_amount: 6200.0,
     commission_rate: 50,
-    commission_amount: 3100.00,
-    net_amount: 3100.00,
+    commission_amount: 3100.0,
+    net_amount: 3100.0,
     due_date: '2024-10-14',
     priority: 'high',
     last_payment_date: '2024-09-14',
-    payment_type: 'independent'
-  }
+    payment_type: 'independent',
+  },
 ];
 
 export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps) {
@@ -98,7 +106,7 @@ export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps)
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
 
-  const filteredPayments = MOCK_MODEL_PAYMENTS.filter(payment => {
+  const filteredPayments = MOCK_MODEL_PAYMENTS.filter((payment) => {
     const matchesSearch =
       payment.model_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       payment.stage_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -144,8 +152,8 @@ export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps)
 
   const totalPending = filteredPayments.reduce((sum, p) => sum + p.pending_amount, 0);
   const totalCommission = filteredPayments.reduce((sum, p) => sum + p.commission_amount, 0);
-  const independentCount = filteredPayments.filter(p => p.payment_type === 'independent').length;
-  const urgentCount = filteredPayments.filter(p => p.priority === 'urgent').length;
+  const independentCount = filteredPayments.filter((p) => p.payment_type === 'independent').length;
+  const urgentCount = filteredPayments.filter((p) => p.priority === 'urgent').length;
 
   return (
     <div className="space-y-4">
@@ -249,7 +257,11 @@ export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps)
                       <h4 className="font-semibold text-gray-900 dark:text-white truncate">
                         {payment.stage_name}
                       </h4>
-                      <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${getPriorityColor(payment.priority)}`}>
+                      <span
+                        className={`px-2 py-0.5 text-xs font-medium rounded-full ${getPriorityColor(
+                          payment.priority
+                        )}`}
+                      >
                         {getPriorityText(payment.priority)}
                       </span>
                       {payment.payment_type === 'independent' && (
@@ -258,9 +270,7 @@ export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps)
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {payment.model_name}
-                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{payment.model_name}</p>
                     {payment.studio_name && (
                       <div className="flex items-center gap-1 mt-1 text-xs text-gray-500 dark:text-gray-400">
                         <Building2 className="h-3 w-3" />
@@ -278,7 +288,9 @@ export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps)
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Comisión ({payment.commission_rate}%)</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                      Comisión ({payment.commission_rate}%)
+                    </p>
                     <p className="text-base font-semibold text-emerald-600 dark:text-emerald-400">
                       ${payment.commission_amount.toLocaleString()}
                     </p>
@@ -293,11 +305,13 @@ export default function ModelPayments({ onTransferPayment }: ModelPaymentsProps)
                     <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Fecha Límite</p>
                     <div className="flex items-center gap-1">
                       <Calendar className="h-3 w-3 text-gray-400" />
-                      <p className={`text-sm font-medium ${
-                        isOverdue(payment.due_date)
-                          ? 'text-red-600 dark:text-red-400'
-                          : 'text-gray-900 dark:text-white'
-                      }`}>
+                      <p
+                        className={`text-sm font-medium ${
+                          isOverdue(payment.due_date)
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-gray-900 dark:text-white'
+                        }`}
+                      >
                         {new Date(payment.due_date).toLocaleDateString()}
                       </p>
                     </div>

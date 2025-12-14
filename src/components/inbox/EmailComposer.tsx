@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { Send, Paperclip, Image, Smile, Bold, Italic, Underline, Link, Save, X } from 'lucide-react';
+import {
+  Send,
+  Paperclip,
+  Image,
+  Smile,
+  Bold,
+  Italic,
+  Underline,
+  Link,
+  Save,
+  X,
+} from 'lucide-react';
 
 interface EmailComposerProps {
   onClose: () => void;
@@ -44,10 +55,7 @@ const EmailComposer: React.FC<EmailComposerProps> = ({ onClose, onSend, replyTo 
         <h2 className="text-lg md:text-xl font-semibold">
           {replyTo ? 'Reply' : 'Compose New Message'}
         </h2>
-        <button
-          onClick={onClose}
-          className="p-1 hover:bg-orange-600 rounded transition-colors"
-        >
+        <button onClick={onClose} className="p-1 hover:bg-orange-600 rounded transition-colors">
           <X className="w-5 h-5" />
         </button>
       </div>
@@ -117,12 +125,7 @@ const EmailComposer: React.FC<EmailComposerProps> = ({ onClose, onSend, replyTo 
               <div className="w-px h-6 bg-slate-600"></div>
               <label className="p-2 hover:bg-slate-700 text-gray-300 rounded transition-colors cursor-pointer">
                 <Paperclip className="w-4 h-4" />
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleAttachment}
-                  className="hidden"
-                />
+                <input type="file" multiple onChange={handleAttachment} className="hidden" />
               </label>
               <label className="p-2 hover:bg-slate-700 text-gray-300 rounded transition-colors cursor-pointer">
                 <Image className="w-4 h-4" />
@@ -153,11 +156,16 @@ const EmailComposer: React.FC<EmailComposerProps> = ({ onClose, onSend, replyTo 
               <label className="block text-sm font-medium text-gray-300 mb-2">Attachments</label>
               <div className="space-y-2">
                 {attachments.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between bg-slate-800 p-2 rounded">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between bg-slate-800 p-2 rounded"
+                  >
                     <div className="flex items-center space-x-2">
                       <Paperclip className="w-4 h-4 text-gray-400" />
                       <span className="text-sm text-white">{file.name}</span>
-                      <span className="text-xs text-gray-400">({(file.size / 1024).toFixed(1)} KB)</span>
+                      <span className="text-xs text-gray-400">
+                        ({(file.size / 1024).toFixed(1)} KB)
+                      </span>
                     </div>
                     <button
                       onClick={() => removeAttachment(index)}
@@ -176,25 +184,41 @@ const EmailComposer: React.FC<EmailComposerProps> = ({ onClose, onSend, replyTo 
             <h3 className="text-sm font-medium text-pink-400 mb-2">Quick Templates</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <button
-                onClick={() => setMessage('Hi! I have some exciting new content available. Would you like to see a preview? 💕')}
+                onClick={() =>
+                  setMessage(
+                    'Hi! I have some exciting new content available. Would you like to see a preview? 💕'
+                  )
+                }
                 className="text-left p-2 bg-slate-700 border border-slate-600 text-white rounded text-sm hover:bg-slate-600 transition-colors"
               >
                 🎬 New Content Available
               </button>
               <button
-                onClick={() => setMessage('Thank you for your support! I really appreciate you being part of my community. ❤️')}
+                onClick={() =>
+                  setMessage(
+                    'Thank you for your support! I really appreciate you being part of my community. ❤️'
+                  )
+                }
                 className="text-left p-2 bg-slate-700 border border-slate-600 text-white rounded text-sm hover:bg-slate-600 transition-colors"
               >
                 💝 Thank You Message
               </button>
               <button
-                onClick={() => setMessage('I\'m going live in 30 minutes! Don\'t miss out on the fun. See you there! 🔥')}
+                onClick={() =>
+                  setMessage(
+                    "I'm going live in 30 minutes! Don't miss out on the fun. See you there! 🔥"
+                  )
+                }
                 className="text-left p-2 bg-slate-700 border border-slate-600 text-white rounded text-sm hover:bg-slate-600 transition-colors"
               >
                 📺 Going Live Soon
               </button>
               <button
-                onClick={() => setMessage('Special offer just for you! Get exclusive access to my premium content. Limited time only! ✨')}
+                onClick={() =>
+                  setMessage(
+                    'Special offer just for you! Get exclusive access to my premium content. Limited time only! ✨'
+                  )
+                }
                 className="text-left p-2 bg-slate-700 border border-slate-600 text-white rounded text-sm hover:bg-slate-600 transition-colors"
               >
                 🎁 Special Offer

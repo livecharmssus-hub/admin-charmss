@@ -16,22 +16,23 @@ interface StreamingModalProps {
 
 const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) => {
   const [isLive] = useState(performer.status === 'active');
-  const [viewers] = useState(Math.floor(Math.random() * 200) + 50);
+  const [viewers, _setViewers] = useState<number | null>(() => Math.floor(Math.random() * 200) + 50);
+  const [tips, _setTips] = useState<number | null>(() => parseFloat((Math.random() * 500).toFixed(2)));
+  const [followers, _setFollowers] = useState<number | null>(() => Math.floor(Math.random() * 50));
   const [streamingTime, setStreamingTime] = useState('0:00');
   const [cameraEnabled] = useState(true);
   const [micEnabled] = useState(true);
 
   useEffect(() => {
-    if (isLive) {
-      const startTime = Date.now();
-      const interval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        const minutes = Math.floor(elapsed / 60);
-        const seconds = elapsed % 60;
-        setStreamingTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
+    if (!isLive) return;
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const minutes = Math.floor(elapsed / 60);
+      const seconds = elapsed % 60;
+      setStreamingTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+    }, 1000);
+    return () => clearInterval(interval);
   }, [isLive]);
 
   return (
@@ -40,7 +41,10 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
         <div className="flex items-center justify-between p-4 border-b border-slate-700">
           <div className="flex items-center gap-3">
             <img
-              src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'}
+              src={
+                performer.avatar_url ||
+                'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'
+              }
               alt={performer.stage_name}
               className="h-10 w-10 rounded-full object-cover ring-2 ring-pink-500"
             />
@@ -79,7 +83,9 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
                   <div className="w-full h-full bg-gradient-to-br from-pink-900 to-purple-900 flex items-center justify-center">
                     <div className="text-center">
                       <Camera className="w-16 h-16 text-white mx-auto mb-4" />
-                      <p className="text-white text-lg font-semibold">{performer.stage_name}'s Stream</p>
+                      <p className="text-white text-lg font-semibold">
+                        {performer.stage_name}'s Stream
+                      </p>
                       <p className="text-gray-300 text-sm">Live stream preview</p>
                     </div>
                   </div>
@@ -101,11 +107,21 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
 
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className={`p-2 rounded-lg ${cameraEnabled ? 'bg-green-600' : 'bg-red-600'}`}>
-                      {cameraEnabled ? <Camera className="w-4 h-4 text-white" /> : <CameraOff className="w-4 h-4 text-white" />}
+                    <div
+                      className={`p-2 rounded-lg ${cameraEnabled ? 'bg-green-600' : 'bg-red-600'}`}
+                    >
+                      {cameraEnabled ? (
+                        <Camera className="w-4 h-4 text-white" />
+                      ) : (
+                        <CameraOff className="w-4 h-4 text-white" />
+                      )}
                     </div>
                     <div className={`p-2 rounded-lg ${micEnabled ? 'bg-green-600' : 'bg-red-600'}`}>
-                      {micEnabled ? <Mic className="w-4 h-4 text-white" /> : <MicOff className="w-4 h-4 text-white" />}
+                      {micEnabled ? (
+                        <Mic className="w-4 h-4 text-white" />
+                      ) : (
+                        <MicOff className="w-4 h-4 text-white" />
+                      )}
                     </div>
                   </div>
                   <div className="bg-black/60 backdrop-blur-sm px-3 py-1 rounded-lg">
@@ -123,21 +139,21 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
                     <Eye className="w-4 h-4" />
                     <span>Viewers</span>
                   </div>
-                  <div className="text-white text-2xl font-bold">{viewers}</div>
+                  <div className="text-white text-2xl font-bold">{viewers ?? 0}</div>
                 </div>
                 <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
                     <DollarSign className="w-4 h-4" />
                     <span>Tips Today</span>
                   </div>
-                  <div className="text-green-500 text-2xl font-bold">${(Math.random() * 500).toFixed(2)}</div>
+                  <div className="text-green-500 text-2xl font-bold">${tips?.toFixed(2) ?? '0.00'}</div>
                 </div>
                 <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
                     <Users className="w-4 h-4" />
                     <span>New Followers</span>
                   </div>
-                  <div className="text-blue-500 text-2xl font-bold">{Math.floor(Math.random() * 50)}</div>
+                  <div className="text-blue-500 text-2xl font-bold">{followers ?? 0}</div>
                 </div>
               </div>
 
@@ -168,12 +184,7 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
 
             <div className="space-y-4">
               <div className="h-full">
-                <ChatComponent
-                  title="Chat"
-                  isPublic={true}
-                  showTabs={false}
-                  className="h-full"
-                />
+                <ChatComponent title="Chat" isPublic={true} showTabs={false} className="h-full" />
               </div>
             </div>
           </div>

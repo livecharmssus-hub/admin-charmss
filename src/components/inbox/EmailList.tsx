@@ -1,12 +1,12 @@
 import React from 'react';
-import { Star, Paperclip, Trash2, Archive, MoreVertical } from 'lucide-react';
+import { Star, Paperclip, Trash2, Archive } from 'lucide-react';
 
 interface Email {
   id: string;
   from: string;
   to: string;
   subject: string;
-  preview: string;
+  preview?: string;
   date: string;
   time: string;
   isRead: boolean;
@@ -34,7 +34,7 @@ const EmailList: React.FC<EmailListProps> = ({
   folder,
   onToggleStar,
   onDelete,
-  onArchive
+  onArchive,
 }) => {
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -65,10 +65,14 @@ const EmailList: React.FC<EmailListProps> = ({
   const formatTimeAgo = (date: string) => {
     const now = new Date();
     const emailDate = new Date(date);
-    const diffInMonths = Math.floor((now.getTime() - emailDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
-    
+    const diffInMonths = Math.floor(
+      (now.getTime() - emailDate.getTime()) / (1000 * 60 * 60 * 24 * 30)
+    );
+
     if (diffInMonths >= 12) {
-      return `about ${Math.floor(diffInMonths / 12)} year${Math.floor(diffInMonths / 12) > 1 ? 's' : ''} ago`;
+      return `about ${Math.floor(diffInMonths / 12)} year${
+        Math.floor(diffInMonths / 12) > 1 ? 's' : ''
+      } ago`;
     } else if (diffInMonths >= 1) {
       return `about ${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
     } else {
@@ -91,7 +95,7 @@ const EmailList: React.FC<EmailListProps> = ({
             <span className="text-sm text-gray-400">entries</span>
           </div>
         </div>
-        
+
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-400">
             Showing 1 to {Math.min(10, emails.length)} of {emails.length} entries
@@ -152,20 +156,14 @@ const EmailList: React.FC<EmailListProps> = ({
 
               {/* Attachment */}
               <div className="col-span-1 md:col-span-1 text-center">
-                {email.hasAttachment && (
-                  <Paperclip className="w-4 h-4 text-gray-400" />
-                )}
+                {email.hasAttachment && <Paperclip className="w-4 h-4 text-gray-400" />}
               </div>
 
               {/* To */}
               <div className="col-span-2 md:col-span-2">
                 <div className="flex items-center space-x-2">
                   {email.avatar && (
-                    <img
-                      src={email.avatar}
-                      alt={email.to}
-                      className="w-6 h-6 rounded-full"
-                    />
+                    <img src={email.avatar} alt={email.to} className="w-6 h-6 rounded-full" />
                   )}
                   <span className="text-white truncate">{email.to}</span>
                 </div>
@@ -174,11 +172,18 @@ const EmailList: React.FC<EmailListProps> = ({
               {/* Subject */}
               <div className="col-span-5 md:col-span-5">
                 <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 rounded-full text-xs text-white ${getTypeColor(email.type)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs text-white ${getTypeColor(
+                      email.type
+                    )}`}
+                  >
                     {formatTimeAgo(email.date)}
                   </span>
                   <span className="text-pink-400 hover:text-pink-300 truncate cursor-pointer">
                     {email.subject}
+                  </span>
+                  <span className="ml-2 px-2 py-0.5 rounded text-xs bg-slate-700 text-gray-300">
+                    {getTypeLabel(email.type)}
                   </span>
                 </div>
               </div>
@@ -194,6 +199,16 @@ const EmailList: React.FC<EmailListProps> = ({
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onArchive(email.id);
+                  }}
+                  className="p-1 text-gray-400 hover:text-gray-200 rounded ml-1"
+                  title="Archive"
+                >
+                  <Archive className="w-4 h-4" />
+                </button>
               </div>
             </div>
           </div>
@@ -203,16 +218,18 @@ const EmailList: React.FC<EmailListProps> = ({
       {/* Pagination */}
       <div className="bg-slate-800 border-t border-slate-700 p-3 md:p-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-400">
-            Showing 1 to 10 of 60 entries
-          </span>
+          <span className="text-sm text-gray-400">Showing 1 to 10 of 60 entries</span>
           <div className="flex items-center space-x-1">
             <button className="px-3 py-1 border border-slate-600 bg-slate-700 text-white rounded text-sm hover:bg-slate-600">
               Previous
             </button>
             <button className="px-3 py-1 bg-pink-600 text-white rounded text-sm">1</button>
-            <button className="px-3 py-1 border border-slate-600 bg-slate-700 text-white rounded text-sm hover:bg-slate-600">2</button>
-            <button className="px-3 py-1 border border-slate-600 bg-slate-700 text-white rounded text-sm hover:bg-slate-600">3</button>
+            <button className="px-3 py-1 border border-slate-600 bg-slate-700 text-white rounded text-sm hover:bg-slate-600">
+              2
+            </button>
+            <button className="px-3 py-1 border border-slate-600 bg-slate-700 text-white rounded text-sm hover:bg-slate-600">
+              3
+            </button>
             <button className="px-3 py-1 border border-slate-600 bg-slate-700 text-white rounded text-sm hover:bg-slate-600">
               Next
             </button>

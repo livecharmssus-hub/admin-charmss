@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, BarChart3, Calendar, Settings } from 'lucide-react';
+import { Plus, BarChart3, Calendar } from 'lucide-react';
 import StoryCreator from '../components/stories/StoryCreator';
 import StoryViewer from '../components/stories/StoryViewer';
 import StoryGrid from '../components/stories/StoryGrid';
@@ -32,7 +32,8 @@ const Stories: React.FC = () => {
       id: '1',
       type: 'photo',
       url: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop',
-      comment: '¡Qué día tan hermoso! ☀️ Disfrutando de la playa y sintiendo la brisa del mar. La vida es bella cuando sabes apreciar los pequeños momentos. 🌊✨',
+      comment:
+        '¡Qué día tan hermoso! ☀️ Disfrutando de la playa y sintiendo la brisa del mar. La vida es bella cuando sabes apreciar los pequeños momentos. 🌊✨',
       publishDate: '2025-01-15',
       publishTime: '14:30',
       duration: 24,
@@ -41,13 +42,14 @@ const Stories: React.FC = () => {
       likes: 89,
       comments: 23,
       isActive: true,
-      timeRemaining: '18h restantes'
+      timeRemaining: '18h restantes',
     },
     {
       id: '2',
       type: 'video',
       url: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-      comment: '¡Bailando mi canción favorita! 💃 La música siempre me pone de buen humor. ¿Cuál es tu canción para bailar? 🎵',
+      comment:
+        '¡Bailando mi canción favorita! 💃 La música siempre me pone de buen humor. ¿Cuál es tu canción para bailar? 🎵',
       publishDate: '2025-01-14',
       publishTime: '20:15',
       duration: 24,
@@ -56,13 +58,14 @@ const Stories: React.FC = () => {
       likes: 156,
       comments: 45,
       isActive: true,
-      timeRemaining: '6h restantes'
+      timeRemaining: '6h restantes',
     },
     {
       id: '3',
       type: 'photo',
       url: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400&h=600&fit=crop',
-      comment: 'Momento de relajación con mi café favorito ☕ A veces necesitamos parar y disfrutar de las cosas simples de la vida.',
+      comment:
+        'Momento de relajación con mi café favorito ☕ A veces necesitamos parar y disfrutar de las cosas simples de la vida.',
       publishDate: '2025-01-13',
       publishTime: '09:00',
       duration: 24,
@@ -71,8 +74,8 @@ const Stories: React.FC = () => {
       likes: 67,
       comments: 12,
       isActive: false,
-      timeRemaining: 'Expirada'
-    }
+      timeRemaining: 'Expirada',
+    },
   ]);
 
   const handleCreateStory = () => {
@@ -87,7 +90,7 @@ const Stories: React.FC = () => {
       likes: 0,
       comments: 0,
       isActive: true,
-      timeRemaining: `${newStory.duration}h restantes`
+      timeRemaining: `${newStory.duration}h restantes`,
     };
     setStories([story, ...stories]);
   };
@@ -111,7 +114,7 @@ const Stories: React.FC = () => {
     }
   };
 
-  const activeStories = stories.filter(story => story.isActive);
+  const activeStories = stories.filter((story) => story.isActive);
   const totalViews = stories.reduce((sum, story) => sum + story.views, 0);
   const totalLikes = stories.reduce((sum, story) => sum + story.likes, 0);
   const totalComments = stories.reduce((sum, story) => sum + story.comments, 0);
@@ -142,18 +145,12 @@ const Stories: React.FC = () => {
       <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
         <h3 className="text-white font-semibold mb-4">Rendimiento de Historias</h3>
         <div className="space-y-4">
-          {stories.slice(0, 5).map((story, index) => (
+          {stories.slice(0, 5).map((story, _index) => (
             <div key={story.id} className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <img
-                  src={story.url}
-                  alt="Story"
-                  className="w-12 h-12 rounded-lg object-cover"
-                />
+                <img src={story.url} alt="Story" className="w-12 h-12 rounded-lg object-cover" />
                 <div>
-                  <div className="text-white text-sm font-medium line-clamp-1">
-                    {story.comment}
-                  </div>
+                  <div className="text-white text-sm font-medium line-clamp-1">{story.comment}</div>
                   <div className="text-gray-400 text-xs">
                     {story.publishDate} • {story.type}
                   </div>
@@ -175,7 +172,9 @@ const Stories: React.FC = () => {
       <div className="text-center py-12">
         <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 className="text-white text-xl font-semibold mb-2">Historias Programadas</h3>
-        <p className="text-gray-400 mb-6">Aquí aparecerán las historias que hayas programado para publicar más tarde</p>
+        <p className="text-gray-400 mb-6">
+          Aquí aparecerán las historias que hayas programado para publicar más tarde
+        </p>
         <button
           onClick={handleCreateStory}
           className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-medium hover:from-purple-700 hover:to-pink-700 transition-all"
@@ -192,7 +191,9 @@ const Stories: React.FC = () => {
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between space-y-4 md:space-y-0">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-white">Historias</h1>
-          <p className="text-gray-400 text-sm md:text-base">Comparte momentos especiales con tus seguidores</p>
+          <p className="text-gray-400 text-sm md:text-base">
+            Comparte momentos especiales con tus seguidores
+          </p>
         </div>
         <button
           onClick={handleCreateStory}
@@ -221,7 +222,9 @@ const Stories: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-400 text-xs md:text-sm">Vistas Totales</p>
-              <p className="text-lg md:text-2xl font-bold text-white">{totalViews.toLocaleString()}</p>
+              <p className="text-lg md:text-2xl font-bold text-white">
+                {totalViews.toLocaleString()}
+              </p>
             </div>
             <div className="p-2 md:p-3 rounded-lg bg-blue-600">
               <BarChart3 className="w-4 h-4 md:w-6 md:h-6 text-white" />
@@ -234,7 +237,10 @@ const Stories: React.FC = () => {
             <div>
               <p className="text-gray-400 text-xs md:text-sm">Engagement</p>
               <p className="text-lg md:text-2xl font-bold text-white">
-                {totalViews > 0 ? ((totalLikes + totalComments) / totalViews * 100).toFixed(1) : 0}%
+                {totalViews > 0
+                  ? (((totalLikes + totalComments) / totalViews) * 100).toFixed(1)
+                  : 0}
+                %
               </p>
             </div>
             <div className="p-2 md:p-3 rounded-lg bg-pink-600">
@@ -308,10 +314,7 @@ const Stories: React.FC = () => {
 
       {/* Story Creator Modal */}
       {showCreator && (
-        <StoryCreator
-          onClose={() => setShowCreator(false)}
-          onPublish={handlePublishStory}
-        />
+        <StoryCreator onClose={() => setShowCreator(false)} onPublish={handlePublishStory} />
       )}
 
       {/* Story Viewer Modal */}
