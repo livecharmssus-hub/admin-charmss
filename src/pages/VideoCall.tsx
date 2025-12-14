@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Video,
-  VideoOff,
-  Mic,
-  MicOff,
-  Phone,
-  PhoneOff,
-  Camera,
-  Settings,
-} from 'lucide-react';
+import { Video, VideoOff, Mic, MicOff, Phone, PhoneOff, Camera, Settings } from 'lucide-react';
 import ChatComponent from '../components/ChatComponent';
 
 const VideoCall: React.FC = () => {

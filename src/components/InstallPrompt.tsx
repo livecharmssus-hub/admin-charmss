@@ -10,7 +10,8 @@ export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const isStandalone =
     typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches;
-  const hasDeclined = typeof window !== 'undefined' ? localStorage.getItem('pwa-install-declined') : null;
+  const hasDeclined =
+    typeof window !== 'undefined' ? localStorage.getItem('pwa-install-declined') : null;
   const [showPrompt, setShowPrompt] = useState(() => !isStandalone && !hasDeclined);
 
   useEffect(() => {

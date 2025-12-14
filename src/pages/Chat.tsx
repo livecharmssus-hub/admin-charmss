@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Phone, Video, MoreVertical } from 'lucide-react';
 import ChatComponent from '../components/ChatComponent';
 
 const Chat: React.FC = () => {

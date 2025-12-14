@@ -29,15 +29,15 @@ const AuthValidator = () => {
             navigate('/dashboard');
           } else {
             console.error('Invalid response from auth callback:', response);
-            navigate('/login');
+            //navigate('/login');
           }
         } else {
           console.error('Missing userId or provider in callback');
-          navigate('/login');
+          //navigate('/login');
         }
       } catch (err) {
         console.error('Authentication error:', err);
-        navigate('/login');
+        //navigate('/login');
       }
     };
 

@@ -1,32 +1,30 @@
 import React from 'react';
 import { Home, DollarSign, Users, Mail, HelpCircle, LogOut, X } from 'lucide-react';
+import { NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/images/livecharmss2t.png';
 
 interface SidebarProps {
-  currentPage: string;
-  setCurrentPage: (page: string) => void;
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  currentPage,
-  setCurrentPage,
-  sidebarOpen,
-  setSidebarOpen,
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Home },
-    { id: 'performers', label: 'Performers', icon: Users },
-    { id: 'inbox', label: 'Inbox', icon: Mail },
-    { id: 'payments', label: 'Payments', icon: DollarSign },
+    { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
+    { id: 'performers', label: 'Performers', icon: Users, path: '/performers' },
+    { id: 'inbox', label: 'Inbox', icon: Mail, path: '/inbox' },
+    { id: 'payments', label: 'Payments', icon: DollarSign, path: '/payments' },
   ];
 
-  const bottomItems = [{ id: 'help', label: 'Help and configurations', icon: HelpCircle }];
+  const bottomItems = [
+    { id: 'help', label: 'Help and configurations', icon: HelpCircle, path: '/help' },
+  ];
 
-  const handlePageChange = (page: string) => {
-    setCurrentPage(page);
-    setSidebarOpen(false); // Close sidebar on mobile after selection
+  const location = useLocation();
+
+  const handlePageChange = () => {
+    // Close the sidebar on mobile after selection
+    setSidebarOpen(false);
   };
 
   return (
@@ -63,19 +61,23 @@ const Sidebar: React.FC<SidebarProps> = ({
           <ul className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
+              const isDashboardActive = location.pathname === '/' || location.pathname === '/dashboard';
+              const isActive = item.path === '/dashboard' ? isDashboardActive : location.pathname.startsWith(item.path);
+
               return (
                 <li key={item.id}>
-                  <button
-                    onClick={() => handlePageChange(item.id)}
+                  <NavLink
+                    to={item.path}
+                    onClick={() => handlePageChange()}
                     className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                      currentPage === item.id
+                      isActive
                         ? 'bg-pink-600 text-white'
                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white'
                     }`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="text-sm">{item.label}</span>
-                  </button>
+                  </NavLink>
                 </li>
               );
             })}
@@ -86,15 +88,19 @@ const Sidebar: React.FC<SidebarProps> = ({
           <ul className="space-y-2">
             {bottomItems.map((item) => {
               const Icon = item.icon;
+              const isActive = location.pathname.startsWith(item.path);
               return (
                 <li key={item.id}>
-                  <button
-                    onClick={() => handlePageChange(item.id)}
-                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+                  <NavLink
+                    to={item.path}
+                    onClick={() => handlePageChange()}
+                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white transition-colors ${
+                      isActive ? 'bg-pink-600 text-white' : ''
+                    }`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="text-sm">{item.label}</span>
-                  </button>
+                  </NavLink>
                 </li>
               );
             })}

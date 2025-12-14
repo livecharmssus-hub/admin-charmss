@@ -1,3 +1,4 @@
+import ApiClient from './api/axios/apiClient';
 import ApiClientOpen from './api/axios/apiClientOpen';
 
 export interface LoginConfig {
@@ -37,11 +38,11 @@ export const fetchLoginConfig = async (delayMs = 1000): Promise<LoginConfig> => 
     oauth: {
       google: {
         enabled: true,
-        url: `${baseUrl}/auth/google?role=admin`,
+        url: `${baseUrl}/api/auth/google?role=admin`,
       },
       facebook: {
         enabled: true,
-        url: `${baseUrl}/auth/facebook?role=admin`,
+        url: `${baseUrl}/api/auth/facebook?role=admin`,
       },
     },
   };
@@ -54,11 +55,31 @@ export const validateAuthCallback = async (
 ): Promise<any> => {
   try {
     const response = await ApiClientOpen.get(
-      `/auth/provider/validate-callback?userId=${userId}&provider=${provider}&role=${role}`
+      `api/auth/provider/validate-callback?userId=${userId}&provider=${provider}&role=${role}`
     );
     return response.data;
   } catch (error) {
     console.error('Auth validation error:', error);
+    throw error;
+  }
+};
+
+// Revoke Google OAuth token
+export const revokeGoogleToken = async (userId: string): Promise<void> => {
+  try {
+    await ApiClient.post('/api/auth/google/revoke', { userId });
+  } catch (error) {
+    console.error('Google token revocation error:', error);
+    throw error;
+  }
+};
+
+// Revoke Facebook OAuth token
+export const revokeFacebookToken = async (userId: string): Promise<void> => {
+  try {
+    await ApiClient.post('/api/auth/facebook/revoke', { userId });
+  } catch (error) {
+    console.error('Facebook token revocation error:', error);
     throw error;
   }
 };

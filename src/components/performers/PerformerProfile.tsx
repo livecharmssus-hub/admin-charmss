@@ -74,10 +74,10 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         <div className="relative">
           <img
             src={
-              performer.avatar_url ||
+              performer?.avatar_url ||
               'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200&h=200&fit=crop'
             }
-            alt="Profile"
+            alt={performer?.stage_name ?? 'Profile'}
             className="w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover"
           />
           <button className="absolute bottom-1 right-1 md:bottom-2 md:right-2 bg-pink-600 hover:bg-pink-700 p-1 md:p-2 rounded-full transition-colors">
@@ -86,11 +86,11 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         </div>
         <div className="flex-1 text-center md:text-left">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
-            {performer.stage_name}
+            {performer?.stage_name ?? '—'}
           </h2>
           <p className="text-gray-600 text-sm md:text-base flex items-center justify-center md:justify-start gap-2">
             <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            {performer.rating.toFixed(1)} • {performer.total_shows} shows
+            {performer ? `${performer.rating.toFixed(1)} • ${performer.total_shows} shows` : ''}
           </p>
         </div>
       </div>
@@ -573,7 +573,7 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
         <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
           <div className="flex items-center justify-between p-4">
             <h2 className="text-xl font-bold text-gray-900">
-              Profile Management - {performer.stage_name}
+              Profile Management - {performer?.stage_name ?? ''}
             </h2>
             <button
               onClick={onClose}

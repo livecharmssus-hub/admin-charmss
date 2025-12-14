@@ -16,8 +16,12 @@ interface StreamingModalProps {
 
 const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) => {
   const [isLive] = useState(performer.status === 'active');
-  const [viewers, _setViewers] = useState<number | null>(() => Math.floor(Math.random() * 200) + 50);
-  const [tips, _setTips] = useState<number | null>(() => parseFloat((Math.random() * 500).toFixed(2)));
+  const [viewers, _setViewers] = useState<number | null>(
+    () => Math.floor(Math.random() * 200) + 50
+  );
+  const [tips, _setTips] = useState<number | null>(() =>
+    parseFloat((Math.random() * 500).toFixed(2))
+  );
   const [followers, _setFollowers] = useState<number | null>(() => Math.floor(Math.random() * 50));
   const [streamingTime, setStreamingTime] = useState('0:00');
   const [cameraEnabled] = useState(true);
@@ -146,7 +150,9 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
                     <DollarSign className="w-4 h-4" />
                     <span>Tips Today</span>
                   </div>
-                  <div className="text-green-500 text-2xl font-bold">${tips?.toFixed(2) ?? '0.00'}</div>
+                  <div className="text-green-500 text-2xl font-bold">
+                    ${tips?.toFixed(2) ?? '0.00'}
+                  </div>
                 </div>
                 <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
                   <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">

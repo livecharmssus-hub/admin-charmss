@@ -13,9 +13,10 @@ import CustomerRegister from '../../pages/CustomerRegister';
 import Inbox from '../../pages/Inbox';
 import Performers from '../../pages/Performers';
 import Studios from '../../pages/Studios';
-import AuthValidator from '../providers/AuthValidator';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
+import Help from '../../pages/Help';
+import Login from '../../pages/Login';
 
 const AppRouter: React.FC = () => {
   // Mock values for now - these would come from global state
@@ -25,27 +26,17 @@ const AppRouter: React.FC = () => {
   const mockSetOnlineStatus = () => {};
   const mockSetSidebarOpen = () => {};
   const mockSetIsStreaming = () => {};
-  const mockCurrentPage = 'dashboard';
-  const mockSetCurrentPage = () => {};
   const mockSidebarOpen = false;
 
   return (
     <Routes>
-      {/* Auth callback route */}
-      <Route path="/auth/callback" element={<AuthValidator />} />
-
       {/* Protected routes with layout */}
       <Route
         path="/*"
         element={
           <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white overflow-hidden transition-colors">
             <div className="flex h-screen">
-              <Sidebar
-                currentPage={mockCurrentPage}
-                setCurrentPage={mockSetCurrentPage}
-                sidebarOpen={mockSidebarOpen}
-                setSidebarOpen={mockSetSidebarOpen}
-              />
+              <Sidebar sidebarOpen={mockSidebarOpen} setSidebarOpen={mockSetSidebarOpen} />
               <div className="flex-1 flex flex-col min-w-0">
                 <Header
                   earnings={mockEarnings}
@@ -83,6 +74,8 @@ const AppRouter: React.FC = () => {
                     <Route path="/inbox" element={<Inbox />} />
                     <Route path="/performers" element={<Performers />} />
                     <Route path="/studios" element={<Studios />} />
+                    <Route path="/help" element={<><Help /></>} />
+                    <Route path="/login" element={<Login />} />
                   </Routes>
                 </main>
               </div>

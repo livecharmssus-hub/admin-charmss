@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import ApiClientOpen from '../services/api/axios/apiClientOpen';
+import { revokeGoogleToken, revokeFacebookToken } from '../services/auth.service';
 import type { User } from '../types/User';
 
 interface AuthState {
@@ -47,7 +47,14 @@ export const useAuthStore = create<AuthState>()(
           const { user } = useAuthStore.getState();
           // `user` in state now contains the object { user: AuthUser, admin?: AdminUser }
           const userId = (user as any)?.user?.id || (user as any)?.id; // fallback to older shape if needed
-          await ApiClientOpen.get(`/auth/provider/logout?userId=${userId}`);
+          
+          if (userId) {
+            // Revoke OAuth tokens in parallel
+            await Promise.allSettled([
+              revokeGoogleToken(userId),
+              revokeFacebookToken(userId)
+            ]);
+          }
         } catch (error) {
           console.error('Logout API call failed:', error);
         } finally {

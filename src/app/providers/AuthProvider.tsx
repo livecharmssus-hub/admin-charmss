@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuthStore, isTokenExpired } from '../stores/auth.store';
 import Login from '../../pages/Login';
+import { validateAuthCallback } from '../services/auth.service';
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,7 +18,27 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const clearCredentials = useAuthStore((state) => state.clearCredentials);
 
-  useEffect(() => {
+
+  const controlSession = async () => {
+
+      if(location.pathname === '/auth-validator') {
+        const userId = searchParams.get('userId');
+        const provider = searchParams.get('provider');
+        if (userId && provider) {
+          const role = searchParams.get('role') || 'admin';
+          const response = await validateAuthCallback(userId, provider, role);
+
+          if (response.jwt && response.user) {
+              const userForStore = { ...response.user };
+              useAuthStore.getState().setCredentials(response.jwt, userForStore);
+              useAuthStore.getState().setLoggedIn(true);
+              navigate('/');
+            }
+          } else {
+            console.error('Invalid response from auth callback:');
+          }
+      }     
+
     let shouldRedirectToLogin = false;
 
     if (jwt) {
@@ -23,33 +46,18 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         clearCredentials();
         shouldRedirectToLogin = true;
       }
-    } else if (isLoggedIn) {
-      clearCredentials();
-      shouldRedirectToLogin = true;
-    } else {
-      // No jwt and not logged in - check if we're on an auth callback route
-      const isAuthCallback = location.pathname === '/auth/callback';
-      if (!isAuthCallback) {
-        shouldRedirectToLogin = true;
-      }
     }
-
-    // If redirection is needed and not already on the login page or auth callback
-    if (
-      shouldRedirectToLogin &&
-      location.pathname !== '/login' &&
-      location.pathname !== '/auth/callback'
-    ) {
+      
+    if(shouldRedirectToLogin) {
       navigate('/login', { state: { from: location.pathname } });
     }
-  }, [jwt, isLoggedIn, clearCredentials, navigate, location.pathname]);
-
-  // Allow auth callback route to render without authentication
-  if (location.pathname === '/auth/callback') {
-    return <>{children}</>;
   }
 
-  // Render children only if currently logged in
+  useEffect(() => {
+    controlSession();
+  }, [jwt, isLoggedIn]);
+
+
   return isLoggedIn ? <>{children}</> : <Login />;
 };
 

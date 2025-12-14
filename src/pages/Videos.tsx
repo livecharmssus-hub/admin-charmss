@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { Upload, Video, Eye, Heart, Download, Edit, Plus, Play, Calendar, DollarSign, MoreVertical } from 'lucide-react';
+import {
+  Upload,
+  Video,
+  Eye,
+  Heart,
+  Download,
+  Edit,
+  Plus,
+  Filter,
+  Play,
+  Calendar,
+  DollarSign,
+  MoreVertical,
+} from 'lucide-react';
 
 const Videos: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  
 
   const categories = [
     { id: 'all', label: 'All Videos', count: 18 },

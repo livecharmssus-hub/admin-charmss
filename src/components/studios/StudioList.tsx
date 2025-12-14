@@ -39,7 +39,15 @@ type SortField = 'name' | 'location' | 'active_performers' | 'status';
 type SortDirection = 'asc' | 'desc';
 
 // SortIcon component declared outside render to avoid creating components during render
-const SortIcon = ({ field, sortField, sortDirection }: { field: SortField; sortField: SortField; sortDirection: SortDirection }) => {
+const SortIcon = ({
+  field,
+  sortField,
+  sortDirection,
+}: {
+  field: SortField;
+  sortField: SortField;
+  sortDirection: SortDirection;
+}) => {
   if (sortField !== field) {
     return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
   }
@@ -183,7 +191,11 @@ export default function StudioList({
                   className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                 >
                   Performers
-                  <SortIcon field="active_performers" sortField={sortField} sortDirection={sortDirection} />
+                  <SortIcon
+                    field="active_performers"
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                  />
                 </button>
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">

@@ -4,7 +4,8 @@ const metaEnv =
   typeof import.meta !== 'undefined' && (import.meta as { env?: Record<string, unknown> }).env
     ? (import.meta as { env?: Record<string, unknown> }).env
     : undefined;
-const apiUrl = String(metaEnv?.VITE_API_URL ?? process.env.VITE_API_URL ?? '');
+const nodeEnvVar = typeof process !== 'undefined' ? (process.env as Record<string, string | undefined>)?.VITE_API_URL : undefined;
+const apiUrl = String(metaEnv?.VITE_API_URL ?? nodeEnvVar ?? '');
 
 const ApiClientOpen = axios.create({
   baseURL: apiUrl,
