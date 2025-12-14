@@ -1,0 +1,478 @@
+import React, { useState } from 'react';
+import { Power, User, Video, Upload, Star, MapPin, Clock, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ArrowUpDown, CheckSquare } from 'lucide-react';
+
+interface Performer {
+  id: string;
+  full_name: string;
+  stage_name: string;
+  email: string;
+  phone: string;
+  avatar_url: string;
+  bio: string;
+  status: 'active' | 'inactive' | 'pending' | 'suspended' | 'online' | 'offline';
+  rating: number;
+  total_shows: number;
+  joined_date: string;
+  last_active: string;
+  country: string;
+  languages: string[];
+  categories: string[];
+  hourly_rate: number;
+}
+
+interface PerformerListProps {
+  performers: Performer[];
+  onToggleStatus: (id: string, currentStatus: string) => void;
+  onViewProfile: (performer: Performer) => void;
+  onViewStreaming: (performer: Performer) => void;
+  onUploadAssets: (performer: Performer) => void;
+  onApproveContent: (performer: Performer) => void;
+}
+
+type SortField = 'stage_name' | 'rating' | 'total_shows' | 'country' | 'status';
+type SortDirection = 'asc' | 'desc';
+
+export default function PerformerList({
+  performers,
+  onToggleStatus,
+  onViewProfile,
+  onViewStreaming,
+  onUploadAssets,
+  onApproveContent,
+}: PerformerListProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [sortField, setSortField] = useState<SortField>('stage_name');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+    setCurrentPage(1);
+  };
+
+  const filteredPerformers = performers.filter(performer => {
+    const matchesSearch =
+      performer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      performer.stage_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      performer.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = statusFilter === 'all' || performer.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  const sortedPerformers = [...filteredPerformers].sort((a, b) => {
+    let aValue: any = a[sortField];
+    let bValue: any = b[sortField];
+
+    if (sortField === 'stage_name') {
+      aValue = aValue.toLowerCase();
+      bValue = bValue.toLowerCase();
+    }
+
+    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+    return 0;
+  });
+
+  const totalPages = Math.ceil(sortedPerformers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedPerformers = sortedPerformers.slice(startIndex, endIndex);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'online': return 'bg-green-500 text-white';
+      case 'offline': return 'bg-red-500 text-white';
+      case 'active': return 'bg-transparent border border-gray-300 text-gray-700';
+      case 'inactive': return 'bg-gray-400 text-white';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'suspended': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'online': return 'Online';
+      case 'offline': return 'Offline';
+      case 'active': return 'Active';
+      case 'inactive': return 'Inactive';
+      case 'pending': return 'Pendiente';
+      case 'suspended': return 'Suspendido';
+      default: return status;
+    }
+  };
+
+  const SortIcon = ({ field }: { field: SortField }) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="h-4 w-4 text-gray-400" />;
+    }
+    return (
+      <ArrowUpDown className={`h-4 w-4 ${sortDirection === 'asc' ? 'text-blue-600' : 'text-blue-600 rotate-180'}`} />
+    );
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="Buscar por nombre, stage name o email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+        <div>
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="pending">Pendientes</option>
+            <option value="suspended">Suspendidos</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="hidden md:block overflow-x-auto bg-white dark:bg-slate-800 rounded-lg shadow">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+          <thead className="bg-gray-50 dark:bg-slate-700">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Avatar
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <button
+                  onClick={() => handleSort('stage_name')}
+                  className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                >
+                  Información
+                  <SortIcon field="stage_name" />
+                </button>
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <button
+                  onClick={() => handleSort('rating')}
+                  className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                >
+                  Rating
+                  <SortIcon field="rating" />
+                </button>
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <button
+                  onClick={() => handleSort('total_shows')}
+                  className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                >
+                  Shows
+                  <SortIcon field="total_shows" />
+                </button>
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <button
+                  onClick={() => handleSort('status')}
+                  className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                >
+                  Estado
+                  <SortIcon field="status" />
+                </button>
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                <button
+                  onClick={() => handleSort('country')}
+                  className="flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                >
+                  Ubicación
+                  <SortIcon field="country" />
+                </button>
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+            {paginatedPerformers.map((performer) => (
+              <tr key={performer.id} className="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <img
+                    src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'}
+                    alt={performer.full_name}
+                    className="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
+                  />
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex flex-col">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">{performer.stage_name}</div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">{performer.full_name}</div>
+                    <div className="text-xs text-gray-400 dark:text-gray-500">{performer.email}</div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">{performer.rating.toFixed(1)}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="text-sm text-gray-900 dark:text-white">{performer.total_shows}</span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(performer.status)}`}>
+                    {getStatusText(performer.status)}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {performer.country}
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div className="flex justify-end gap-2">
+                    <button
+                      onClick={() => onToggleStatus(performer.id, performer.status)}
+                      className={`p-2 rounded-lg transition-colors ${
+                        performer.status === 'active'
+                          ? 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                          : 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                      }`}
+                      title={performer.status === 'active' ? 'Desactivar' : 'Activar'}
+                    >
+                      <Power className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => onViewProfile(performer)}
+                      className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
+                      title="Ver perfil"
+                    >
+                      <User className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => onViewStreaming(performer)}
+                      className="p-2 text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-lg transition-colors"
+                      title="Ver streaming"
+                    >
+                      <Video className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => onUploadAssets(performer)}
+                      className="p-2 text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition-colors"
+                      title="Subir assets"
+                    >
+                      <Upload className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => onApproveContent(performer)}
+                      className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                      title="Aprobar contenido"
+                    >
+                      <CheckSquare className="h-4 w-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {sortedPerformers.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600 dark:text-gray-400">Mostrar:</label>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="px-3 py-1 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+            </select>
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              Mostrando {startIndex + 1}-{Math.min(endIndex, sortedPerformers.length)} de {sortedPerformers.length}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => goToPage(1)}
+              disabled={currentPage === 1}
+              className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Primera página"
+            >
+              <ChevronsLeft className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Página anterior"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => {
+                  if (totalPages <= 7) return true;
+                  if (page === 1 || page === totalPages) return true;
+                  if (page >= currentPage - 1 && page <= currentPage + 1) return true;
+                  return false;
+                })
+                .map((page, index, array) => (
+                  <React.Fragment key={page}>
+                    {index > 0 && array[index - 1] !== page - 1 && (
+                      <span className="px-2 text-gray-400 dark:text-gray-500">...</span>
+                    )}
+                    <button
+                      onClick={() => goToPage(page)}
+                      className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === page
+                          ? 'bg-blue-600 text-white'
+                          : 'border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  </React.Fragment>
+                ))}
+            </div>
+
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Página siguiente"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => goToPage(totalPages)}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Última página"
+            >
+              <ChevronsRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="md:hidden space-y-4">
+        {paginatedPerformers.map((performer) => (
+          <div key={performer.id} className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 space-y-4">
+            <div className="flex items-start gap-4">
+              <img
+                src={performer.avatar_url || 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'}
+                alt={performer.full_name}
+                className="h-16 w-16 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
+              />
+              <div className="flex-1 min-w-0">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white truncate">{performer.stage_name}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{performer.full_name}</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{performer.email}</p>
+              </div>
+              <span className={`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(performer.status)}`}>
+                {getStatusText(performer.status)}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 text-center py-2 border-y border-gray-100 dark:border-slate-700">
+              <div>
+                <div className="flex items-center justify-center mb-1">
+                  <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                </div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white">{performer.rating.toFixed(1)}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Rating</div>
+              </div>
+              <div>
+                <div className="flex items-center justify-center mb-1">
+                  <Video className="h-4 w-4 text-gray-400" />
+                </div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white">{performer.total_shows}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">Shows</div>
+              </div>
+              <div>
+                <div className="flex items-center justify-center mb-1">
+                  <MapPin className="h-4 w-4 text-gray-400" />
+                </div>
+                <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">{performer.country}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">País</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2">
+              <button
+                onClick={() => onToggleStatus(performer.id, performer.status)}
+                className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg text-xs font-medium transition-colors ${
+                  performer.status === 'active'
+                    ? 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30'
+                    : 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30'
+                }`}
+              >
+                <Power className="h-4 w-4" />
+                {performer.status === 'active' ? 'Off' : 'On'}
+              </button>
+              <button
+                onClick={() => onViewProfile(performer)}
+                className="flex flex-col items-center gap-1 px-2 py-2 bg-gray-50 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+              >
+                <User className="h-4 w-4" />
+                Perfil
+              </button>
+              <button
+                onClick={() => onViewStreaming(performer)}
+                className="flex flex-col items-center gap-1 px-2 py-2 bg-gray-50 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+              >
+                <Video className="h-4 w-4" />
+                Stream
+              </button>
+              <button
+                onClick={() => onUploadAssets(performer)}
+                className="flex flex-col items-center gap-1 px-2 py-2 bg-gray-50 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs font-medium hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+              >
+                <Upload className="h-4 w-4" />
+                Assets
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {sortedPerformers.length === 0 && (
+        <div className="text-center py-12 bg-white rounded-lg shadow">
+          <div className="text-gray-400 mb-2">
+            <User className="h-12 w-12 mx-auto" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-1">No se encontraron performers</h3>
+          <p className="text-gray-500">Intenta ajustar los filtros de búsqueda</p>
+        </div>
+      )}
+    </div>
+  );
+}
