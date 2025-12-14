@@ -49,6 +49,17 @@ In the project directory, you can run:
 *   `npm run lint`: Runs the ESLint linter to identify and fix problems in the code.
 *   `npm run preview`: Serves the production build locally for preview.
 
+## Troubleshooting
+
+If you see an error like "It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin", install the dedicated PostCSS plugin and update PostCSS config:
+
+```sh
+npm install -D @tailwindcss/postcss
+# in postcss.config.js replace `tailwindcss: {}` with `'@tailwindcss/postcss': {}`
+```
+
+Also, if you use `@apply` in your CSS for utilities that aren't present in your scanned content files, add them to the `safelist` in `tailwind.config.js` or prefer using CSS variables for base theming.
+
 ## Folder Structure
 
 ```

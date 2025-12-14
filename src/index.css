@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "./tailwind.css";
 
 @layer base {
   :root {
@@ -14,7 +12,13 @@
   }
 
   body {
-    @apply bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100 transition-colors;
+    /* Use CSS variables for reliable base theming to avoid @apply timing issues */
+    --bg-color: 249 250 251; /* gray-50 */
+    --text-color: 15 23 42; /* gray-900 */
+
+    background-color: rgb(var(--bg-color));
+    color: rgb(var(--text-color));
+    transition: color 0.2s, background-color 0.2s;
   }
 }
 
