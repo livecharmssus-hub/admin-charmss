@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Camera, Mic, MicOff, CameraOff, Eye, DollarSign, Users, Clock } from 'lucide-react';
 import ChatComponent from '../ChatComponent';
-
-interface Performer {
-  id: string;
-  stage_name: string;
-  avatar_url: string;
-  status: string;
-}
+import { Performer } from '../../app/types/performers.types';
 
 interface StreamingModalProps {
   performer: Performer;

@@ -14,24 +14,7 @@ import {
   CheckSquare,
 } from 'lucide-react';
 
-interface Performer {
-  id: string;
-  full_name: string;
-  stage_name: string;
-  email: string;
-  phone: string;
-  avatar_url: string;
-  bio: string;
-  status: 'active' | 'inactive' | 'pending' | 'suspended' | 'online' | 'offline';
-  rating: number;
-  total_shows: number;
-  joined_date: string;
-  last_active: string;
-  country: string;
-  languages: string[];
-  categories: string[];
-  hourly_rate: number;
-}
+import { Performer } from '../../app/types/performers.types';
 
 interface PerformerListProps {
   performers: Performer[];
@@ -40,6 +23,14 @@ interface PerformerListProps {
   onViewStreaming: (performer: Performer) => void;
   onUploadAssets: (performer: Performer) => void;
   onApproveContent: (performer: Performer) => void;
+  totalCount?: number;
+  currentPage?: number;
+  itemsPerPage?: number;
+  onChangePage?: (page: number) => void;
+  onChangeItemsPerPage?: (n: number) => void;
+  onSearch?: (term: string) => void;
+  onFilterStatus?: (status: string) => void;
+  onSort?: (field: SortField, direction: SortDirection) => void;
 }
 
 type SortField = 'stage_name' | 'rating' | 'total_shows' | 'country' | 'status';
@@ -74,6 +65,14 @@ export default function PerformerList({
   onViewStreaming,
   onUploadAssets,
   onApproveContent,
+  totalCount,
+  currentPage: currentPageProp,
+  itemsPerPage: itemsPerPageProp,
+  onChangePage,
+  onChangeItemsPerPage,
+  onSearch,
+  onFilterStatus,
+  onSort,
 }: PerformerListProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -90,40 +89,25 @@ export default function PerformerList({
       setSortDirection('asc');
     }
     setCurrentPage(1);
+    onSort?.(field, sortField === field ? (sortDirection === 'asc' ? 'desc' : 'asc') : 'asc');
   };
 
-  const filteredPerformers = performers.filter((performer) => {
-    const matchesSearch =
-      performer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      performer.stage_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      performer.email.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus = statusFilter === 'all' || performer.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const sortedPerformers = [...filteredPerformers].sort((a, b) => {
-    let aValue: any = a[sortField];
-    let bValue: any = b[sortField];
-
-    if (sortField === 'stage_name') {
-      aValue = aValue.toLowerCase();
-      bValue = bValue.toLowerCase();
-    }
-
-    if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
-    return 0;
-  });
-
-  const totalPages = Math.ceil(sortedPerformers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedPerformers = sortedPerformers.slice(startIndex, endIndex);
+  // This component is presentational: it renders the `performers` array given by the parent
+  // and emits events (search, filter, pagination, sort) so the parent can call the backend.
+  const displayedPerformers = performers;
+  const currentPageEffective = currentPageProp ?? currentPage;
+  const itemsPerPageEffective = itemsPerPageProp ?? itemsPerPage;
+  const totalPages = Math.max(
+    1,
+    Math.ceil((totalCount ?? displayedPerformers.length) / itemsPerPageEffective)
+  );
+  const startIndex = (currentPageEffective - 1) * itemsPerPageEffective;
+  const endIndex = startIndex + itemsPerPageEffective;
 
   const goToPage = (page: number) => {
-    setCurrentPage(Math.max(1, Math.min(page, totalPages)));
+    const next = Math.max(1, Math.min(page, totalPages));
+    setCurrentPage(next);
+    onChangePage?.(next);
   };
 
   const getStatusColor = (status: string) => {
@@ -174,14 +158,20 @@ export default function PerformerList({
             type="text"
             placeholder="Buscar por nombre, stage name o email..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              onSearch?.(e.target.value);
+            }}
             className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div>
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              onFilterStatus?.(e.target.value);
+            }}
             className="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">Todos los estados</option>
@@ -261,7 +251,7 @@ export default function PerformerList({
             </tr>
           </thead>
           <tbody className="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
-            {paginatedPerformers.map((performer) => (
+            {displayedPerformers.map((performer) => (
               <tr
                 key={performer.id}
                 className="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
@@ -293,7 +283,7 @@ export default function PerformerList({
                   <div className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {performer.rating.toFixed(1)}
+                      {(performer.rating ?? 0).toFixed(1)}
                     </span>
                   </div>
                 </td>
@@ -366,15 +356,18 @@ export default function PerformerList({
         </table>
       </div>
 
-      {sortedPerformers.length > 0 && (
+      {(totalCount ?? displayedPerformers.length) > 0 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 bg-white dark:bg-slate-800 p-4 rounded-lg shadow">
           <div className="flex items-center gap-2">
             <label className="text-sm text-gray-600 dark:text-gray-400">Mostrar:</label>
             <select
               value={itemsPerPage}
               onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
+                const n = Number(e.target.value);
+                setItemsPerPage(n);
+                onChangeItemsPerPage?.(n);
                 setCurrentPage(1);
+                onChangePage?.(1);
               }}
               className="px-3 py-1 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-white rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
@@ -384,23 +377,24 @@ export default function PerformerList({
               <option value={50}>50</option>
             </select>
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              Mostrando {startIndex + 1}-{Math.min(endIndex, sortedPerformers.length)} de{' '}
-              {sortedPerformers.length}
+              Mostrando {startIndex + 1}-
+              {Math.min(endIndex, totalCount ?? displayedPerformers.length)} de{' '}
+              {totalCount ?? displayedPerformers.length}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={() => goToPage(1)}
-              disabled={currentPage === 1}
+              disabled={currentPageEffective === 1}
               className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Primera página"
             >
               <ChevronsLeft className="h-4 w-4" />
             </button>
             <button
-              onClick={() => goToPage(currentPage - 1)}
-              disabled={currentPage === 1}
+              onClick={() => goToPage(currentPageEffective - 1)}
+              disabled={currentPageEffective === 1}
               className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Página anterior"
             >
@@ -412,7 +406,8 @@ export default function PerformerList({
                 .filter((page) => {
                   if (totalPages <= 7) return true;
                   if (page === 1 || page === totalPages) return true;
-                  if (page >= currentPage - 1 && page <= currentPage + 1) return true;
+                  if (page >= currentPageEffective - 1 && page <= currentPageEffective + 1)
+                    return true;
                   return false;
                 })
                 .map((page, index, array) => (
@@ -423,7 +418,7 @@ export default function PerformerList({
                     <button
                       onClick={() => goToPage(page)}
                       className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                        currentPage === page
+                        currentPageEffective === page
                           ? 'bg-blue-600 text-white'
                           : 'border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700'
                       }`}
@@ -435,8 +430,8 @@ export default function PerformerList({
             </div>
 
             <button
-              onClick={() => goToPage(currentPage + 1)}
-              disabled={currentPage === totalPages}
+              onClick={() => goToPage(currentPageEffective + 1)}
+              disabled={currentPageEffective === totalPages}
               className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Página siguiente"
             >
@@ -444,7 +439,7 @@ export default function PerformerList({
             </button>
             <button
               onClick={() => goToPage(totalPages)}
-              disabled={currentPage === totalPages}
+              disabled={currentPageEffective === totalPages}
               className="p-2 rounded-lg border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               title="Última página"
             >
@@ -455,7 +450,7 @@ export default function PerformerList({
       )}
 
       <div className="md:hidden space-y-4">
-        {paginatedPerformers.map((performer) => (
+        {displayedPerformers.map((performer) => (
           <div
             key={performer.id}
             className="bg-white dark:bg-slate-800 rounded-lg shadow p-4 space-y-4"
@@ -495,7 +490,7 @@ export default function PerformerList({
                   <Star className="h-4 w-4 text-yellow-400 fill-current" />
                 </div>
                 <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {performer.rating.toFixed(1)}
+                  {(performer.rating ?? 0).toFixed(1)}
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400">Rating</div>
               </div>
@@ -557,7 +552,7 @@ export default function PerformerList({
         ))}
       </div>
 
-      {sortedPerformers.length === 0 && (
+      {displayedPerformers.length === 0 && (
         <div className="text-center py-12 bg-white rounded-lg shadow">
           <div className="text-gray-400 mb-2">
             <User className="h-12 w-12 mx-auto" />

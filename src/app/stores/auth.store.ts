@@ -45,15 +45,20 @@ export const useAuthStore = create<AuthState>()(
       logout: async () => {
         try {
           const { user } = useAuthStore.getState();
-          // `user` in state now contains the object { user: AuthUser, admin?: AdminUser }
-          const userId = (user as any)?.user?.id || (user as any)?.id; // fallback to older shape if needed
-          
+          // `user` in state may have either shape: { user: { id } } or { id }
+          let userId: string | undefined;
+          if (user && typeof user === 'object') {
+            const u = user as Record<string, unknown>;
+            if ('user' in u && u.user && typeof u.user === 'object') {
+              const inner = u.user as Record<string, unknown>;
+              if (typeof inner.id === 'string') userId = inner.id;
+            }
+            if (!userId && 'id' in u && typeof u.id === 'string') userId = u.id;
+          }
+
           if (userId) {
             // Revoke OAuth tokens in parallel
-            await Promise.allSettled([
-              revokeGoogleToken(userId),
-              revokeFacebookToken(userId)
-            ]);
+            await Promise.allSettled([revokeGoogleToken(userId), revokeFacebookToken(userId)]);
           }
         } catch (error) {
           console.error('Logout API call failed:', error);

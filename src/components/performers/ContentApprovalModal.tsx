@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle, XCircle, Image as ImageIcon, Video, Filter, Calendar } from 'lucide-react';
-
-interface Performer {
-  id: string;
-  full_name: string;
-  stage_name: string;
-  avatar_url: string;
-}
+import { Performer } from '../../app/types/performers.types';
 
 interface MediaItem {
   id: string;
@@ -143,7 +137,7 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
 
             <select
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value as any)}
+              onChange={(e) => setFilterType(e.target.value as 'all' | 'photo' | 'video')}
               className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm"
             >
               <option value="all">Todos los tipos</option>
@@ -153,7 +147,9 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
 
             <select
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value as any)}
+              onChange={(e) =>
+                setFilterStatus(e.target.value as 'all' | 'pending' | 'approved' | 'rejected')
+              }
               className="px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm"
             >
               <option value="all">Todos los estados</option>

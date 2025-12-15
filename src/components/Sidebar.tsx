@@ -61,8 +61,12 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
           <ul className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const isDashboardActive = location.pathname === '/' || location.pathname === '/dashboard';
-              const isActive = item.path === '/dashboard' ? isDashboardActive : location.pathname.startsWith(item.path);
+              const isDashboardActive =
+                location.pathname === '/' || location.pathname === '/dashboard';
+              const isActive =
+                item.path === '/dashboard'
+                  ? isDashboardActive
+                  : location.pathname.startsWith(item.path);
 
               return (
                 <li key={item.id}>

@@ -9,9 +9,10 @@ vi.mock('../../app/services/api/axios/apiClientOpen', () => ({
 
 import { fetchLoginConfig, validateAuthCallback } from '../../app/services/auth.service';
 import ApiClientOpen from '../../app/services/api/axios/apiClientOpen';
+import type { Mock } from 'vitest';
 
-// Cast to `any` so we can use mock helpers (vi.fn / mockResolvedValueOnce) on the axios instance
-const mockApiClient = ApiClientOpen as any;
+// Cast to a limited typed mock to avoid `any`
+const mockApiClient = ApiClientOpen as unknown as { get: Mock };
 
 describe('Auth Service', () => {
   beforeEach(() => {
@@ -39,8 +40,8 @@ describe('Auth Service', () => {
     it('should have correct OAuth URLs', async () => {
       const config = await fetchLoginConfig(0);
 
-      expect(config.oauth.google.url).toBe('http://localhost:3000/auth/google?role=admin');
-      expect(config.oauth.facebook.url).toBe('http://localhost:3000/auth/facebook?role=admin');
+      expect(config.oauth.google.url).toBe('http://localhost:3000/api/auth/google?role=admin');
+      expect(config.oauth.facebook.url).toBe('http://localhost:3000/api/auth/facebook?role=admin');
     });
 
     it('should include correct features with icons and colors', async () => {
@@ -74,7 +75,7 @@ describe('Auth Service', () => {
       const result = await validateAuthCallback('user123', 'google', 'admin');
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        '/auth/provider/validate-callback?userId=user123&provider=google&role=admin'
+        'api/auth/provider/validate-callback?userId=user123&provider=google&role=admin'
       );
       expect(result).toEqual(mockResponse.data);
     });
@@ -92,7 +93,7 @@ describe('Auth Service', () => {
       await validateAuthCallback('user123', 'facebook');
 
       expect(mockApiClient.get).toHaveBeenCalledWith(
-        '/auth/provider/validate-callback?userId=user123&provider=facebook&role=admin'
+        'api/auth/provider/validate-callback?userId=user123&provider=facebook&role=admin'
       );
     });
 

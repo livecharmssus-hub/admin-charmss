@@ -11,25 +11,7 @@ import {
   DollarSign,
   Globe,
 } from 'lucide-react';
-
-interface Performer {
-  id: string;
-  full_name: string;
-  stage_name: string;
-  email: string;
-  phone: string;
-  avatar_url: string;
-  bio: string;
-  status: 'active' | 'inactive' | 'pending' | 'suspended';
-  rating: number;
-  total_shows: number;
-  joined_date: string;
-  last_active: string;
-  country: string;
-  languages: string[];
-  categories: string[];
-  hourly_rate: number;
-}
+import { Performer } from '../../app/types/performers.types';
 
 interface PerformerDetailProps {
   performer: Performer | null;

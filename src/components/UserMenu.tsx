@@ -71,7 +71,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ onClose }) => {
             </div>
           </button>
 
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-slate-700 transition-colors text-left"
           >
@@ -101,11 +101,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ onClose }) => {
                 <h3 className="text-white font-semibold">Confirmar cierre de sesión</h3>
               </div>
             </div>
-            
+
             <p className="text-gray-300 mb-6">
-              ¿Estás seguro de que quieres cerrar sesión? Tendrás que iniciar sesión nuevamente para acceder al panel de administración.
+              ¿Estás seguro de que quieres cerrar sesión? Tendrás que iniciar sesión nuevamente para
+              acceder al panel de administración.
             </p>
-            
+
             <div className="flex space-x-3 justify-end">
               <button
                 onClick={cancelLogout}

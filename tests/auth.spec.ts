@@ -104,7 +104,7 @@ test.describe('Authentication Flow', () => {
     await expect(page.locator('text=Welcome Back')).toBeVisible();
   });
 
-  test('should clear credentials on logout', async ({ page, context }) => {
+  test('should clear credentials on logout', async ({ page }) => {
     // First authenticate
     await page.goto('/auth/callback?userId=test-user&provider=google&role=admin');
     await expect(page).toHaveURL('/dashboard');
@@ -116,7 +116,7 @@ test.describe('Authentication Flow', () => {
 
     // Trigger logout (this would typically be through a logout button)
     await page.evaluate(() => {
-      const authStore = (window as any).useAuthStore;
+      const authStore = (window as unknown as { useAuthStore?: { getState: () => { logout: () => void } } }).useAuthStore;
       if (authStore) {
         authStore.getState().logout();
       }
@@ -157,11 +157,9 @@ test.describe('Login Page', () => {
     await expect(googleButton).toBeVisible();
 
     // Check that clicking would redirect to OAuth URL
-    const href = await googleButton.evaluate((button) => {
-      const clickHandler = button.onclick;
-      // In a real test, you might want to intercept the redirect
-      return button.closest('button')?.getAttribute('onclick') || 'no-handler';
-    });
+    const href = await googleButton.evaluate(
+      (button) => button.closest('button')?.getAttribute('onclick') || 'no-handler'
+    );
 
     // The button should have a click handler
     expect(href).toBeDefined();

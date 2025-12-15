@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { X, Upload, Image, Video, Trash2, Eye, CheckCircle } from 'lucide-react';
-
-interface Performer {
-  id: string;
-  stage_name: string;
-  avatar_url: string;
-}
+import { Performer } from '../../app/types/performers.types';
 
 interface AssetUploaderProps {
   performer: Performer | null;

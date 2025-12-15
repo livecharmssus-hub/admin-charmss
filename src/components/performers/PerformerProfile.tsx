@@ -9,20 +9,7 @@ import {
   TrendingUp,
   Star,
 } from 'lucide-react';
-
-interface Performer {
-  id: string;
-  full_name: string;
-  stage_name: string;
-  avatar_url: string;
-  bio: string;
-  rating: number;
-  total_shows: number;
-  country: string;
-  languages: string[];
-  categories: string[];
-  hourly_rate: number;
-}
+import { Performer } from '../../app/types/performers.types';
 
 interface PerformerProfileProps {
   performer: Performer | null;
@@ -64,7 +51,7 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
     { id: 'sales', label: 'Sales' },
   ];
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: unknown) => {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
