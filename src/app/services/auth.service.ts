@@ -52,7 +52,7 @@ export const validateAuthCallback = async (
   userId: string,
   provider: string,
   role = 'admin'
-): Promise<any> => {
+): Promise<{ userId: string; provider: string; role: string }> => {
   try {
     const response = await ApiClientOpen.get(
       `api/auth/provider/validate-callback?userId=${userId}&provider=${provider}&role=${role}`

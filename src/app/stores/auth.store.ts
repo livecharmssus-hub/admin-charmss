@@ -48,7 +48,11 @@ export const useAuthStore = create<AuthState>()(
           // `user` in state may have either shape: { user: { id } } or { id }
           let userId: string | undefined;
           if (user && typeof user === 'object') {
-            const u = user as Record<string, unknown>;
+            // The `user` value can come in different shapes from the API:
+            // - { user: { id: string } }
+            // - { id: string }
+            // Use an `unknown` intermediate and narrow to a generic record to avoid unsafe casts.
+            const u = user as unknown as Record<string, unknown>;
             if ('user' in u && u.user && typeof u.user === 'object') {
               const inner = u.user as Record<string, unknown>;
               if (typeof inner.id === 'string') userId = inner.id;

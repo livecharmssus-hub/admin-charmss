@@ -77,7 +77,9 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
           </h2>
           <p className="text-gray-600 text-sm md:text-base flex items-center justify-center md:justify-start gap-2">
             <Star className="h-4 w-4 text-yellow-400 fill-current" />
-            {performer ? `${performer.rating.toFixed(1)} • ${performer.total_shows} shows` : ''}
+            {performer
+              ? `${(performer.rating ?? 0).toFixed(1)} • ${performer.total_shows ?? 0} shows`
+              : ''}
           </p>
         </div>
       </div>

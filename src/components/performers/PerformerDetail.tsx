@@ -51,7 +51,8 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return 'No disponible';
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
       month: 'long',
@@ -74,7 +75,7 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
 
         <div className="p-6 space-y-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <img
                 src={
                   performer.avatar_url ||
@@ -145,15 +146,15 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
+            <div className="bg-linear-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center">
               <div className="flex items-center justify-center mb-2">
                 <Star className="h-6 w-6 text-yellow-500 fill-current" />
               </div>
-              <div className="text-2xl font-bold text-gray-900">{performer.rating.toFixed(1)}</div>
+              <div className="text-2xl font-bold text-gray-900">{performer.rating?.toFixed(1)}</div>
               <div className="text-sm text-gray-600">Rating</div>
             </div>
 
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
+            <div className="bg-linear-to-br from-green-50 to-green-100 rounded-lg p-4 text-center">
               <div className="flex items-center justify-center mb-2">
                 <Video className="h-6 w-6 text-green-600" />
               </div>
@@ -161,7 +162,7 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
               <div className="text-sm text-gray-600">Shows realizados</div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
+            <div className="bg-linear-to-br from-purple-50 to-purple-100 rounded-lg p-4 text-center">
               <div className="flex items-center justify-center mb-2">
                 <Calendar className="h-6 w-6 text-purple-600" />
               </div>
@@ -171,7 +172,7 @@ export default function PerformerDetail({ performer, onClose }: PerformerDetailP
               <div className="text-sm text-gray-600">Fecha de ingreso</div>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 text-center">
+            <div className="bg-linear-to-br from-orange-50 to-orange-100 rounded-lg p-4 text-center">
               <div className="flex items-center justify-center mb-2">
                 <Clock className="h-6 w-6 text-orange-600" />
               </div>

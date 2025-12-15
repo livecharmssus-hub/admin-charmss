@@ -2,6 +2,7 @@ import React from 'react';
 import { Users, BarChart3, Shield, Settings } from 'lucide-react';
 import { fetchLoginConfig, type LoginConfig } from '../app/services/auth.service';
 import { BRAND_NAME } from '../app/config/appConfig';
+import logo from '../assets/images/livecharmss2t.png';
 
 const Login: React.FC = () => {
   const [config, setConfig] = React.useState<LoginConfig | null>(null);
@@ -28,7 +29,12 @@ const Login: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center text-gray-400">Loading login…</div>
+      <div className="h-screen flex items-center justify-center bg-linear-to-br from-red-500 via-red-900 to-black ">
+         <div className="mx-auto mb-4 bg-black rounded-[5px] p-1 inline-block drop-shadow-lg shadow-inner">
+            <img src={logo} alt={BRAND_NAME} className="h-14 w-auto block" />
+            Loading login…
+          </div>
+      </div>
     );
   }
 
@@ -45,12 +51,14 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900 flex">
+    <div className="min-h-screen bg-linear-to-br from-red-500 via-red-900 to-black flex">
       {/* Left Side - Branding & Features */}
       <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-center p-12 text-white">
         <div className="max-w-md">
-          <h1 className="text-4xl font-bold mb-4">{BRAND_NAME}</h1>
-          <p className="text-xl text-blue-200 mb-8">{config?.subtitle}</p>
+          <div className="mx-auto mb-4 bg-black rounded-[5px] p-1 inline-block drop-shadow-lg shadow-inner">
+            <img src={logo} alt={BRAND_NAME} className="h-14 w-auto block" />
+          </div>
+          <p className="text-xl text-red-200 mb-8">{config?.subtitle}</p>
 
           <div className="space-y-6">
             {config?.features.map((feature, index) => {
@@ -73,8 +81,15 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md">
           <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-xl">
             <div className="text-center mb-8">
+              {/* Logo for small screens (hidden on large screens where branding is visible on the left) */}
+              <div className="block lg:hidden mb-4">
+                <div className="mx-auto bg-black rounded-[5px] p-1 inline-block drop-shadow-lg shadow-inner">
+                  <img src={logo} alt={BRAND_NAME} className="h-10 w-auto block" />
+                </div>
+              </div>
+
               <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-              <p className="text-blue-200">Sign in to access your admin dashboard</p>
+              <p className="text-red-200">Sign in to access your admin dashboard</p>
             </div>
 
             <div className="space-y-4">
@@ -121,7 +136,7 @@ const Login: React.FC = () => {
             </div>
 
             <div className="mt-8 text-center">
-              <p className="text-sm text-blue-200">
+              <p className="text-sm text-red-200">
                 By continuing, you agree to our Terms of Service and Privacy Policy
               </p>
             </div>

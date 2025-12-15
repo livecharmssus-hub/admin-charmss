@@ -39,11 +39,8 @@ const StreamingModal: React.FC<StreamingModalProps> = ({ performer, onClose }) =
         <div className="flex items-center justify-between p-4 border-b border-slate-700">
           <div className="flex items-center gap-3">
             <img
-              src={
-                performer.avatar_url ||
-                'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'
-              }
-              alt={performer.stage_name}
+              src={performer.avatar_url || '/icons/default-avatar.svg'}
+              alt={performer.stage_name || 'Avatar'}
               className="h-10 w-10 rounded-full object-cover ring-2 ring-pink-500"
             />
             <div>

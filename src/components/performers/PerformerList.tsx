@@ -257,14 +257,11 @@ export default function PerformerList({
                 className="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
               >
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <img
-                    src={
-                      performer.avatar_url ||
-                      'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'
-                    }
-                    alt={performer.full_name}
-                    className="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
-                  />
+                    <img
+                      src={performer.avatar_url || '/icons/default-avatar.svg'}
+                      alt={performer.full_name || 'Avatar'}
+                      className="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
+                    />
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
@@ -457,11 +454,8 @@ export default function PerformerList({
           >
             <div className="flex items-start gap-4">
               <img
-                src={
-                  performer.avatar_url ||
-                  'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=200'
-                }
-                alt={performer.full_name}
+                src={performer.avatar_url || '/icons/default-avatar.svg'}
+                alt={performer.full_name || 'Avatar'}
                 className="h-16 w-16 rounded-full object-cover ring-2 ring-gray-200 dark:ring-slate-600"
               />
               <div className="flex-1 min-w-0">
