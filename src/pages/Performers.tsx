@@ -19,7 +19,6 @@ export default function Performers() {
   const [search, setSearch] = useState<string>('');
   const [statusFilterGlobal, setStatusFilterGlobal] = useState<string>('all');
   const [orderBy, setOrderBy] = useState<string>('lastName');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null);
   const [activeModal, setActiveModal] = useState<
     'detail' | 'profile' | 'upload' | 'streaming' | 'approval' | null
@@ -28,13 +27,39 @@ export default function Performers() {
   const fetchPerformers = async (params?: GetPerformersParams) => {
     setLoading(true);
     try {
+      // Construir el objeto where
+      const whereConditions: Record<string, unknown> = {};
+      
+      // Agregar filtro de búsqueda si existe
+      const searchTerm = params?.where ?? search;
+      if (searchTerm && typeof searchTerm === 'string' && searchTerm.trim()) {
+        whereConditions.OR = [
+          { firstName: { contains: searchTerm } },
+          { lastName: { contains: searchTerm } },
+          { email: { contains: searchTerm } },
+        ];
+      }
+      
+      // Agregar filtro de status si no es 'all'
+      const currentStatus = statusFilterGlobal;
+      if (currentStatus !== 'all') {
+        // Mapear status string a número según el backend
+        const statusMap: Record<string, number> = {
+          active: 0,
+          inactive: 1,
+          pending: 2,
+          suspended: 3,
+        };
+        if (statusMap[currentStatus] !== undefined) {
+          whereConditions.status = statusMap[currentStatus];
+        }
+      }
+
       const p: GetPerformersParams = {
         page: params?.page ?? page,
         limit: params?.limit ?? limit,
-        order: params?.order ?? order,
-        orderBy: params?.orderBy ?? orderBy,
-        where: params?.where ?? search,
-        status: params?.status ?? (statusFilterGlobal === 'all' ? undefined : statusFilterGlobal),
+        orderBy: params?.orderBy ?? { [orderBy]: 'asc' },
+        where: Object.keys(whereConditions).length > 0 ? whereConditions : undefined,
       };
 
       const resp = await PerformersService.getPerformers(p);
@@ -151,13 +176,12 @@ export default function Performers() {
               onFilterStatus={(status) => {
                 setStatusFilterGlobal(status);
                 setPage(1);
-                fetchPerformers({ status: status === 'all' ? undefined : status, page: 1 });
+                fetchPerformers({ page: 1 });
               }}
-              onSort={(field, direction) => {
+              onSort={(field) => {
                 setOrderBy(field);
-                setOrder(direction);
                 setPage(1);
-                fetchPerformers({ orderBy: field, order: direction, page: 1 });
+                fetchPerformers({ orderBy: field, page: 1 });
               }}
             />
           )}

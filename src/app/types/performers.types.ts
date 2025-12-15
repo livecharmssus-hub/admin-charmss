@@ -64,12 +64,10 @@ export interface ApiPerformersResponse {
 }
 
 export interface GetPerformersParams {
-  page?: number; // 1..n
-  limit?: number; // items per page
-  order?: 'asc' | 'desc';
-  orderBy?: string; // columna para ordenamiento
-  where?: string; // texto para filtrado
-  status?: string; // filtro por estado opcional
+  page?: number; // Page number (1-indexed)
+  limit?: number; // Items per page
+  orderBy?: string | object | object[]; // Sort order: JSON like {"stage_name": "desc"} or array [{"stage_name": "desc"}, {"id": "asc"}], or short string like "stage_name:desc"
+  where?: string | object; // Filter conditions (prefer JSON encoded). Examples: {"status": 1} or combined: {"OR": [{"firstName": {"contains": "john"}}, {"lastName": {"contains": "john"}}]}
 }
 
 export interface PaginatedResponse<T> {

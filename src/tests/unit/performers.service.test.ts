@@ -73,11 +73,9 @@ describe('Performers Service', () => {
 
     const res = await PerformersService.getPerformers({
       page: 2,
-      limit: 5,
-      order: 'desc',
-      orderBy: 'rating',
+      limit: 5,      
+      orderBy: 'rating:desc',
       where: 'alice',
-      status: 'active',
     });
 
     expect(mockApiClient.get).toHaveBeenCalledWith('/api/performers', {

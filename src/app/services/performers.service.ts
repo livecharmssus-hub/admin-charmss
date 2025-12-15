@@ -56,17 +56,23 @@ const getPerformers = async (
   params: GetPerformersParams = { page: 1, limit: 10 }
 ): Promise<GetPerformersResponse> => {
     
-  const { page = 1, limit = 10, order, orderBy, where, status } = params;
+  const { page = 1, limit = 10, orderBy, where } = params;
 
   const query: Record<string, unknown> = {
     page,
     limit,
+    where: '{}', // where es obligatorio, enviar objeto vacío por defecto
   };
 
-  if (order) query.order = order;
-  if (orderBy) query.orderBy = orderBy;
-  if (where) query.where = where;
-  if (status) query.status = status;
+  // orderBy puede ser string, objeto JSON o array de objetos
+  if (orderBy) {
+    query.orderBy = typeof orderBy === 'string' ? orderBy : JSON.stringify(orderBy);
+  }
+  
+  // where puede ser string o objeto JSON
+  if (where) {
+    query.where = typeof where === 'string' ? where : JSON.stringify(where);
+  }
 
   const response = await ApiClient.get(BASE, { params: query });
   const apiData = response.data as ApiPerformersResponse;
