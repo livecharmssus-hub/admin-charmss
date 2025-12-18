@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   Save,
@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Star,
 } from 'lucide-react';
-import { Performer } from '../../app/types/performers.types';
+import { Performer, PerformerProfile as PerformerProfileType } from '../../app/types/performers.types';
+import PerformerProfileService from '../../app/services/performerProfile.service';
 
 interface PerformerProfileProps {
   performer: Performer | null;
@@ -18,6 +19,8 @@ interface PerformerProfileProps {
 
 export default function PerformerProfile({ performer, onClose }: PerformerProfileProps) {
   const [activeTab, setActiveTab] = useState('personal');
+  const [loading, setLoading] = useState(false);
+  const [_profileDataFromApi, setProfileDataFromApi] = useState<PerformerProfileType | null>(null);
 
   const [profileData, setProfileData] = useState({
     nickname: performer?.stage_name ?? '',
@@ -38,6 +41,39 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
     videoCallRate: 18,
     streamingRate: 30,
   });
+
+  // Cargar datos del perfil cuando se abre el modal
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!performer?.id) return;
+      
+      setLoading(true);
+      try {
+        const profile = await PerformerProfileService.getPerformerProfile(performer.id);
+        setProfileDataFromApi(profile);
+        
+        // Actualizar los datos locales con los datos del backend
+        setProfileData(prev => ({
+          ...prev,
+          nickname: profile.nickName || prev.nickname,
+          headline: profile.headLines || prev.headline,
+          myLive: profile.showDescription || prev.myLive,
+          age: profile.age || prev.age,
+          height: profile.height || prev.height,
+          weight: profile.weight || prev.weight,
+          country: profile.countryCode || prev.country,
+          twitterLink: profile.twitterLink || prev.twitterLink,
+          instagramLink: profile.instagramLink || prev.instagramLink,
+        }));
+      } catch (error) {
+        console.error('Error loading performer profile:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [performer?.id]);
 
   // Render even when performer is null; individual fields use optional chaining
 
@@ -558,7 +594,16 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-xl max-w-5xl w-full max-h-[90vh] overflow-y-auto relative">
+        {loading && (
+          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-20 rounded-lg">
+            <div className="flex flex-col items-center">
+              <div className="animate-spin h-12 w-12 border-4 border-pink-600 border-t-transparent rounded-full mb-4"></div>
+              <p className="text-gray-600">Cargando perfil...</p>
+            </div>
+          </div>
+        )}
+        
         <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
           <div className="flex items-center justify-between p-4">
             <h2 className="text-xl font-bold text-gray-900">
@@ -577,7 +622,7 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-shrink-0 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
+                className={`shrink-0 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
                   activeTab === tab.id
                     ? 'border-pink-600 text-pink-600 bg-pink-50'
                     : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-50'

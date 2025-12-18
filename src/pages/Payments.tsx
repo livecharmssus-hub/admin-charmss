@@ -10,7 +10,17 @@ interface PaymentsProps {
 
 const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
   const [selectedWeek, setSelectedWeek] = useState('Semana 33, 2025');
-  const [selectedPayment, setSelectedPayment] = useState<any>(null);
+  interface SelectedPayment {
+    id: string | number;
+    recipient_name: string;
+    recipient_type: 'model' | 'studio' | 'other';
+    amount: number;
+    commission_amount?: number;
+    net_amount?: number;
+    commission_rate?: number;
+  }
+
+  const [selectedPayment, setSelectedPayment] = useState<SelectedPayment | null>(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const weeklyData = [
@@ -28,7 +38,16 @@ const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
     { date: '2025-01-13', type: 'Gifts', amount: 12.3, status: 'Pending' },
   ];
 
-  const handleModelPayment = (model: any) => {
+  interface ModelRow {
+    id: string | number;
+    stage_name: string;
+    pending_amount: number;
+    commission_amount?: number;
+    net_amount?: number;
+    commission_rate?: number;
+  }
+
+  const handleModelPayment = (model: ModelRow) => {
     setSelectedPayment({
       id: model.id,
       recipient_name: model.stage_name,

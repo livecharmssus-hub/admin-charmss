@@ -1,6 +1,26 @@
 import React, { useState } from 'react';
 import { TrendingUp, Download } from 'lucide-react';
 
+type CategoryKey = 'privateChats' | 'photos' | 'videos' | 'streaming' | 'gifts' | 'tokens';
+
+interface CategoryData {
+  count?: number;
+  hours?: number;
+  amount: number;
+}
+
+interface WeeklyData {
+  week: string;
+  period: string;
+  totalEarnings: number;
+  privateChats: CategoryData;
+  photos: CategoryData;
+  videos: CategoryData;
+  streaming: CategoryData;
+  gifts: CategoryData;
+  tokens: CategoryData;
+}
+
 const SalesAnalyticsTab: React.FC = () => {
   const [selectedWeek, setSelectedWeek] = useState('2025-W33');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -99,7 +119,7 @@ const SalesAnalyticsTab: React.FC = () => {
   const previousWeekData =
     weeklyData[weeklyData.findIndex((week) => week.week === selectedWeek) + 1];
 
-  const calculateTrend = (category: string) => {
+  const calculateTrend = (category: 'total' | CategoryKey) => {
     if (!previousWeekData) return { change: '0.0', isPositive: true };
 
     let currentValue, previousValue;
@@ -108,8 +128,8 @@ const SalesAnalyticsTab: React.FC = () => {
       currentValue = currentWeekData.totalEarnings;
       previousValue = previousWeekData.totalEarnings;
     } else {
-      currentValue = (currentWeekData as any)[category].amount;
-      previousValue = (previousWeekData as any)[category].amount;
+      currentValue = (currentWeekData as WeeklyData)[category].amount;
+      previousValue = (previousWeekData as WeeklyData)[category].amount;
     }
 
     const change = ((currentValue - previousValue) / previousValue) * 100;
@@ -119,15 +139,19 @@ const SalesAnalyticsTab: React.FC = () => {
   const getRecommendations = () => {
     const last7Weeks = weeklyData.slice(0, 7);
     const avgEarnings = last7Weeks.reduce((sum, week) => sum + week.totalEarnings, 0) / 7;
-    const bestCategory = Object.entries(currentWeekData)
+    const bestCategory = (Object.entries(currentWeekData) as [string, unknown][])
       .filter(([key]) => !['week', 'period', 'totalEarnings'].includes(key))
-      .sort(([, a], [, b]) => (b as any).amount - (a as any).amount)[0];
+      .sort(([, a], [, b]) => {
+        const aAmount = (a as CategoryData).amount ?? 0;
+        const bAmount = (b as CategoryData).amount ?? 0;
+        return bAmount - aAmount;
+      })[0];
 
     return [
       {
         type: 'success',
         title: 'Top Performer',
-        message: `${bestCategory[0]} generated $${(bestCategory[1] as any).amount} this week`,
+        message: `${bestCategory[0]} generated $${((bestCategory[1] as CategoryData).amount ?? 0).toFixed(2)} this week`,
         action: 'Focus more time on this category',
       },
       {
@@ -481,9 +505,14 @@ const SalesAnalyticsTab: React.FC = () => {
             <div className="space-y-2">
               {Object.entries(currentWeekData)
                 .filter(([key]) => !['week', 'period', 'totalEarnings'].includes(key))
-                .sort(([, a], [, b]) => (b as any).amount - (a as any).amount)
+                .sort(([, a], [, b]) => {
+                  const aAmount = (a as CategoryData).amount ?? 0;
+                  const bAmount = (b as CategoryData).amount ?? 0;
+                  return bAmount - aAmount;
+                })
                 .map(([category, data]) => {
-                  const percentage = ((data as any).amount / currentWeekData.totalEarnings) * 100;
+                  const cat = data as CategoryData;
+                  const percentage = (cat.amount / currentWeekData.totalEarnings) * 100;
                   const categoryLabels: { [key: string]: string } = {
                     privateChats: 'Private Chats',
                     photos: 'Photos',
@@ -500,7 +529,7 @@ const SalesAnalyticsTab: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <div className="text-sm text-white font-medium">
-                          ${(data as any).amount.toFixed(2)}
+                          ${cat.amount.toFixed(2)}
                         </div>
                         <div className="text-xs text-gray-400">{percentage.toFixed(1)}%</div>
                       </div>

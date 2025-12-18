@@ -1,9 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { Camera, Video, Upload, Calendar, Clock, X, RotateCcw } from 'lucide-react';
 
+interface StoryPayload {
+  id: string;
+  type: 'photo' | 'video';
+  file: File;
+  comment: string;
+  publishDate: string;
+  publishTime: string;
+  duration: number;
+  createdAt: string;
+}
+
 interface StoryCreatorProps {
   onClose: () => void;
-  onPublish: (story: any) => void;
+  onPublish: (story: StoryPayload) => void;
 }
 
 const StoryCreator: React.FC<StoryCreatorProps> = ({ onClose, onPublish }) => {

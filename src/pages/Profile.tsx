@@ -10,8 +10,29 @@ import {
 } from 'lucide-react';
 
 const Profile: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('personal');
-  const [profileData, setProfileData] = useState({
+  const [activeTab, setActiveTab] = useState<'personal' | 'profile' | 'like' | 'pricing' | 'media' | 'payments' | 'sales'>('personal');
+
+  interface ProfileDataType {
+    nickname: string;
+    headline: string;
+    myLive: string;
+    age: number;
+    height: number;
+    weight: number;
+    zodiac: string;
+    ethnicity: string;
+    sexualPreference: string;
+    hairColor: string;
+    eyeColor: string;
+    build: string;
+    country: string;
+    twitterLink: string;
+    instagramLink: string;
+    videoCallRate: number;
+    streamingRate: number;
+  }
+
+  const [profileData, setProfileData] = useState<ProfileDataType>({
     nickname: 'Zafira',
     headline:
       'Hello, welcome, I am an influencer and I love that you follow me on my social networks so that you are updated on all my daily activities, which by the way are very fun.',
@@ -43,7 +64,7 @@ const Profile: React.FC = () => {
     { id: 'sales', label: 'Sales' },
   ];
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = <K extends keyof ProfileDataType>(field: K, value: ProfileDataType[K]) => {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -575,15 +596,37 @@ const Profile: React.FC = () => {
       weeklyData.find((week) => week.week === (parseInt(selectedWeek) - 1).toString()) ||
       weeklyData[1];
 
-    const calculateTrend = (category: string) => {
+    type CategoryKey = 'privateShows' | 'tips' | 'videos' | 'photos' | 'gifts';
+
+    interface CategoryData {
+      amount: number;
+      count?: number;
+      avgDuration?: number;
+      avgAmount?: number;
+      avgPrice?: number;
+      avgValue?: number;
+    }
+
+    interface WeeklyProfileData {
+      week: string;
+      period: string;
+      totalEarnings: number;
+      privateShows: CategoryData;
+      tips: CategoryData;
+      videos: CategoryData;
+      photos: CategoryData;
+      gifts: CategoryData;
+    }
+
+    const calculateTrend = (category: 'total' | CategoryKey) => {
       const currentValue =
         category === 'total'
           ? currentWeekData.totalEarnings
-          : (currentWeekData as any)[category]?.amount || 0;
+          : (currentWeekData as WeeklyProfileData)[category]?.amount || 0;
       const previousValue =
         category === 'total'
           ? previousWeekData.totalEarnings
-          : (previousWeekData as any)[category]?.amount || 0;
+          : (previousWeekData as WeeklyProfileData)[category]?.amount || 0;
 
       if (previousValue === 0) return { change: '0.0', isPositive: true };
 
@@ -594,15 +637,19 @@ const Profile: React.FC = () => {
     const getRecommendations = () => {
       const last7Weeks = weeklyData.slice(0, 7);
       const avgEarnings = last7Weeks.reduce((sum, week) => sum + week.totalEarnings, 0) / 7;
-      const bestCategory = Object.entries(currentWeekData)
+      const bestCategory = (Object.entries(currentWeekData) as [string, unknown][]) 
         .filter(([key]) => !['week', 'period', 'totalEarnings'].includes(key))
-        .sort(([, a], [, b]) => (b as any).amount - (a as any).amount)[0];
+        .sort(([, a], [, b]) => {
+          const aAmount = (a as CategoryData).amount ?? 0;
+          const bAmount = (b as CategoryData).amount ?? 0;
+          return bAmount - aAmount;
+        })[0];
 
       return [
         {
           type: 'success',
           title: 'Top Performer',
-          message: `${bestCategory[0]} generated $${(bestCategory[1] as any).amount} this week`,
+          message: `${bestCategory[0]} generated $${((bestCategory[1] as CategoryData).amount ?? 0).toFixed(2)} this week`,
           action: 'Focus more time on this category',
         },
         {
@@ -699,8 +746,8 @@ const Profile: React.FC = () => {
             .filter(([key]) => !['week', 'period', 'totalEarnings'].includes(key))
             .filter(([key]) => selectedCategory === 'all' || selectedCategory === key)
             .map(([category, data]) => {
-              const categoryData = data as any;
-              const trend = calculateTrend(category);
+              const categoryData = data as CategoryData;
+              const trend = calculateTrend(category as 'total' | CategoryKey);
 
               return (
                 <div key={category} className="bg-slate-700 rounded-lg border border-slate-600 p-4">

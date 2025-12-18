@@ -162,7 +162,15 @@ const Inbox: React.FC = () => {
     console.log('Archive email:', id);
   };
 
-  const handleSendEmail = (newEmail: any) => {
+  interface ComposeEmailPayload {
+    to: string;
+    subject: string;
+    message: string;
+    priority: 'high' | 'normal' | 'low';
+    attachments?: File[];
+  }
+
+  const handleSendEmail = (newEmail: ComposeEmailPayload) => {
     const email: Email = {
       ...newEmail,
       id: Date.now().toString(),
@@ -179,7 +187,7 @@ const Inbox: React.FC = () => {
         type: file.name.split('.').pop() || 'file',
       })),
     };
-    setEmails([email, ...emails]);
+    setEmails((prev) => [email, ...prev]);
   };
 
   const handleReply = (email: Email) => {
@@ -193,9 +201,7 @@ const Inbox: React.FC = () => {
   // Mark email as read when selected
   React.useEffect(() => {
     if (selectedEmail) {
-      setEmails(
-        emails.map((email) => (email.id === selectedEmail ? { ...email, isRead: true } : email))
-      );
+      setEmails((prev) => prev.map((email) => (email.id === selectedEmail ? { ...email, isRead: true } : email)));
     }
   }, [selectedEmail]);
 

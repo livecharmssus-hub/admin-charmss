@@ -1,5 +1,6 @@
 import ApiClient from './api/axios/apiClient';
 import ApiClientOpen from './api/axios/apiClientOpen';
+import { User } from '../types/User';
 
 export interface LoginConfig {
   title: string;
@@ -51,8 +52,14 @@ export const fetchLoginConfig = async (delayMs = 1000): Promise<LoginConfig> => 
 export const validateAuthCallback = async (
   userId: string,
   provider: string,
-  role = 'admin'
-): Promise<{ userId: string; provider: string; role: string }> => {
+  role = 'performer'
+): Promise<{
+  user: User;
+  jwt: string;
+  userId: string;
+  provider: string;
+  role: string;
+}> => {
   try {
     const response = await ApiClientOpen.get(
       `api/auth/provider/validate-callback?userId=${userId}&provider=${provider}&role=${role}`

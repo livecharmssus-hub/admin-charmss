@@ -79,4 +79,66 @@ export interface PaginatedResponse<T> {
 
 export type GetPerformersResponse = PaginatedResponse<Performer>;
 
+// Tipo para el perfil del performer según el JSON del endpoint
+export interface PerformerProfile {
+  id: number;
+  countryId: number;
+  performerId: number;
+  languages: string;
+  headLines: string;
+  showDescription: string;
+  turnOns: string;
+  expertise: string;
+  nickName: string;
+  age: number;
+  ethnicity: number;
+  sexualPreference: number;
+  zodiac: number;
+  height: number;
+  weight: number;
+  hairColor: number;
+  eyeColor: number;
+  pubicHair: number;
+  waist: number;
+  build: number;
+  bust: number;
+  bustName: number;
+  hips: number;
+  countryCode: string;
+  coverAssetId: number;
+  profileAssetId: number;
+  homeAssetId: number;
+  homeSliderOrder: number;
+  streamName: string;
+  streamId: string;
+  appStatus: number;
+  chatPhrases: string;
+  roomTopic: string;
+  blockCountryOrigin: boolean;
+  mac: string;
+  mobilePhone: string;
+  videoAssetId: number;
+  videoAlbumId: number;
+  faceBookLink: string;
+  twitterLink: string;
+  instagramLink: string;
+  whatsAppNumber: string;
+  enableWhatsAppNotifications: boolean;
+  favoriteColor: string;
+  favoriteCandies: string;
+  favoriteBeverages: string;
+  favoriteFood: string;
+  favoriteMusic: string;
+  favoritePerfumes: string;
+  favoriteFashion: string;
+  favoriteJewells: string;
+  favoritePlaces: string;
+  hobbies: string;
+  whatToDoMillion: string;
+  favoriteMovies: string;
+  favoriteBooks: string;
+  isStreamingEnabled: boolean;
+  followerCount: number;
+}
+
 export default Performer;

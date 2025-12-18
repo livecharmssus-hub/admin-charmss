@@ -1,8 +1,10 @@
 export type UserRole = 'admin' | 'super_admin' | 'moderator';
 
+import { User } from '../app/types/User';
+
 export interface AuthValidationResponse {
   jwt: string;
-  user: any;
+  user: User;
 }
 
 export interface OAuth2Provider {
@@ -16,7 +18,7 @@ export interface OAuth2Provider {
 export interface AuthError {
   code: string;
   message: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'error';

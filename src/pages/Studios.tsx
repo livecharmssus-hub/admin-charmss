@@ -121,9 +121,9 @@ export default function Studios() {
     }, 1000);
   };
 
-  const handleToggleStatus = (id: string, currentStatus: string) => {
-    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
-    setStudios((prev) => prev.map((s) => (s.id === id ? { ...s, status: newStatus as any } : s)));
+  const handleToggleStatus = (id: string, currentStatus: 'active' | 'inactive') => {
+    const newStatus: 'active' | 'inactive' = currentStatus === 'active' ? 'inactive' : 'active';
+    setStudios((prev) => prev.map((s) => (s.id === id ? { ...s, status: newStatus } : s)));
   };
 
   const handleViewDetail = (studio: Studio) => {

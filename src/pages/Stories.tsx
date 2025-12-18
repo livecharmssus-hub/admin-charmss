@@ -82,17 +82,32 @@ const Stories: React.FC = () => {
     setShowCreator(true);
   };
 
-  const handlePublishStory = (newStory: any) => {
+  interface NewStoryPayload {
+    type: 'photo' | 'video';
+    file: File;
+    comment: string;
+    publishDate?: string;
+    publishTime?: string;
+    duration: number;
+  }
+
+  const handlePublishStory = (newStory: NewStoryPayload) => {
     const story: Story = {
-      ...newStory,
+      id: Date.now().toString(),
+      type: newStory.type,
       url: URL.createObjectURL(newStory.file),
+      comment: newStory.comment,
+      publishDate: newStory.publishDate || new Date().toISOString().split('T')[0],
+      publishTime: newStory.publishTime || new Date().toTimeString().slice(0, 5),
+      duration: newStory.duration,
+      createdAt: new Date().toISOString(),
       views: 0,
       likes: 0,
       comments: 0,
       isActive: true,
       timeRemaining: `${newStory.duration}h restantes`,
     };
-    setStories([story, ...stories]);
+    setStories((prev) => [story, ...prev]);
   };
 
   const handleStoryClick = (index: number) => {

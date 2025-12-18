@@ -96,10 +96,10 @@ export default function StudioList({
   });
 
   const sortedStudios = [...filteredStudios].sort((a, b) => {
-    let aValue: any = a[sortField];
-    let bValue: any = b[sortField];
+    let aValue: string | number = a[sortField] as string | number;
+    let bValue: string | number = b[sortField] as string | number;
 
-    if (sortField === 'name' || sortField === 'location' || sortField === 'status') {
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
       aValue = aValue.toLowerCase();
       bValue = bValue.toLowerCase();
     }

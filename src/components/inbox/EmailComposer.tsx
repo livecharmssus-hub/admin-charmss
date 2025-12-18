@@ -12,10 +12,25 @@ import {
   X,
 } from 'lucide-react';
 
+interface EmailPayload {
+  id: string;
+  to: string;
+  subject: string;
+  message: string;
+  priority: 'high' | 'normal' | 'low';
+  attachments: File[];
+  date: string;
+}
+
+interface ReplyTo {
+  from: string;
+  subject?: string;
+}
+
 interface EmailComposerProps {
   onClose: () => void;
-  onSend: (email: any) => void;
-  replyTo?: any;
+  onSend: (email: EmailPayload) => void;
+  replyTo?: ReplyTo | null;
 }
 
 const EmailComposer: React.FC<EmailComposerProps> = ({ onClose, onSend, replyTo }) => {

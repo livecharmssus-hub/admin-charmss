@@ -67,7 +67,9 @@ export default function StudioDetail({ studio, onClose, onSave }: StudioDetailPr
     }, 500);
   };
 
-  const handleChange = (field: keyof Studio, value: any) => {
+  type StudioValue = Studio[keyof Studio];
+
+  const handleChange = (field: keyof Studio, value: StudioValue) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => {
