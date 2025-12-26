@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, CheckCircle, XCircle, Image as ImageIcon, Video, Filter, Calendar } from 'lucide-react';
 import AssetPreviewModal from './AssetPreviewModal';
+import { motion } from 'framer-motion';
 import type { ContentItem } from '../../types/content';
 import { Performer } from '../../app/types/performers.types';
 import { getContentByPerformerProfileId } from '../../app/services/content.service';
@@ -77,18 +78,52 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
     };
   }, [performer?.performerProfile?.id]);
 
+  // Local UI flow states for action confirmation
+  const [confirmApproveId, setConfirmApproveId] = useState<string | null>(null);
+  const [rejectModal, setRejectModal] = useState<{ id: string; reason: string } | null>(null);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+
   if (!performer) return null;
 
   const handleApprove = (id: string) => {
-    setMediaItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status: 'approved' as const } : item))
-    );
+    setConfirmApproveId(id);
+    setActionError(null);
   };
 
   const handleReject = (id: string) => {
-    setMediaItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, status: 'rejected' as const } : item))
-    );
+    setRejectModal({ id, reason: '' });
+    setActionError(null);
+  };
+
+  const doApprove = async (id: string) => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      // status 3 = approved
+      await import('../../app/services/content.service').then((m) => m.updateAssetStatus(id, 3));
+      setMediaItems((prev) => prev.map((it) => (it.id === id ? { ...it, status: 'approved', statusCode: 3 } : it)));
+      setConfirmApproveId(null);
+    } catch {
+      setActionError('Error al aprobar el asset');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const doReject = async (id: string, reason: string) => {
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      // status 2 = rejected
+      await import('../../app/services/content.service').then((m) => m.updateAssetStatus(id, 2, reason));
+      setMediaItems((prev) => prev.map((it) => (it.id === id ? { ...it, status: 'rejected', statusCode: 2 } : it)));
+      setRejectModal(null);
+    } catch {
+      setActionError('Error al rechazar el asset');
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const filteredMedia = mediaItems.filter((item) => {
@@ -178,27 +213,31 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMedia.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => setSelectedAsset(item)}
-                  className="bg-gray-50 dark:bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
-                >
-                  <div className="relative aspect-video">
-                    {item.type === 'photo' ? (
-                      <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="relative w-full h-full">
-                        <img
-                          src={item.thumbnail || item.url}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
-                          <Video className="h-12 w-12 text-white" />
+              {filteredMedia.map((item) => {
+                const layoutId = 'asset-' + item.id;
+                const thumbTestId = `asset-thumb-${item.id}`;
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => setSelectedAsset(item)}
+                    className="relative bg-gray-50 dark:bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+                  >
+                    <motion.div layoutId={layoutId} data-testid={thumbTestId} className="relative aspect-video">
+                      {item.type === 'photo' ? (
+                        <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="relative w-full h-full">
+                          <img
+                            src={item.thumbnail || item.url}
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
+                            <Video className="h-12 w-12 text-white" />
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </motion.div>
 
                     <div className="absolute top-2 right-2">
                       {item.type === 'photo' ? (
@@ -214,24 +253,26 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                       )}
                     </div>
 
-                    <div className="absolute top-2 left-2">
+                    <div className="absolute top-2 left-2 flex flex-col gap-2">
                       {item.status === 'pending' && (
                         <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium">
                           Pendiente
                         </span>
                       )}
-                      {item.status === 'approved' && (
-                        <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium">
-                          Aprobado
-                        </span>
-                      )}
-                      {item.status === 'rejected' && (
-                        <span className="bg-red-500 text-white px-2 py-1 rounded text-xs font-medium">
-                          Rechazado
+
+                      {/* Numeric asset status pill (1=subido, 2=rechazado, 3=aprobado) */}
+                      {/* Only show numeric status pill for approved (3) or rejected (2). Hide "Subido" (1) */}
+                      {typeof item.statusCode === 'number' && (item.statusCode === 2 || item.statusCode === 3) && (
+                        <span
+                          data-testid={`asset-statuscode-${item.id}`}
+                          className={`px-2 py-1 rounded text-xs font-medium ${
+                            item.statusCode === 2 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                          }`}
+                        >
+                          {item.statusCode === 2 ? 'Rechazado' : 'Aprobado'}
                         </span>
                       )}
                     </div>
-                  </div>
 
                   <div className="p-4">
                     <h3 className="font-medium text-gray-900 dark:text-white mb-2">{item.title}</h3>
@@ -280,7 +321,8 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                     )}
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </div>
@@ -344,8 +386,60 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
             };
             return content;
           })()}
+          editorialStatus={selectedAsset.status}
           onClose={() => setSelectedAsset(null)}
         />
+      )}
+
+      {/* Approve confirm modal */}
+      {confirmApproveId && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 max-w-lg w-full z-10">
+            <h3 className="text-lg font-semibold mb-4">Confirmar aprobación</h3>
+            <p className="text-sm text-gray-600 mb-4">¿Deseas aprobar este asset?</p>
+            {actionError && <p className="text-red-500 mb-2">{actionError}</p>}
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setConfirmApproveId(null)} className="px-4 py-2 rounded text-gray-800 dark:text-gray-200">Cancelar</button>
+              <button
+                onClick={() => doApprove(confirmApproveId)}
+                disabled={actionLoading}
+                className="px-4 py-2 rounded bg-green-600 text-white"
+              >
+                {actionLoading ? 'Procesando...' : 'Aceptar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reject modal (reason textarea 255 chars required) */}
+      {rejectModal && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 max-w-md w-full z-10">
+            <h3 className="text-lg font-semibold mb-4">Rechazar asset</h3>
+            <p className="text-sm text-gray-600 mb-2">Indica la causal de rechazo (máx 255 caracteres)</p>
+            <textarea
+              value={rejectModal.reason}
+              onChange={(e) => setRejectModal({ id: rejectModal.id, reason: e.target.value.slice(0, 255) })}
+              className="w-full border p-2 rounded mb-4 h-24"
+              maxLength={255}
+              aria-label="Motivo de rechazo"
+            />
+            {actionError && <p className="text-red-500 mb-2">{actionError}</p>}
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setRejectModal(null)} className="px-4 py-2 rounded text-gray-800 dark:text-gray-200">Cancelar</button>
+              <button
+                onClick={() => rejectModal && doReject(rejectModal.id, rejectModal.reason)}
+                disabled={actionLoading || !(rejectModal?.reason && rejectModal.reason.trim().length > 0)}
+                className="px-4 py-2 rounded bg-red-600 text-white"
+              >
+                {actionLoading ? 'Procesando...' : 'Enviar rechazo'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

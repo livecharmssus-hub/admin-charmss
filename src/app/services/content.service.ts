@@ -67,6 +67,19 @@ export const getContentByPerformerProfileId = async (
 };
 
 /**
+ * Update asset editorial status on backend.
+ * status: 2 = rejected, 3 = approved
+ */
+export const updateAssetStatus = async (
+  assetId: number | string,
+  status: number,
+  notes?: string
+): Promise<void> => {
+  if (!assetId) throw new Error('assetId required');
+  await ApiClient.patch(`/api/asset/${assetId}/status`, { status, notes });
+};
+
+/**
  * Map an API AlbumDTO and its assets to the app's ContentItem format.
  * Notes about assumptions / missing data:
  * - assetType: we assume 1 === photo, 2 === video. If backend uses other values, adjust mapping.

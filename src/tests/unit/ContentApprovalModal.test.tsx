@@ -149,6 +149,7 @@ describe('ContentApprovalModal', () => {
           isLiked: false,
           creator: { id: '1', username: 'previewer', avatar: '' },
           createdAt: new Date(),
+          status: 1,
         },
         {
           id: '31',
@@ -164,6 +165,7 @@ describe('ContentApprovalModal', () => {
           creator: { id: '2', username: 'videouser', avatar: '' },
           createdAt: new Date(),
           duration: 35,
+          status: 3,
         },
       ],
     } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
@@ -187,6 +189,16 @@ describe('ContentApprovalModal', () => {
     expect(screen.getByText(/previewer/i)).toBeInTheDocument();
     expect(screen.getByText(/Likes:/i)).toBeInTheDocument();
 
+    // Ensure the shared-layout node exists (Framer Motion layoutId)
+    expect(screen.getByTestId('asset-preview-30')).toBeInTheDocument();
+
+    // Bottom 'Cerrar' button should be visible (sticky footer control)
+    expect(screen.getByTestId('asset-footer-close-30')).toBeInTheDocument();
+
+    // Editorial status pill should be visible (pending) and numeric 'subido' should NOT be shown
+    expect(screen.getByTestId('asset-preview-editorial-30')).toBeInTheDocument();
+    expect(screen.queryByTestId('asset-preview-status-30')).toBeNull();
+
     // Close preview
     const closeBtn = screen.getByLabelText('Cerrar preview');
     fireEvent.click(closeBtn);
@@ -202,6 +214,15 @@ describe('ContentApprovalModal', () => {
     fireEvent.click(videoCard!);
 
     await waitFor(() => expect(screen.getByLabelText('Cerrar preview')).toBeInTheDocument());
+
+    // Now editorial pill for video should be visible and numeric status not shown
+    expect(screen.getByTestId('asset-preview-editorial-31')).toBeInTheDocument();
+    expect(screen.queryByTestId('asset-preview-status-31')).toBeNull();
+
+    // Parent modal should still be open and onClose not called
+    expect(screen.getByText(/Aprobación de Contenido/i)).toBeInTheDocument();
+    expect(onCloseSpy).not.toHaveBeenCalled();
+
     // video element should be present with controls
     const videoEl = document.querySelector('video');
     expect(videoEl).toBeTruthy();
@@ -210,5 +231,66 @@ describe('ContentApprovalModal', () => {
     fireEvent.click(closeVideo);
 
     expect(onCloseSpy).not.toHaveBeenCalled();
+  });
+
+  it('calls API to approve an item and updates UI on success', async () => {
+    const fakeResp = {
+      album: { id: 4, name: 'Album 4', creationDate: new Date().toISOString(), performerProfileId: 1, albumType: 0, premiumContent: false, price: 0, totalLike: 0, totalComment: 0, assets: [] },
+      items: [{ id: '40', type: 'photo', fileURLThumb: 't.jpg', fileURL: 'f.jpg', assetName: 'To Approve', description: '', price: 0, likes: 0, comments: 0, isLiked: false, creator: { id: '1', username: 'p', avatar: '' }, createdAt: new Date(), status: 1 }],
+    } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
+
+    (contentService.getContentByPerformerProfileId as unknown as Mock).mockResolvedValue(fakeResp);
+    const updateMock = vi.spyOn(contentService as any, 'updateAssetStatus').mockResolvedValue(undefined);
+
+    render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
+
+    await waitFor(() => expect(screen.getByText('To Approve')).toBeInTheDocument());
+
+    const approvBtn = screen.getByRole('button', { name: /Aprobar/i });
+    fireEvent.click(approvBtn);
+
+    // Confirm modal appears
+    await waitFor(() => expect(screen.getByText(/Confirmar aprobación/i)).toBeInTheDocument());
+
+    // Accept
+    fireEvent.click(screen.getByText(/Aceptar/i));
+
+    await waitFor(() => expect(updateMock).toHaveBeenCalledWith('40', 3));
+    // Badge should show Aprobado (statuscode pill present)
+    await waitFor(() => expect(screen.getByTestId('asset-statuscode-40')).toBeInTheDocument());
+
+    updateMock.mockRestore();
+  });
+
+  it('calls API to reject an item with a reason and updates UI on success', async () => {
+    const fakeResp = {
+      album: { id: 5, name: 'Album 5', creationDate: new Date().toISOString(), performerProfileId: 1, albumType: 0, premiumContent: false, price: 0, totalLike: 0, totalComment: 0, assets: [] },
+      items: [{ id: '50', type: 'photo', fileURLThumb: 't2.jpg', fileURL: 'f2.jpg', assetName: 'To Reject', description: '', price: 0, likes: 0, comments: 0, isLiked: false, creator: { id: '1', username: 'p', avatar: '' }, createdAt: new Date(), status: 1 }],
+    } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
+
+    (contentService.getContentByPerformerProfileId as unknown as Mock).mockResolvedValue(fakeResp);
+    const updateMock = vi.spyOn(contentService as any, 'updateAssetStatus').mockResolvedValue(undefined);
+
+    render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
+
+    await waitFor(() => expect(screen.getByText('To Reject')).toBeInTheDocument());
+
+    const rejectBtn = screen.getByRole('button', { name: /Rechazar/i });
+    fireEvent.click(rejectBtn);
+
+    // Reject modal appears with textarea
+    await waitFor(() => expect(screen.getByLabelText('Motivo de rechazo')).toBeInTheDocument());
+
+    const textarea = screen.getByLabelText('Motivo de rechazo') as HTMLTextAreaElement;
+    fireEvent.change(textarea, { target: { value: 'Causal válida' } });
+
+    // Submit reject
+    fireEvent.click(screen.getByText(/Enviar rechazo/i));
+
+    await waitFor(() => expect(updateMock).toHaveBeenCalledWith('50', 2, 'Causal válida'));
+    // Badge should show Rechazado (statuscode pill present)
+    await waitFor(() => expect(screen.getByTestId('asset-statuscode-50')).toBeInTheDocument());
+
+    updateMock.mockRestore();
   });
 });
