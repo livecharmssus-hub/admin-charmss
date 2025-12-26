@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { X, CheckCircle, XCircle, Image as ImageIcon, Video, Filter, Calendar } from 'lucide-react';
+import AssetPreviewModal from './AssetPreviewModal';
+import type { ContentItem } from '../../types/content';
 import { Performer } from '../../app/types/performers.types';
+import { getContentByPerformerProfileId } from '../../app/services/content.service';
 
 interface MediaItem {
   id: string;
@@ -10,6 +13,12 @@ interface MediaItem {
   uploaded_date: string;
   status: 'pending' | 'approved' | 'rejected';
   title?: string;
+  // additional metadata
+  likes?: number;
+  comments?: number;
+  creator?: { id: string; username: string; avatar?: string };
+  duration?: number;
+  statusCode?: number;
 }
 
 interface ContentApprovalModalProps {
@@ -17,65 +26,56 @@ interface ContentApprovalModalProps {
   onClose: () => void;
 }
 
-const MOCK_MEDIA: MediaItem[] = [
-  {
-    id: '1',
-    type: 'photo',
-    url: 'https://images.pexels.com/photos/1024311/pexels-photo-1024311.jpeg',
-    uploaded_date: '2024-10-08',
-    status: 'pending',
-    title: 'Performance Photo 1',
-  },
-  {
-    id: '2',
-    type: 'photo',
-    url: 'https://images.pexels.com/photos/1181391/pexels-photo-1181391.jpeg',
-    uploaded_date: '2024-10-07',
-    status: 'pending',
-    title: 'Performance Photo 2',
-  },
-  {
-    id: '3',
-    type: 'video',
-    url: 'https://example.com/video1.mp4',
-    thumbnail: 'https://images.pexels.com/photos/1181695/pexels-photo-1181695.jpeg',
-    uploaded_date: '2024-10-06',
-    status: 'pending',
-    title: 'Performance Video 1',
-  },
-  {
-    id: '4',
-    type: 'photo',
-    url: 'https://images.pexels.com/photos/1102341/pexels-photo-1102341.jpeg',
-    uploaded_date: '2024-10-05',
-    status: 'approved',
-    title: 'Performance Photo 3',
-  },
-  {
-    id: '5',
-    type: 'video',
-    url: 'https://example.com/video2.mp4',
-    thumbnail: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg',
-    uploaded_date: '2024-10-04',
-    status: 'rejected',
-    title: 'Performance Video 2',
-  },
-  {
-    id: '6',
-    type: 'photo',
-    url: 'https://images.pexels.com/photos/718978/pexels-photo-718978.jpeg',
-    uploaded_date: '2024-10-03',
-    status: 'pending',
-    title: 'Performance Photo 4',
-  },
-];
-
 export default function ContentApprovalModal({ performer, onClose }: ContentApprovalModalProps) {
-  const [mediaItems, setMediaItems] = useState<MediaItem[]>(MOCK_MEDIA);
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
   const [filterType, setFilterType] = useState<'all' | 'photo' | 'video'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>(
     'all'
   );
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedAsset, setSelectedAsset] = useState<MediaItem | null>(null);
+
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (!performer?.performerProfile?.id) return setMediaItems([]);
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const resp = await getContentByPerformerProfileId(performer.performerProfile.id);
+        const items = resp?.items ?? [];
+        const mapped: MediaItem[] = items.map((it) => ({
+          id: String(it.id),
+          type: it.type as 'photo' | 'video',
+          url: it.fileURL ?? it.fileURLThumb ?? '',
+          thumbnail: it.fileURLThumb ?? undefined,
+          uploaded_date:
+            it.createdAt instanceof Date ? it.createdAt.toISOString() : String(it.createdAt),
+          status: 'pending', // default editorial status
+          title: it.assetName || it.description || '',
+          likes: (it.likes ?? 0) as number,
+          comments: (it.comments ?? 0) as number,
+          creator: it.creator ?? undefined,
+          duration: it.duration ?? undefined,
+          statusCode: it.status ?? undefined,
+        }));
+
+        if (mounted) setMediaItems(mapped);
+      } catch {
+        if (mounted) setError('Error al cargar contenido');
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, [performer?.performerProfile?.id]);
 
   if (!performer) return null;
 
@@ -161,7 +161,17 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
-          {filteredMedia.length === 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-300 mb-4" />
+              <p className="text-lg">Cargando contenido...</p>
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center py-12 text-red-500">
+              <XCircle className="h-16 w-16 mb-4 opacity-50" />
+              <p className="text-lg">{error}</p>
+            </div>
+          ) : filteredMedia.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
               <ImageIcon className="h-16 w-16 mb-4 opacity-50" />
               <p className="text-lg">No hay contenido que coincida con los filtros</p>
@@ -171,7 +181,8 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
               {filteredMedia.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-gray-50 dark:bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow"
+                  onClick={() => setSelectedAsset(item)}
+                  className="bg-gray-50 dark:bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                 >
                   <div className="relative aspect-video">
                     {item.type === 'photo' ? (
@@ -183,7 +194,7 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                           alt={item.title}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-opacity-30 flex items-center justify-center">
                           <Video className="h-12 w-12 text-white" />
                         </div>
                       </div>
@@ -232,14 +243,14 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                     {item.status === 'pending' && (
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleApprove(item.id)}
+                          onClick={(e) => { e.stopPropagation(); handleApprove(item.id); }}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                         >
                           <CheckCircle className="h-4 w-4" />
                           Aprobar
                         </button>
                         <button
-                          onClick={() => handleReject(item.id)}
+                          onClick={(e) => { e.stopPropagation(); handleReject(item.id); }}
                           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                         >
                           <XCircle className="h-4 w-4" />
@@ -250,7 +261,7 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
 
                     {item.status === 'approved' && (
                       <button
-                        onClick={() => handleReject(item.id)}
+                        onClick={(e) => { e.stopPropagation(); handleReject(item.id); }}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-600 hover:bg-red-600 hover:text-white text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                       >
                         <XCircle className="h-4 w-4" />
@@ -260,7 +271,7 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
 
                     {item.status === 'rejected' && (
                       <button
-                        onClick={() => handleApprove(item.id)}
+                        onClick={(e) => { e.stopPropagation(); handleApprove(item.id); }}
                         className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-600 hover:bg-green-600 hover:text-white text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                       >
                         <CheckCircle className="h-4 w-4" />
@@ -309,6 +320,33 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
           </div>
         </div>
       </div>
+
+      {selectedAsset && (
+        <AssetPreviewModal
+          asset={(() => {
+            const content: ContentItem = {
+              id: selectedAsset.id,
+              type: selectedAsset.type,
+              fileURLThumb: selectedAsset.thumbnail ?? '',
+              fileURL: selectedAsset.url,
+              assetName: selectedAsset.title,
+              description: selectedAsset.title,
+              price: 0,
+              likes: selectedAsset.likes ?? 0,
+              comments: selectedAsset.comments ?? 0,
+              isLiked: false,
+              creator: selectedAsset.creator
+              ? { id: selectedAsset.creator.id, username: selectedAsset.creator.username, avatar: selectedAsset.creator.avatar ?? '' }
+              : { id: '', username: '', avatar: '' },
+              createdAt: new Date(selectedAsset.uploaded_date),
+              duration: selectedAsset.duration,
+              status: selectedAsset.statusCode,
+            };
+            return content;
+          })()}
+          onClose={() => setSelectedAsset(null)}
+        />
+      )}
     </div>
   );
 }

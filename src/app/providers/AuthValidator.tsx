@@ -28,13 +28,13 @@ const AuthValidator = () => {
             useAuthStore.getState().setLoggedIn(true);
             navigate('/dashboard');
           } else {
-            console.error('Invalid response from auth callback:', response);            
+            console.error('Invalid response from auth callback:', response);
           }
         } else {
-          console.error('Missing userId or provider in callback');          
+          console.error('Missing userId or provider in callback');
         }
       } catch (err) {
-        console.error('Authentication error:', err);        
+        console.error('Authentication error:', err);
       }
     };
 

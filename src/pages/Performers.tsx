@@ -29,7 +29,7 @@ export default function Performers() {
     try {
       // Construir el objeto where
       const whereConditions: Record<string, unknown> = {};
-      
+
       // Agregar filtro de búsqueda si existe
       const searchTerm = params?.where ?? search;
       if (searchTerm && typeof searchTerm === 'string' && searchTerm.trim()) {
@@ -39,7 +39,7 @@ export default function Performers() {
           { email: { contains: searchTerm } },
         ];
       }
-      
+
       // Agregar filtro de status si no es 'all'
       const currentStatus = statusFilterGlobal;
       if (currentStatus !== 'all') {
@@ -206,4 +206,3 @@ export default function Performers() {
     </div>
   );
 }
-

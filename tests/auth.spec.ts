@@ -116,7 +116,9 @@ test.describe('Authentication Flow', () => {
 
     // Trigger logout (this would typically be through a logout button)
     await page.evaluate(() => {
-      const authStore = (window as unknown as { useAuthStore?: { getState: () => { logout: () => void } } }).useAuthStore;
+      const authStore = (
+        window as unknown as { useAuthStore?: { getState: () => { logout: () => void } } }
+      ).useAuthStore;
       if (authStore) {
         authStore.getState().logout();
       }

@@ -30,10 +30,10 @@ const Login: React.FC = () => {
   if (loading) {
     return (
       <div className="h-screen flex items-center justify-center bg-linear-to-br from-red-500 via-red-900 to-black ">
-         <div className="mx-auto mb-4 bg-black rounded-[5px] p-1 inline-block drop-shadow-lg shadow-inner">
-            <img src={logo} alt={BRAND_NAME} className="h-14 w-auto block" />
-            Loading login…
-          </div>
+        <div className="mx-auto mb-4 bg-black rounded-[5px] p-1 inline-block drop-shadow-lg shadow-inner">
+          <img src={logo} alt={BRAND_NAME} className="h-14 w-auto block" />
+          Loading login…
+        </div>
       </div>
     );
   }

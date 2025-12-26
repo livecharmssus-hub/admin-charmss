@@ -9,7 +9,10 @@ import {
   TrendingUp,
   Star,
 } from 'lucide-react';
-import { Performer, PerformerProfile as PerformerProfileType } from '../../app/types/performers.types';
+import {
+  Performer,
+  PerformerProfile as PerformerProfileType,
+} from '../../app/types/performers.types';
 import PerformerProfileService from '../../app/services/performerProfile.service';
 
 interface PerformerProfileProps {
@@ -46,14 +49,14 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
   useEffect(() => {
     const fetchProfile = async () => {
       if (!performer?.id) return;
-      
+
       setLoading(true);
       try {
         const profile = await PerformerProfileService.getPerformerProfile(performer.id);
         setProfileDataFromApi(profile);
-        
+
         // Actualizar los datos locales con los datos del backend
-        setProfileData(prev => ({
+        setProfileData((prev) => ({
           ...prev,
           nickname: profile.nickName || prev.nickname,
           headline: profile.headLines || prev.headline,
@@ -603,7 +606,7 @@ export default function PerformerProfile({ performer, onClose }: PerformerProfil
             </div>
           </div>
         )}
-        
+
         <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
           <div className="flex items-center justify-between p-4">
             <h2 className="text-xl font-bold text-gray-900">

@@ -151,7 +151,9 @@ const SalesAnalyticsTab: React.FC = () => {
       {
         type: 'success',
         title: 'Top Performer',
-        message: `${bestCategory[0]} generated $${((bestCategory[1] as CategoryData).amount ?? 0).toFixed(2)} this week`,
+        message: `${bestCategory[0]} generated $${(
+          (bestCategory[1] as CategoryData).amount ?? 0
+        ).toFixed(2)} this week`,
         action: 'Focus more time on this category',
       },
       {

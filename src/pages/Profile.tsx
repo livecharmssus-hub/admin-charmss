@@ -10,7 +10,9 @@ import {
 } from 'lucide-react';
 
 const Profile: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'personal' | 'profile' | 'like' | 'pricing' | 'media' | 'payments' | 'sales'>('personal');
+  const [activeTab, setActiveTab] = useState<
+    'personal' | 'profile' | 'like' | 'pricing' | 'media' | 'payments' | 'sales'
+  >('personal');
 
   interface ProfileDataType {
     nickname: string;
@@ -64,7 +66,10 @@ const Profile: React.FC = () => {
     { id: 'sales', label: 'Sales' },
   ];
 
-  const handleInputChange = <K extends keyof ProfileDataType>(field: K, value: ProfileDataType[K]) => {
+  const handleInputChange = <K extends keyof ProfileDataType>(
+    field: K,
+    value: ProfileDataType[K]
+  ) => {
     setProfileData((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -637,7 +642,7 @@ const Profile: React.FC = () => {
     const getRecommendations = () => {
       const last7Weeks = weeklyData.slice(0, 7);
       const avgEarnings = last7Weeks.reduce((sum, week) => sum + week.totalEarnings, 0) / 7;
-      const bestCategory = (Object.entries(currentWeekData) as [string, unknown][]) 
+      const bestCategory = (Object.entries(currentWeekData) as [string, unknown][])
         .filter(([key]) => !['week', 'period', 'totalEarnings'].includes(key))
         .sort(([, a], [, b]) => {
           const aAmount = (a as CategoryData).amount ?? 0;
@@ -649,7 +654,9 @@ const Profile: React.FC = () => {
         {
           type: 'success',
           title: 'Top Performer',
-          message: `${bestCategory[0]} generated $${((bestCategory[1] as CategoryData).amount ?? 0).toFixed(2)} this week`,
+          message: `${bestCategory[0]} generated $${(
+            (bestCategory[1] as CategoryData).amount ?? 0
+          ).toFixed(2)} this week`,
           action: 'Focus more time on this category',
         },
         {
@@ -840,7 +847,7 @@ const Profile: React.FC = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => setActiveTab(tab.id as any)}
               className={`flex-shrink-0 px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-medium whitespace-nowrap transition-colors ${
                 activeTab === tab.id
                   ? 'bg-pink-600 text-white'

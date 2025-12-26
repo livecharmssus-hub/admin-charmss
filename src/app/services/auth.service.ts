@@ -52,7 +52,7 @@ export const fetchLoginConfig = async (delayMs = 1000): Promise<LoginConfig> => 
 export const validateAuthCallback = async (
   userId: string,
   provider: string,
-  role = 'performer'
+  role = 'admin'
 ): Promise<{
   user: User;
   jwt: string;

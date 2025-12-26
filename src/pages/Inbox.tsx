@@ -177,7 +177,7 @@ const Inbox: React.FC = () => {
       from: 'Zafira',
       isRead: true,
       isStarred: false,
-      hasAttachment: newEmail.attachments?.length > 0,
+      hasAttachment: (newEmail.attachments?.length ?? 0) > 0,
       preview: newEmail.message.substring(0, 50) + '...',
       time: new Date().toLocaleTimeString(),
       date: new Date().toISOString().split('T')[0],
@@ -186,6 +186,7 @@ const Inbox: React.FC = () => {
         size: `${(file.size / 1024).toFixed(1)} KB`,
         type: file.name.split('.').pop() || 'file',
       })),
+      type: 'message',
     };
     setEmails((prev) => [email, ...prev]);
   };
@@ -201,7 +202,9 @@ const Inbox: React.FC = () => {
   // Mark email as read when selected
   React.useEffect(() => {
     if (selectedEmail) {
-      setEmails((prev) => prev.map((email) => (email.id === selectedEmail ? { ...email, isRead: true } : email)));
+      setEmails((prev) =>
+        prev.map((email) => (email.id === selectedEmail ? { ...email, isRead: true } : email))
+      );
     }
   }, [selectedEmail]);
 

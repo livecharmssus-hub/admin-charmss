@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { X, AlertTriangle, DollarSign, Building2, User, CheckCircle } from 'lucide-react';
 
 interface PaymentData {
-  id: string;
+  id: string | number;
   recipient_name: string;
-  recipient_type: 'studio' | 'model';
+  recipient_type: 'studio' | 'model' | 'other';
   amount: number;
-  commission_amount: number;
-  net_amount: number;
+  commission_amount?: number;
+  net_amount?: number;
   commission_rate?: number;
 }
 
@@ -144,7 +144,7 @@ export default function PaymentConfirmationDialog({
                     Comisión {payment.commission_rate && `(${payment.commission_rate}%)`}
                   </p>
                   <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                    ${payment.commission_amount.toLocaleString()}
+                    ${((payment.commission_amount ?? 0)).toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function PaymentConfirmationDialog({
                     Neto a Transferir
                   </span>
                   <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    ${payment.net_amount.toLocaleString()}
+                    ${((payment.net_amount ?? 0)).toLocaleString()}
                   </span>
                 </div>
               </div>

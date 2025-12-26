@@ -73,7 +73,7 @@ describe('Performers Service', () => {
 
     const res = await PerformersService.getPerformers({
       page: 2,
-      limit: 5,      
+      limit: 5,
       orderBy: 'rating:desc',
       where: 'alice',
     });

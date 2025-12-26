@@ -44,34 +44,48 @@ const mapDto = (dto: PerformerDto): Performer => {
     joined_date: dto.birthDate ?? undefined,
     last_active: undefined,
     country: dto.countryCode ?? undefined,
-    languages: [],
+    languages: dto.performerProfile?.languages
+      ? dto.performerProfile.languages
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [],
     categories: [],
     hourly_rate: undefined,
     studio_id: dto.studioId ?? undefined,
     app_user_id: dto.appUserId ?? undefined,
+    performerProfile: dto.performerProfile ?? null,
   };
 };
 
 const getPerformers = async (
   params: GetPerformersParams = { page: 1, limit: 10 }
 ): Promise<GetPerformersResponse> => {
-    
   const { page = 1, limit = 10, orderBy, where } = params;
 
   const query: Record<string, unknown> = {
     page,
     limit,
-    where: '{}', // where es obligatorio, enviar objeto vacío por defecto
   };
 
   // orderBy puede ser string, objeto JSON o array de objetos
   if (orderBy) {
-    query.orderBy = typeof orderBy === 'string' ? orderBy : JSON.stringify(orderBy);
+    if (typeof orderBy === 'string' && orderBy.includes(':')) {
+      const [field, dir] = orderBy.split(':');
+      query.orderBy = field;
+      query.order = dir;
+    } else {
+      query.orderBy = typeof orderBy === 'string' ? orderBy : JSON.stringify(orderBy);
+    }
   }
-  
+
   // where puede ser string o objeto JSON
   if (where) {
     query.where = typeof where === 'string' ? where : JSON.stringify(where);
+    // Si where es una cadena de búsqueda simple, añadir filtro de estado por defecto
+    if (typeof where === 'string' && where.trim()) {
+      query.status = 'active';
+    }
   }
 
   const response = await ApiClient.get(BASE, { params: query });
