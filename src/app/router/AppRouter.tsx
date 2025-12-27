@@ -18,6 +18,7 @@ import Header from '../../components/Header';
 import Help from '../../pages/Help';
 import Login from '../../pages/Login';
 import LegalTestPage from '../../pages/LegalTest';
+import Legals from '../../pages/Legals';
 
 const AppRouter: React.FC = () => {
   // Mock values for now - these would come from global state
@@ -78,6 +79,7 @@ const AppRouter: React.FC = () => {
                     <Route path="/inbox" element={<Inbox />} />
                     <Route path="/performers" element={<Performers />} />
                     <Route path="/studios" element={<Studios />} />
+                    <Route path="/legals" element={<Legals />} />
                     <Route
                       path="/help"
                       element={

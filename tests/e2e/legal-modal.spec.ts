@@ -30,7 +30,10 @@ test.describe('Legal Modal E2E', () => {
       const fakeJwt = 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjk5OTk5OTk5OTl9.signature';
       window.sessionStorage.setItem(
         'auth-storage',
-        JSON.stringify({ state: { jwt: fakeJwt, user: { id: 'admin' }, isLoggedIn: true }, version: 0 })
+        JSON.stringify({
+          state: { jwt: fakeJwt, user: { id: 'admin' }, isLoggedIn: true },
+          version: 0,
+        })
       );
     });
 
@@ -61,7 +64,10 @@ test.describe('Legal Modal E2E', () => {
       const fakeJwt = 'eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjk5OTk5OTk5OTl9.signature';
       window.sessionStorage.setItem(
         'auth-storage',
-        JSON.stringify({ state: { jwt: fakeJwt, user: { id: 'admin' }, isLoggedIn: true }, version: 0 })
+        JSON.stringify({
+          state: { jwt: fakeJwt, user: { id: 'admin' }, isLoggedIn: true },
+          version: 0,
+        })
       );
     });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, DollarSign, Users, Mail, HelpCircle, LogOut, X } from 'lucide-react';
+import { Home, DollarSign, Users, Mail, HelpCircle, FileText, LogOut, X } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import logo from '../assets/images/livecharmss2t.png';
 
@@ -14,6 +14,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     { id: 'performers', label: 'Performers', icon: Users, path: '/performers' },
     { id: 'inbox', label: 'Inbox', icon: Mail, path: '/inbox' },
     { id: 'payments', label: 'Payments', icon: DollarSign, path: '/payments' },
+    { id: 'legals', label: 'Legales', icon: FileText, path: '/legals' },
   ];
 
   const bottomItems = [
