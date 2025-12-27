@@ -3,10 +3,13 @@ import { Users, BarChart3, Shield, Settings } from 'lucide-react';
 import { fetchLoginConfig, type LoginConfig } from '../app/services/auth.service';
 import { BRAND_NAME } from '../app/config/appConfig';
 import logo from '../assets/images/livecharmss2t.png';
+import LegalModal from '../components/legal/LegalModal';
 
 const Login: React.FC = () => {
   const [config, setConfig] = React.useState<LoginConfig | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [legalOpen, setLegalOpen] = React.useState(false);
+  const [legalName, setLegalName] = React.useState('');
 
   React.useEffect(() => {
     let mounted = true;
@@ -137,12 +140,34 @@ const Login: React.FC = () => {
 
             <div className="mt-8 text-center">
               <p className="text-sm text-red-200">
-                By continuing, you agree to our Terms of Service and Privacy Policy
+                Al continuar aceptas nuestra{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLegalName('Política de privacidad');
+                    setLegalOpen(true);
+                  }}
+                  className="underline hover:text-white ml-1"
+                >
+                  Política de privacidad
+                </button>{' '}
+                y los{' '}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLegalName('Términos y Condiciones de Uso - Livecharmss.com');
+                    setLegalOpen(true);
+                  }}
+                  className="underline hover:text-white ml-1"
+                >
+                  Términos y Condiciones de Uso - Livecharmss.com
+                </button>
               </p>
             </div>
           </div>
         </div>
       </div>
+      <LegalModal name={legalName} open={legalOpen} onClose={() => setLegalOpen(false)} />
     </div>
   );
 };
