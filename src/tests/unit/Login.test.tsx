@@ -32,7 +32,7 @@ describe('Login page legal links', () => {
       updatedAt: new Date().toISOString(),
     };
 
-    vi.spyOn(LegalService, 'getLegalByName').mockResolvedValue(doc as any);
+    vi.spyOn(LegalService, 'getLegalByName').mockResolvedValue(doc as unknown as any);
 
     render(<Login />);
 
