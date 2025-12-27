@@ -144,7 +144,7 @@ export default function PaymentConfirmationDialog({
                     Comisión {payment.commission_rate && `(${payment.commission_rate}%)`}
                   </p>
                   <p className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
-                    ${((payment.commission_amount ?? 0)).toLocaleString()}
+                    ${(payment.commission_amount ?? 0).toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function PaymentConfirmationDialog({
                     Neto a Transferir
                   </span>
                   <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                    ${((payment.net_amount ?? 0)).toLocaleString()}
+                    ${(payment.net_amount ?? 0).toLocaleString()}
                   </span>
                 </div>
               </div>

@@ -30,15 +30,56 @@ const sample = {
   statusProfileImageFile: 2,
   sign: 'https://example.com/sign.png',
   requestDocuments: [
-    { id: 7, requestPerformerId: 2, fileName: 'https://example.com/doc1.png', documentType: 1, documentName: 'Front', loadDate: new Date().toISOString() },
-    { id: 8, requestPerformerId: 2, fileName: 'https://example.com/doc2.png', documentType: 2, documentName: 'Back', loadDate: new Date().toISOString() },
-    { id: 9, requestPerformerId: 2, fileName: 'https://example.com/doc3.png', documentType: 3, documentName: 'FrontFace', loadDate: new Date().toISOString() },
-    { id: 10, requestPerformerId: 2, fileName: 'https://example.com/doc4.png', documentType: 4, documentName: 'BackFace', loadDate: new Date().toISOString() },
-    { id: 11, requestPerformerId: 2, fileName: 'https://example.com/doc5.png', documentType: 5, documentName: 'ProfileImage', loadDate: new Date().toISOString() },
-    { id: 12, requestPerformerId: 2, fileName: 'https://example.com/contract.png', documentType: 6, documentName: 'Contract', loadDate: new Date().toISOString() },
+    {
+      id: 7,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc1.png',
+      documentType: 1,
+      documentName: 'Front',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 8,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc2.png',
+      documentType: 2,
+      documentName: 'Back',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 9,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc3.png',
+      documentType: 3,
+      documentName: 'FrontFace',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 10,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc4.png',
+      documentType: 4,
+      documentName: 'BackFace',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 11,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc5.png',
+      documentType: 5,
+      documentName: 'ProfileImage',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 12,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/contract.png',
+      documentType: 6,
+      documentName: 'Contract',
+      loadDate: new Date().toISOString(),
+    },
   ],
   contractAcceptedByPerformer: true,
-
 } as unknown as OnboardingData;
 
 describe('OnboardingModal', () => {
@@ -46,7 +87,10 @@ describe('OnboardingModal', () => {
 
   it('renders loading and then displays documents, signature and details', async () => {
     (onboardingService.getOnboardingData as unknown as Mock).mockResolvedValueOnce(sample);
-    (onboardingService.decideOnboarding as unknown as Mock).mockResolvedValueOnce({ ...sample, status: 3 } as unknown as OnboardingData);
+    (onboardingService.decideOnboarding as unknown as Mock).mockResolvedValueOnce({
+      ...sample,
+      status: 3,
+    } as unknown as OnboardingData);
 
     render(<OnboardingModal performerId={2} onClose={vi.fn()} />);
 
@@ -87,7 +131,10 @@ describe('OnboardingModal', () => {
 
   it('approve flow shows confirm and sets approval state', async () => {
     (onboardingService.getOnboardingData as unknown as Mock).mockResolvedValueOnce(sample);
-    (onboardingService.decideOnboarding as unknown as Mock).mockResolvedValueOnce({ ...sample, status: 2 } as unknown as OnboardingData);
+    (onboardingService.decideOnboarding as unknown as Mock).mockResolvedValueOnce({
+      ...sample,
+      status: 2,
+    } as unknown as OnboardingData);
 
     render(<OnboardingModal performerId={2} onClose={vi.fn()} />);
 
@@ -108,7 +155,10 @@ describe('OnboardingModal', () => {
 
   it('reject flow opens textarea and sets rejected state', async () => {
     (onboardingService.getOnboardingData as unknown as Mock).mockResolvedValueOnce(sample);
-    (onboardingService.decideOnboarding as unknown as Mock).mockResolvedValueOnce({ ...sample, status: 3 } as unknown as OnboardingData);
+    (onboardingService.decideOnboarding as unknown as Mock).mockResolvedValueOnce({
+      ...sample,
+      status: 3,
+    } as unknown as OnboardingData);
 
     render(<OnboardingModal performerId={2} onClose={vi.fn()} />);
 
@@ -117,7 +167,9 @@ describe('OnboardingModal', () => {
     const rejectBtn = screen.getByRole('button', { name: /Rechazar inscripción/i });
     fireEvent.click(rejectBtn);
 
-    await waitFor(() => expect(screen.getByText(/Indica la causa del rechazo/i)).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText(/Indica la causa del rechazo/i)).toBeInTheDocument()
+    );
 
     const textarea = screen.getByRole('textbox') as HTMLTextAreaElement;
     fireEvent.change(textarea, { target: { value: 'Documento ilegible' } });

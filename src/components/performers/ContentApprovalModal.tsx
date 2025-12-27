@@ -37,7 +37,6 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
   const [error, setError] = useState<string | null>(null);
   const [selectedAsset, setSelectedAsset] = useState<MediaItem | null>(null);
 
-
   useEffect(() => {
     let mounted = true;
     const load = async () => {
@@ -102,7 +101,9 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
     try {
       // status 3 = approved
       await import('../../app/services/content.service').then((m) => m.updateAssetStatus(id, 3));
-      setMediaItems((prev) => prev.map((it) => (it.id === id ? { ...it, status: 'approved', statusCode: 3 } : it)));
+      setMediaItems((prev) =>
+        prev.map((it) => (it.id === id ? { ...it, status: 'approved', statusCode: 3 } : it))
+      );
       setConfirmApproveId(null);
     } catch {
       setActionError('Error al aprobar el asset');
@@ -116,8 +117,12 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
     setActionError(null);
     try {
       // status 2 = rejected
-      await import('../../app/services/content.service').then((m) => m.updateAssetStatus(id, 2, reason));
-      setMediaItems((prev) => prev.map((it) => (it.id === id ? { ...it, status: 'rejected', statusCode: 2 } : it)));
+      await import('../../app/services/content.service').then((m) =>
+        m.updateAssetStatus(id, 2, reason)
+      );
+      setMediaItems((prev) =>
+        prev.map((it) => (it.id === id ? { ...it, status: 'rejected', statusCode: 2 } : it))
+      );
       setRejectModal(null);
     } catch {
       setActionError('Error al rechazar el asset');
@@ -222,9 +227,17 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
                     onClick={() => setSelectedAsset(item)}
                     className="relative bg-gray-50 dark:bg-slate-700 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
                   >
-                    <motion.div layoutId={layoutId} data-testid={thumbTestId} className="relative aspect-video">
+                    <motion.div
+                      layoutId={layoutId}
+                      data-testid={thumbTestId}
+                      className="relative aspect-video"
+                    >
                       {item.type === 'photo' ? (
-                        <img src={item.url} alt={item.title} className="w-full h-full object-cover" />
+                        <img
+                          src={item.url}
+                          alt={item.title}
+                          className="w-full h-full object-cover"
+                        />
                       ) : (
                         <div className="relative w-full h-full">
                           <img
@@ -262,67 +275,84 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
 
                       {/* Numeric asset status pill (1=subido, 2=rechazado, 3=aprobado) */}
                       {/* Only show numeric status pill for approved (3) or rejected (2). Hide "Subido" (1) */}
-                      {typeof item.statusCode === 'number' && (item.statusCode === 2 || item.statusCode === 3) && (
-                        <span
-                          data-testid={`asset-statuscode-${item.id}`}
-                          className={`px-2 py-1 rounded text-xs font-medium ${
-                            item.statusCode === 2 ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
-                          }`}
-                        >
-                          {item.statusCode === 2 ? 'Rechazado' : 'Aprobado'}
-                        </span>
+                      {typeof item.statusCode === 'number' &&
+                        (item.statusCode === 2 || item.statusCode === 3) && (
+                          <span
+                            data-testid={`asset-statuscode-${item.id}`}
+                            className={`px-2 py-1 rounded text-xs font-medium ${
+                              item.statusCode === 2
+                                ? 'bg-red-500 text-white'
+                                : 'bg-green-500 text-white'
+                            }`}
+                          >
+                            {item.statusCode === 2 ? 'Rechazado' : 'Aprobado'}
+                          </span>
+                        )}
+                    </div>
+
+                    <div className="p-4">
+                      <h3 className="font-medium text-gray-900 dark:text-white mb-2">
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                        <Calendar className="h-4 w-4" />
+                        <span>{new Date(item.uploaded_date).toLocaleDateString()}</span>
+                      </div>
+
+                      {item.status === 'pending' && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleApprove(item.id);
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                          >
+                            <CheckCircle className="h-4 w-4" />
+                            Aprobar
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleReject(item.id);
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          >
+                            <XCircle className="h-4 w-4" />
+                            Rechazar
+                          </button>
+                        </div>
                       )}
-                    </div>
 
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">{item.title}</h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
-                      <Calendar className="h-4 w-4" />
-                      <span>{new Date(item.uploaded_date).toLocaleDateString()}</span>
-                    </div>
-
-                    {item.status === 'pending' && (
-                      <div className="flex gap-2">
+                      {item.status === 'approved' && (
                         <button
-                          onClick={(e) => { e.stopPropagation(); handleApprove(item.id); }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-                        >
-                          <CheckCircle className="h-4 w-4" />
-                          Aprobar
-                        </button>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleReject(item.id); }}
-                          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleReject(item.id);
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-600 hover:bg-red-600 hover:text-white text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
                         >
                           <XCircle className="h-4 w-4" />
                           Rechazar
                         </button>
-                      </div>
-                    )}
+                      )}
 
-                    {item.status === 'approved' && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleReject(item.id); }}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-600 hover:bg-red-600 hover:text-white text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
-                      >
-                        <XCircle className="h-4 w-4" />
-                        Rechazar
-                      </button>
-                    )}
-
-                    {item.status === 'rejected' && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleApprove(item.id); }}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-600 hover:bg-green-600 hover:text-white text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
-                      >
-                        <CheckCircle className="h-4 w-4" />
-                        Aprobar
-                      </button>
-                    )}
+                      {item.status === 'rejected' && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApprove(item.id);
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-200 dark:bg-slate-600 hover:bg-green-600 hover:text-white text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                          Aprobar
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
             </div>
           )}
         </div>
@@ -378,8 +408,12 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
               comments: selectedAsset.comments ?? 0,
               isLiked: false,
               creator: selectedAsset.creator
-              ? { id: selectedAsset.creator.id, username: selectedAsset.creator.username, avatar: selectedAsset.creator.avatar ?? '' }
-              : { id: '', username: '', avatar: '' },
+                ? {
+                    id: selectedAsset.creator.id,
+                    username: selectedAsset.creator.username,
+                    avatar: selectedAsset.creator.avatar ?? '',
+                  }
+                : { id: '', username: '', avatar: '' },
               createdAt: new Date(selectedAsset.uploaded_date),
               duration: selectedAsset.duration,
               status: selectedAsset.statusCode,
@@ -400,7 +434,12 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
             <p className="text-sm text-gray-600 mb-4">¿Deseas aprobar este asset?</p>
             {actionError && <p className="text-red-500 mb-2">{actionError}</p>}
             <div className="flex justify-end gap-2">
-              <button onClick={() => setConfirmApproveId(null)} className="px-4 py-2 rounded text-gray-800 dark:text-gray-200">Cancelar</button>
+              <button
+                onClick={() => setConfirmApproveId(null)}
+                className="px-4 py-2 rounded text-gray-800 dark:text-gray-200"
+              >
+                Cancelar
+              </button>
               <button
                 onClick={() => doApprove(confirmApproveId)}
                 disabled={actionLoading}
@@ -419,20 +458,31 @@ export default function ContentApprovalModal({ performer, onClose }: ContentAppr
           <div className="absolute inset-0 bg-black bg-opacity-50" />
           <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 max-w-md w-full z-10">
             <h3 className="text-lg font-semibold mb-4">Rechazar asset</h3>
-            <p className="text-sm text-gray-600 mb-2">Indica la causal de rechazo (máx 255 caracteres)</p>
+            <p className="text-sm text-gray-600 mb-2">
+              Indica la causal de rechazo (máx 255 caracteres)
+            </p>
             <textarea
               value={rejectModal.reason}
-              onChange={(e) => setRejectModal({ id: rejectModal.id, reason: e.target.value.slice(0, 255) })}
+              onChange={(e) =>
+                setRejectModal({ id: rejectModal.id, reason: e.target.value.slice(0, 255) })
+              }
               className="w-full border p-2 rounded mb-4 h-24"
               maxLength={255}
               aria-label="Motivo de rechazo"
             />
             {actionError && <p className="text-red-500 mb-2">{actionError}</p>}
             <div className="flex justify-end gap-2">
-              <button onClick={() => setRejectModal(null)} className="px-4 py-2 rounded text-gray-800 dark:text-gray-200">Cancelar</button>
+              <button
+                onClick={() => setRejectModal(null)}
+                className="px-4 py-2 rounded text-gray-800 dark:text-gray-200"
+              >
+                Cancelar
+              </button>
               <button
                 onClick={() => rejectModal && doReject(rejectModal.id, rejectModal.reason)}
-                disabled={actionLoading || !(rejectModal?.reason && rejectModal.reason.trim().length > 0)}
+                disabled={
+                  actionLoading || !(rejectModal?.reason && rejectModal.reason.trim().length > 0)
+                }
                 className="px-4 py-2 rounded bg-red-600 text-white"
               >
                 {actionLoading ? 'Procesando...' : 'Enviar rechazo'}

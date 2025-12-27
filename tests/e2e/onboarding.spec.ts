@@ -51,7 +51,10 @@ test('Onboarding endpoint returns expected structure for id 2', async ({ page })
   await page.addInitScript(() => {
     window.sessionStorage.setItem(
       'auth-storage',
-      JSON.stringify({ state: { jwt: 'test-jwt', user: { id: 'admin' }, isLoggedIn: true }, version: 0 })
+      JSON.stringify({
+        state: { jwt: 'test-jwt', user: { id: 'admin' }, isLoggedIn: true },
+        version: 0,
+      })
     );
   });
 

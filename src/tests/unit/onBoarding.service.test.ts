@@ -7,7 +7,11 @@ vi.mock('../../app/services/api/axios/apiClient', () => ({
   },
 }));
 
-import { getOnboardingData, calculateSentDocuments, calculateSignedContract } from '../../app/services/onBoarding.service';
+import {
+  getOnboardingData,
+  calculateSentDocuments,
+  calculateSignedContract,
+} from '../../app/services/onBoarding.service';
 import ApiClient from '../../app/services/api/axios/apiClient';
 import { AssetStatusType } from '../../types/onboarding';
 import type { Mock } from 'vitest';
@@ -66,23 +70,43 @@ describe('Onboarding Service', () => {
 
     it('returns false when any required field is missing, empty or whitespace', () => {
       expect(
-        calculateSignedContract({ contractAcceptedByPerformer: false, identificationNumber: '123', sign: 's' })
+        calculateSignedContract({
+          contractAcceptedByPerformer: false,
+          identificationNumber: '123',
+          sign: 's',
+        })
       ).toBe(false);
 
       expect(
-        calculateSignedContract({ contractAcceptedByPerformer: true, identificationNumber: '', sign: 's' })
+        calculateSignedContract({
+          contractAcceptedByPerformer: true,
+          identificationNumber: '',
+          sign: 's',
+        })
       ).toBe(false);
 
       expect(
-        calculateSignedContract({ contractAcceptedByPerformer: true, identificationNumber: '  ', sign: 's' })
+        calculateSignedContract({
+          contractAcceptedByPerformer: true,
+          identificationNumber: '  ',
+          sign: 's',
+        })
       ).toBe(false);
 
       expect(
-        calculateSignedContract({ contractAcceptedByPerformer: true, identificationNumber: '123', sign: '' })
+        calculateSignedContract({
+          contractAcceptedByPerformer: true,
+          identificationNumber: '123',
+          sign: '',
+        })
       ).toBe(false);
 
       expect(
-        calculateSignedContract({ contractAcceptedByPerformer: true, identificationNumber: '123', sign: '   ' })
+        calculateSignedContract({
+          contractAcceptedByPerformer: true,
+          identificationNumber: '123',
+          sign: '   ',
+        })
       ).toBe(false);
     });
   });
@@ -159,9 +183,14 @@ describe('Onboarding Service', () => {
 
       mockApiClient.patch.mockResolvedValueOnce({ data: mockData } as unknown);
 
-      const res = await (await import('../../app/services/onBoarding.service')).decideOnboarding(2, 2, 'Aprobado');
+      const res = await (
+        await import('../../app/services/onBoarding.service')
+      ).decideOnboarding(2, 2, 'Aprobado');
 
-      expect(mockApiClient.patch).toHaveBeenCalledWith('/api/performer/onboarding/2/decision', { statusOnboarding: 2, notes: 'Aprobado' });
+      expect(mockApiClient.patch).toHaveBeenCalledWith('/api/performer/onboarding/2/decision', {
+        statusOnboarding: 2,
+        notes: 'Aprobado',
+      });
       expect(res.sentDocuments).toBe(true);
       expect(res.signedContract).toBe(true);
     });
@@ -170,7 +199,9 @@ describe('Onboarding Service', () => {
       const mockError = new Error('Patch failed');
       mockApiClient.patch.mockRejectedValueOnce(mockError);
 
-      await expect((await import('../../app/services/onBoarding.service')).decideOnboarding(2, 3, 'Rechazado')).rejects.toThrow('Patch failed');
+      await expect(
+        (await import('../../app/services/onBoarding.service')).decideOnboarding(2, 3, 'Rechazado')
+      ).rejects.toThrow('Patch failed');
     });
   });
 });

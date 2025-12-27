@@ -64,7 +64,9 @@ describe('ContentApprovalModal', () => {
   });
 
   it('shows error message when service fails', async () => {
-    (contentService.getContentByPerformerProfileId as unknown as Mock).mockRejectedValue(new Error('fail'));
+    (contentService.getContentByPerformerProfileId as unknown as Mock).mockRejectedValue(
+      new Error('fail')
+    );
 
     render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
 
@@ -235,12 +237,41 @@ describe('ContentApprovalModal', () => {
 
   it('calls API to approve an item and updates UI on success', async () => {
     const fakeResp = {
-      album: { id: 4, name: 'Album 4', creationDate: new Date().toISOString(), performerProfileId: 1, albumType: 0, premiumContent: false, price: 0, totalLike: 0, totalComment: 0, assets: [] },
-      items: [{ id: '40', type: 'photo', fileURLThumb: 't.jpg', fileURL: 'f.jpg', assetName: 'To Approve', description: '', price: 0, likes: 0, comments: 0, isLiked: false, creator: { id: '1', username: 'p', avatar: '' }, createdAt: new Date(), status: 1 }],
+      album: {
+        id: 4,
+        name: 'Album 4',
+        creationDate: new Date().toISOString(),
+        performerProfileId: 1,
+        albumType: 0,
+        premiumContent: false,
+        price: 0,
+        totalLike: 0,
+        totalComment: 0,
+        assets: [],
+      },
+      items: [
+        {
+          id: '40',
+          type: 'photo',
+          fileURLThumb: 't.jpg',
+          fileURL: 'f.jpg',
+          assetName: 'To Approve',
+          description: '',
+          price: 0,
+          likes: 0,
+          comments: 0,
+          isLiked: false,
+          creator: { id: '1', username: 'p', avatar: '' },
+          createdAt: new Date(),
+          status: 1,
+        },
+      ],
     } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
 
     (contentService.getContentByPerformerProfileId as unknown as Mock).mockResolvedValue(fakeResp);
-    const updateMock = vi.spyOn(contentService as unknown as { updateAssetStatus: Mock }, 'updateAssetStatus').mockResolvedValue(undefined);
+    const updateMock = vi
+      .spyOn(contentService as unknown as { updateAssetStatus: Mock }, 'updateAssetStatus')
+      .mockResolvedValue(undefined);
 
     render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
 
@@ -264,12 +295,41 @@ describe('ContentApprovalModal', () => {
 
   it('calls API to reject an item with a reason and updates UI on success', async () => {
     const fakeResp = {
-      album: { id: 5, name: 'Album 5', creationDate: new Date().toISOString(), performerProfileId: 1, albumType: 0, premiumContent: false, price: 0, totalLike: 0, totalComment: 0, assets: [] },
-      items: [{ id: '50', type: 'photo', fileURLThumb: 't2.jpg', fileURL: 'f2.jpg', assetName: 'To Reject', description: '', price: 0, likes: 0, comments: 0, isLiked: false, creator: { id: '1', username: 'p', avatar: '' }, createdAt: new Date(), status: 1 }],
+      album: {
+        id: 5,
+        name: 'Album 5',
+        creationDate: new Date().toISOString(),
+        performerProfileId: 1,
+        albumType: 0,
+        premiumContent: false,
+        price: 0,
+        totalLike: 0,
+        totalComment: 0,
+        assets: [],
+      },
+      items: [
+        {
+          id: '50',
+          type: 'photo',
+          fileURLThumb: 't2.jpg',
+          fileURL: 'f2.jpg',
+          assetName: 'To Reject',
+          description: '',
+          price: 0,
+          likes: 0,
+          comments: 0,
+          isLiked: false,
+          creator: { id: '1', username: 'p', avatar: '' },
+          createdAt: new Date(),
+          status: 1,
+        },
+      ],
     } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
 
     (contentService.getContentByPerformerProfileId as unknown as Mock).mockResolvedValue(fakeResp);
-    const updateMock = vi.spyOn(contentService as unknown as { updateAssetStatus: Mock }, 'updateAssetStatus').mockResolvedValue(undefined);
+    const updateMock = vi
+      .spyOn(contentService as unknown as { updateAssetStatus: Mock }, 'updateAssetStatus')
+      .mockResolvedValue(undefined);
 
     render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
 

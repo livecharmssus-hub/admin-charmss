@@ -177,7 +177,14 @@ test.describe('Content Approval Modal E2E', () => {
     await page.addInitScript(() => {
       window.sessionStorage.setItem(
         'auth-storage',
-        JSON.stringify({ state: { jwt: 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJleHAiOjE5MDAwMDAwMDB9.', user: { id: 'test-admin-id' }, isLoggedIn: true }, version: 0 })
+        JSON.stringify({
+          state: {
+            jwt: 'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJleHAiOjE5MDAwMDAwMDB9.',
+            user: { id: 'test-admin-id' },
+            isLoggedIn: true,
+          },
+          version: 0,
+        })
       );
     });
 

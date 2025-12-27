@@ -45,7 +45,8 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
   if (!performerId) return null;
 
   const _allowed = new Set<number>([1, 2, 3, 4, 5]);
-  const documents = data?.requestDocuments?.filter((d) => _allowed.has(Number(d.documentType))) ?? [];
+  const documents =
+    data?.requestDocuments?.filter((d) => _allowed.has(Number(d.documentType))) ?? [];
 
   const handleConfirmApprove = () => setConfirmApprove(true);
   const doApprove = async () => {
@@ -97,7 +98,9 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
 
           <div className="flex items-center gap-2">
             {actionResult === 'approved' && (
-              <div className="px-3 py-2 bg-green-100 text-green-700 rounded">Inscripción aprobada</div>
+              <div className="px-3 py-2 bg-green-100 text-green-700 rounded">
+                Inscripción aprobada
+              </div>
             )}
             {actionResult === 'rejected' && (
               <div className="px-3 py-2 bg-red-100 text-red-700 rounded">Inscripción rechazada</div>
@@ -135,10 +138,18 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
                     onClick={() => setSelectedDoc(doc.id)}
                     className="cursor-pointer bg-gray-50 dark:bg-slate-700 rounded overflow-hidden shadow-sm hover:shadow-md transition"
                   >
-                    <img src={doc.fileName} alt={doc.documentName} className="w-full h-40 object-cover" />
+                    <img
+                      src={doc.fileName}
+                      alt={doc.documentName}
+                      className="w-full h-40 object-cover"
+                    />
                     <div className="p-3">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">{doc.documentName}</div>
-                      <div className="text-xs text-gray-500 mt-1">Subido: {new Date(doc.loadDate).toLocaleString()}</div>
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                        {doc.documentName}
+                      </div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        Subido: {new Date(doc.loadDate).toLocaleString()}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -176,7 +187,9 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
               <div className="space-y-3 text-sm text-gray-700 dark:text-gray-200">
                 <div>
                   <div className="text-xs text-gray-500">Nombre</div>
-                  <div>{data.firstName} {data.middleName ?? ''} {data.lastName}</div>
+                  <div>
+                    {data.firstName} {data.middleName ?? ''} {data.lastName}
+                  </div>
                 </div>
                 <div>
                   <div className="text-xs text-gray-500">Email</div>
@@ -204,7 +217,10 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
                 </div>
                 <div>
                   <div className="text-xs text-gray-500">Identificación</div>
-                  <div>{data.identificationNumber ?? '—'} {data.identificationType ? `(${data.identificationType})` : ''}</div>
+                  <div>
+                    {data.identificationNumber ?? '—'}{' '}
+                    {data.identificationType ? `(${data.identificationType})` : ''}
+                  </div>
                 </div>
               </div>
             )}
@@ -229,33 +245,45 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
               </button>
             </div>
 
-            {actionError && <div className="text-sm text-red-500 mt-3">{actionError}</div>} 
+            {actionError && <div className="text-sm text-red-500 mt-3">{actionError}</div>}
           </div>
         </div>
 
         <div className="p-4 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-750">
           <div className="flex justify-end gap-3">
-            <button onClick={onClose} className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white">Cerrar</button>
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       </div>
 
       {selectedDoc !== null && (
         <AssetPreviewModal
-          asset={{
-            id: String(selectedDoc),
-            type: 'photo',
-            fileURLThumb: (data?.requestDocuments.find((d) => d.id === selectedDoc)?.fileName) ?? '',
-            fileURL: (data?.requestDocuments.find((d) => d.id === selectedDoc)?.fileName) ?? '',
-            assetName: data?.requestDocuments.find((d) => d.id === selectedDoc)?.documentName ?? '',
-            description: data?.requestDocuments.find((d) => d.id === selectedDoc)?.documentName ?? '',
-            price: 0,
-            likes: 0,
-            comments: 0,
-            isLiked: false,
-            creator: { id: '', username: '', avatar: '' },
-            createdAt: new Date(data?.requestDocuments.find((d) => d.id === selectedDoc)?.loadDate ?? Date.now()),
-          } as ContentItem}
+          asset={
+            {
+              id: String(selectedDoc),
+              type: 'photo',
+              fileURLThumb:
+                data?.requestDocuments.find((d) => d.id === selectedDoc)?.fileName ?? '',
+              fileURL: data?.requestDocuments.find((d) => d.id === selectedDoc)?.fileName ?? '',
+              assetName:
+                data?.requestDocuments.find((d) => d.id === selectedDoc)?.documentName ?? '',
+              description:
+                data?.requestDocuments.find((d) => d.id === selectedDoc)?.documentName ?? '',
+              price: 0,
+              likes: 0,
+              comments: 0,
+              isLiked: false,
+              creator: { id: '', username: '', avatar: '' },
+              createdAt: new Date(
+                data?.requestDocuments.find((d) => d.id === selectedDoc)?.loadDate ?? Date.now()
+              ),
+            } as ContentItem
+          }
           editorialStatus={undefined}
           onClose={() => setSelectedDoc(null)}
         />
@@ -266,10 +294,19 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
           <div className="absolute inset-0 bg-black bg-opacity-50" />
           <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-6 max-w-lg w-full z-10">
             <h3 className="text-lg font-semibold mb-4">Confirmar aprobación</h3>
-            <p className="text-sm text-gray-600 mb-4">¿Deseas aprobar la inscripción de este performer?</p>
+            <p className="text-sm text-gray-600 mb-4">
+              ¿Deseas aprobar la inscripción de este performer?
+            </p>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setConfirmApprove(false)} className="px-4 py-2 rounded bg-gray-200">Cancelar</button>
-              <button onClick={doApprove} className="px-4 py-2 rounded bg-green-600 text-white">Aprobar</button>
+              <button
+                onClick={() => setConfirmApprove(false)}
+                className="px-4 py-2 rounded bg-gray-200"
+              >
+                Cancelar
+              </button>
+              <button onClick={doApprove} className="px-4 py-2 rounded bg-green-600 text-white">
+                Aprobar
+              </button>
             </div>
           </div>
         </div>
@@ -288,8 +325,18 @@ export default function OnboardingModal({ performerId, onClose }: OnboardingModa
               className="w-full border border-gray-300 rounded p-2 min-h-30 bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
             />
             <div className="flex justify-end gap-2 mt-4">
-              <button onClick={() => setRejectModal(null)} className="px-4 py-2 rounded bg-gray-200">Cancelar</button>
-              <button onClick={() => doReject(rejectModal.reason)} className="px-4 py-2 rounded bg-red-600 text-white">Confirmar rechazo</button>
+              <button
+                onClick={() => setRejectModal(null)}
+                className="px-4 py-2 rounded bg-gray-200"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => doReject(rejectModal.reason)}
+                className="px-4 py-2 rounded bg-red-600 text-white"
+              >
+                Confirmar rechazo
+              </button>
             </div>
           </div>
         </div>

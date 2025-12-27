@@ -9,7 +9,11 @@ interface AssetPreviewModalProps {
   onClose: () => void;
 }
 
-export default function AssetPreviewModal({ asset, editorialStatus, onClose }: AssetPreviewModalProps) {
+export default function AssetPreviewModal({
+  asset,
+  editorialStatus,
+  onClose,
+}: AssetPreviewModalProps) {
   // Map numeric asset status -> labels/colors according to spec: 1=Subido, 2=Rechazado, 3=Aprobado
   const statusMap: Record<number, { label: string; color: string }> = {
     1: { label: 'Subido', color: 'bg-gray-400' },
@@ -18,7 +22,10 @@ export default function AssetPreviewModal({ asset, editorialStatus, onClose }: A
     4: { label: 'Inactiva', color: 'bg-blue-500' },
   };
 
-  const s = typeof asset.status === 'number' && statusMap[asset.status] ? statusMap[asset.status] : { label: 'Pendiente', color: 'bg-yellow-500' };
+  const s =
+    typeof asset.status === 'number' && statusMap[asset.status]
+      ? statusMap[asset.status]
+      : { label: 'Pendiente', color: 'bg-yellow-500' };
 
   return (
     <AnimatePresence>
@@ -42,7 +49,9 @@ export default function AssetPreviewModal({ asset, editorialStatus, onClose }: A
             <div className="flex items-center gap-4">
               <div className={`w-3 h-3 rounded ${s.color}`} />
               <div>
-                <div className="text-lg font-semibold text-gray-900 dark:text-white">{asset.assetName || asset.description || 'Sin título'}</div>
+                <div className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {asset.assetName || asset.description || 'Sin título'}
+                </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   {asset.creator?.username} • {new Date(asset.createdAt).toLocaleString()}
                 </div>
@@ -59,16 +68,27 @@ export default function AssetPreviewModal({ asset, editorialStatus, onClose }: A
                   <span
                     data-testid={`asset-preview-editorial-${asset.id}`}
                     className={`text-xs px-2 py-1 rounded ${
-                      editorialStatus === 'pending' ? 'bg-yellow-500 text-white' : editorialStatus === 'approved' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+                      editorialStatus === 'pending'
+                        ? 'bg-yellow-500 text-white'
+                        : editorialStatus === 'approved'
+                        ? 'bg-green-500 text-white'
+                        : 'bg-red-500 text-white'
                     }`}
                   >
-                    {editorialStatus === 'pending' ? 'Pendiente' : editorialStatus === 'approved' ? 'Aprobado' : 'Rechazado'}
+                    {editorialStatus === 'pending'
+                      ? 'Pendiente'
+                      : editorialStatus === 'approved'
+                      ? 'Aprobado'
+                      : 'Rechazado'}
                   </span>
-                ) : (
-                  asset.status === 2 || asset.status === 3 ? (
-                    <span data-testid={`asset-preview-status-${asset.id}`} className={`text-xs px-2 py-1 rounded ${s.color} text-white`}>{s.label}</span>
-                  ) : null
-                )}
+                ) : asset.status === 2 || asset.status === 3 ? (
+                  <span
+                    data-testid={`asset-preview-status-${asset.id}`}
+                    className={`text-xs px-2 py-1 rounded ${s.color} text-white`}
+                  >
+                    {s.label}
+                  </span>
+                ) : null}
               </div>
 
               <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">

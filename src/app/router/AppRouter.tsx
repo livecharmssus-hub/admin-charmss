@@ -17,6 +17,7 @@ import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import Help from '../../pages/Help';
 import Login from '../../pages/Login';
+import LegalTestPage from '../../pages/LegalTest';
 
 const AppRouter: React.FC = () => {
   // Mock values for now - these would come from global state
@@ -30,6 +31,9 @@ const AppRouter: React.FC = () => {
 
   return (
     <Routes>
+      {/* Public test route (unprotected) */}
+      <Route path="/legal-test" element={<LegalTestPage />} />
+
       {/* Protected routes with layout */}
       <Route
         path="/*"

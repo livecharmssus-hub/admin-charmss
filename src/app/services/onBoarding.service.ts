@@ -1,8 +1,5 @@
-import { AssetStatusType, OnboardingData } from "../../types/onboarding";
-import apiClient from "./api/axios/apiClient";
-
-
-
+import { AssetStatusType, OnboardingData } from '../../types/onboarding';
+import apiClient from './api/axios/apiClient';
 
 export const getOnboardingData = async (id: string | number): Promise<OnboardingData> => {
   try {
@@ -20,7 +17,6 @@ export const getOnboardingData = async (id: string | number): Promise<Onboarding
     throw error;
   }
 };
-
 
 /**
  * Approve or reject onboarding request by id
@@ -48,7 +44,6 @@ export const decideOnboarding = async (
     throw error;
   }
 };
-
 
 /**
  * Calculate if all documents are sent and approved

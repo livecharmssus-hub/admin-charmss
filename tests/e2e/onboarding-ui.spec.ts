@@ -26,12 +26,54 @@ const sampleOnboarding = {
   signedAt: null,
   securityRequest: null,
   requestDocuments: [
-    { id: 7, requestPerformerId: 2, fileName: 'https://example.com/doc1.png', documentType: 1, documentName: 'Front', loadDate: new Date().toISOString() },
-    { id: 8, requestPerformerId: 2, fileName: 'https://example.com/doc2.png', documentType: 2, documentName: 'Back', loadDate: new Date().toISOString() },
-    { id: 9, requestPerformerId: 2, fileName: 'https://example.com/doc3.png', documentType: 3, documentName: 'FrontFace', loadDate: new Date().toISOString() },
-    { id: 10, requestPerformerId: 2, fileName: 'https://example.com/doc4.png', documentType: 4, documentName: 'BackFace', loadDate: new Date().toISOString() },
-    { id: 11, requestPerformerId: 2, fileName: 'https://example.com/doc5.png', documentType: 5, documentName: 'ProfileImage', loadDate: new Date().toISOString() },
-    { id: 12, requestPerformerId: 2, fileName: 'https://example.com/contract.png', documentType: 6, documentName: 'Contract', loadDate: new Date().toISOString() },
+    {
+      id: 7,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc1.png',
+      documentType: 1,
+      documentName: 'Front',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 8,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc2.png',
+      documentType: 2,
+      documentName: 'Back',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 9,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc3.png',
+      documentType: 3,
+      documentName: 'FrontFace',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 10,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc4.png',
+      documentType: 4,
+      documentName: 'BackFace',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 11,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/doc5.png',
+      documentType: 5,
+      documentName: 'ProfileImage',
+      loadDate: new Date().toISOString(),
+    },
+    {
+      id: 12,
+      requestPerformerId: 2,
+      fileName: 'https://example.com/contract.png',
+      documentType: 6,
+      documentName: 'Contract',
+      loadDate: new Date().toISOString(),
+    },
   ],
 };
 
@@ -62,7 +104,11 @@ test.describe('Onboarding Modal UI', () => {
 
     // Mock onboarding endpoint
     await page.route('**/api/performer/onboarding/request/2**', (route) => {
-      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(sampleOnboarding) });
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(sampleOnboarding),
+      });
     });
 
     // Intercept decision PATCH and reply using the posted payload (statusOnboarding)
@@ -81,7 +127,10 @@ test.describe('Onboarding Modal UI', () => {
     await page.addInitScript(() => {
       window.sessionStorage.setItem(
         'auth-storage',
-        JSON.stringify({ state: { jwt: 'test-jwt', user: { id: 'admin' }, isLoggedIn: true }, version: 0 })
+        JSON.stringify({
+          state: { jwt: 'test-jwt', user: { id: 'admin' }, isLoggedIn: true },
+          version: 0,
+        })
       );
     });
 
