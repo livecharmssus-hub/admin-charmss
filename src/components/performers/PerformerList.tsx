@@ -11,6 +11,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   ArrowUpDown,
+  FileText,
   CheckSquare,
 } from 'lucide-react';
 
@@ -23,6 +24,7 @@ interface PerformerListProps {
   onViewStreaming: (performer: Performer) => void;
   onUploadAssets: (performer: Performer) => void;
   onApproveContent: (performer: Performer) => void;
+  onViewOnboarding?: (performer: Performer) => void;
   totalCount?: number;
   currentPage?: number;
   itemsPerPage?: number;
@@ -65,6 +67,7 @@ export default function PerformerList({
   onViewStreaming,
   onUploadAssets,
   onApproveContent,
+  onViewOnboarding,
   totalCount,
   currentPage: currentPageProp,
   itemsPerPage: itemsPerPageProp,
@@ -338,6 +341,14 @@ export default function PerformerList({
                     >
                       <Upload className="h-4 w-4" />
                     </button>
+                    <button
+                      onClick={() => onViewOnboarding?.(performer)}
+                      className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-colors"
+                      title="Ver Onboarding"
+                    >
+                      <FileText className="h-4 w-4" />
+                    </button>
+
                     <button
                       onClick={() => onApproveContent(performer)}
                       className="p-2 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"

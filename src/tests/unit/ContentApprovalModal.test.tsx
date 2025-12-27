@@ -240,7 +240,7 @@ describe('ContentApprovalModal', () => {
     } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
 
     (contentService.getContentByPerformerProfileId as unknown as Mock).mockResolvedValue(fakeResp);
-    const updateMock = vi.spyOn(contentService as any, 'updateAssetStatus').mockResolvedValue(undefined);
+    const updateMock = vi.spyOn(contentService as unknown as { updateAssetStatus: Mock }, 'updateAssetStatus').mockResolvedValue(undefined);
 
     render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
 
@@ -269,7 +269,7 @@ describe('ContentApprovalModal', () => {
     } as unknown as ReturnType<typeof contentService.getContentByPerformerProfileId>;
 
     (contentService.getContentByPerformerProfileId as unknown as Mock).mockResolvedValue(fakeResp);
-    const updateMock = vi.spyOn(contentService as any, 'updateAssetStatus').mockResolvedValue(undefined);
+    const updateMock = vi.spyOn(contentService as unknown as { updateAssetStatus: Mock }, 'updateAssetStatus').mockResolvedValue(undefined);
 
     render(<ContentApprovalModal performer={mockPerformer} onClose={vi.fn()} />);
 

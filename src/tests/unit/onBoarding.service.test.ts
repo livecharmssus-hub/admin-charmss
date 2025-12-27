@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 vi.mock('../../app/services/api/axios/apiClient', () => ({
   default: {
     get: vi.fn(),
+    patch: vi.fn(),
   },
 }));
 
@@ -12,7 +13,7 @@ import { AssetStatusType } from '../../types/onboarding';
 import type { Mock } from 'vitest';
 import { data } from 'react-router-dom';
 
-const mockApiClient = ApiClient as unknown as { get: Mock };
+const mockApiClient = ApiClient as unknown as { get: Mock; patch: Mock };
 
 describe('Onboarding Service', () => {
   beforeEach(() => {
@@ -127,6 +128,49 @@ describe('Onboarding Service', () => {
       mockApiClient.get.mockRejectedValueOnce(mockError);
 
       await expect(getOnboardingData(2)).rejects.toThrow('Network Error');
+    });
+  });
+
+  describe('decideOnboarding', () => {
+    it('calls PATCH and returns updated data with recalculated fields', async () => {
+      const mockData = {
+        id: 2,
+        firstName: 'Luis',
+        lastName: 'Corredor',
+        emailAddress: 'luis@example.com',
+        nickName: 'lg',
+        birthDate: '1990-01-01',
+        countryCode: 'CO',
+        gender: 1,
+        requestDate: new Date().toISOString(),
+        performerId: 2,
+        studioId: 1,
+        identificationNumber: '1234',
+        identificationType: 'ID',
+        statusCardFrontFile: AssetStatusType.Approved,
+        statusCardBackFile: AssetStatusType.Approved,
+        statusCardFrontFaceFile: AssetStatusType.Approved,
+        statusCardBackFaceFile: AssetStatusType.Approved,
+        statusProfileImageFile: AssetStatusType.Approved,
+        sign: 'signed',
+        requestDocuments: [],
+        contractAcceptedByPerformer: true,
+      } as const;
+
+      mockApiClient.patch.mockResolvedValueOnce({ data: mockData } as unknown);
+
+      const res = await (await import('../../app/services/onBoarding.service')).decideOnboarding(2, 2, 'Aprobado');
+
+      expect(mockApiClient.patch).toHaveBeenCalledWith('/api/performer/onboarding/2/decision', { statusOnboarding: 2, notes: 'Aprobado' });
+      expect(res.sentDocuments).toBe(true);
+      expect(res.signedContract).toBe(true);
+    });
+
+    it('propagates PATCH errors', async () => {
+      const mockError = new Error('Patch failed');
+      mockApiClient.patch.mockRejectedValueOnce(mockError);
+
+      await expect((await import('../../app/services/onBoarding.service')).decideOnboarding(2, 3, 'Rechazado')).rejects.toThrow('Patch failed');
     });
   });
 });

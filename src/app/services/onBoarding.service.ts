@@ -23,6 +23,34 @@ export const getOnboardingData = async (id: string | number): Promise<Onboarding
 
 
 /**
+ * Approve or reject onboarding request by id
+ */
+export const decideOnboarding = async (
+  id: string | number,
+  statusOnboarding: number,
+  notes?: string
+): Promise<OnboardingData> => {
+  try {
+    const url = `/api/performer/onboarding/${id}/decision`;
+    const payload: { statusOnboarding: number; notes?: string } = { statusOnboarding };
+    if (notes) payload.notes = notes;
+
+    const response = await apiClient.patch<OnboardingData>(url, payload);
+
+    const data = response.data;
+    // Recalculate derived fields
+    data.sentDocuments = calculateSentDocuments(data);
+    data.signedContract = calculateSignedContract(data);
+
+    return data;
+  } catch (error) {
+    console.error('Error deciding onboarding:', error);
+    throw error;
+  }
+};
+
+
+/**
  * Calculate if all documents are sent and approved
  */
 export const calculateSentDocuments = (data: Partial<OnboardingData>): boolean => {

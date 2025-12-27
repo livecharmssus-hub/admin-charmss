@@ -7,6 +7,7 @@ import PerformerProfile from '../components/performers/PerformerProfile';
 import AssetUploader from '../components/performers/AssetUploader';
 import StreamingModal from '../components/performers/StreamingModal';
 import ContentApprovalModal from '../components/performers/ContentApprovalModal';
+import OnboardingModal from '../components/performers/OnboardingModal';
 
 // Performers are loaded from the backend service via `PerformersService`.
 
@@ -21,7 +22,7 @@ export default function Performers() {
   const [orderBy, setOrderBy] = useState<string>('lastName');
   const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null);
   const [activeModal, setActiveModal] = useState<
-    'detail' | 'profile' | 'upload' | 'streaming' | 'approval' | null
+    'detail' | 'profile' | 'upload' | 'streaming' | 'approval' | 'onboarding' | null
   >(null);
 
   const fetchPerformers = async (params?: GetPerformersParams) => {
@@ -107,6 +108,11 @@ export default function Performers() {
     setActiveModal('approval');
   };
 
+  const handleViewOnboarding = (performer: Performer) => {
+    setSelectedPerformer(performer);
+    setActiveModal('onboarding');
+  };
+
   const handleCloseModal = () => {
     setActiveModal(null);
     setSelectedPerformer(null);
@@ -119,7 +125,7 @@ export default function Performers() {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg">
+                <div className="p-2 bg-linear-to-r from-purple-600 to-pink-600 rounded-lg">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 Administración de Performers
@@ -156,6 +162,7 @@ export default function Performers() {
               onViewStreaming={handleViewStreaming}
               onUploadAssets={handleUploadAssets}
               onApproveContent={handleApproveContent}
+              onViewOnboarding={handleViewOnboarding}
               totalCount={total}
               currentPage={page}
               itemsPerPage={limit}
@@ -202,6 +209,10 @@ export default function Performers() {
 
       {activeModal === 'approval' && (
         <ContentApprovalModal performer={selectedPerformer} onClose={handleCloseModal} />
+      )}
+
+      {activeModal === 'onboarding' && selectedPerformer && (
+        <OnboardingModal performerId={selectedPerformer.id} onClose={handleCloseModal} />
       )}
     </div>
   );

@@ -847,7 +847,7 @@ const Profile: React.FC = () => {
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`flex-shrink-0 px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-medium whitespace-nowrap transition-colors ${
                 activeTab === tab.id
                   ? 'bg-pink-600 text-white'
