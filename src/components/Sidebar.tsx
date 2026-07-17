@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Home,
-  // DollarSign,
+  DollarSign,
   // Mail,
   Users,
   HelpCircle,
@@ -25,6 +25,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard' },
+    { id: 'payments', label: 'Payments', icon: DollarSign, path: '/payments' },
     { id: 'performers', label: 'Performers', icon: Users, path: '/performers' },
     { id: 'support', label: 'Soporte', icon: LifeBuoy, path: '/support' },
     { id: 'gifts', label: 'Gifts', icon: Gift, path: '/gifts' },
@@ -32,7 +33,6 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     { id: 'packages', label: 'Packages', icon: Box, path: '/packages' },
     { id: 'parameters', label: 'Parámetros', icon: Settings2, path: '/parameters' },
     // { id: 'inbox', label: 'Inbox', icon: Mail, path: '/inbox' },
-    // { id: 'payments', label: 'Payments', icon: DollarSign, path: '/payments' },
     { id: 'legals', label: 'Legales', icon: FileText, path: '/legals' },
   ];
 

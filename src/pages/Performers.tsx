@@ -8,6 +8,7 @@ import AssetUploader from '../components/performers/AssetUploader';
 import StreamingModal from '../components/performers/StreamingModal';
 import ContentApprovalModal from '../components/performers/ContentApprovalModal';
 import OnboardingModal from '../components/performers/OnboardingModal';
+import PerformerBankAccountModal from '../components/performers/PerformerBankAccountModal';
 
 // Performers are loaded from the backend service via `PerformersService`.
 
@@ -22,7 +23,14 @@ export default function Performers() {
   const [orderBy, setOrderBy] = useState<string>('lastName');
   const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null);
   const [activeModal, setActiveModal] = useState<
-    'detail' | 'profile' | 'upload' | 'streaming' | 'approval' | 'onboarding' | null
+    | 'detail'
+    | 'profile'
+    | 'upload'
+    | 'streaming'
+    | 'approval'
+    | 'onboarding'
+    | 'bankAccount'
+    | null
   >(null);
 
   // Toast state for success/error notifications
@@ -159,6 +167,11 @@ export default function Performers() {
     setActiveModal('onboarding');
   };
 
+  const handlePayPerformer = (performer: Performer) => {
+    setSelectedPerformer(performer);
+    setActiveModal('bankAccount');
+  };
+
   const handleCloseModal = () => {
     setActiveModal(null);
     setSelectedPerformer(null);
@@ -234,6 +247,7 @@ export default function Performers() {
               onUploadAssets={handleUploadAssets}
               onApproveContent={handleApproveContent}
               onViewOnboarding={handleViewOnboarding}
+              onPayPerformer={handlePayPerformer}
               totalCount={total}
               currentPage={page}
               itemsPerPage={limit}
@@ -284,6 +298,20 @@ export default function Performers() {
 
       {activeModal === 'onboarding' && selectedPerformer && (
         <OnboardingModal performerId={selectedPerformer.id} onClose={handleCloseModal} />
+      )}
+
+      {activeModal === 'bankAccount' && (
+        <PerformerBankAccountModal
+          performer={selectedPerformer}
+          onClose={handleCloseModal}
+          onSaved={() => {
+            showToast(
+              `Cuenta bancaria de ${selectedPerformer?.stage_name ?? 'performer'} guardada`,
+              'success'
+            );
+            fetchPerformers();
+          }}
+        />
       )}
     </div>
   );

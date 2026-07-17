@@ -12,6 +12,7 @@ import {
   ArrowUpDown,
   FileText,
   CheckSquare,
+  DollarSign,
 } from 'lucide-react';
 
 import { Performer } from '../../app/types/performers.types';
@@ -24,6 +25,7 @@ interface PerformerListProps {
   onUploadAssets: (performer: Performer) => void;
   onApproveContent: (performer: Performer) => void;
   onViewOnboarding?: (performer: Performer) => void;
+  onPayPerformer?: (performer: Performer) => void;
   totalCount?: number;
   currentPage?: number;
   itemsPerPage?: number;
@@ -67,6 +69,7 @@ export default function PerformerList({
   onUploadAssets,
   onApproveContent,
   onViewOnboarding,
+  onPayPerformer,
   totalCount,
   currentPage: currentPageProp,
   itemsPerPage: itemsPerPageProp,
@@ -328,6 +331,13 @@ export default function PerformerList({
                     >
                       <CheckSquare className="h-4 w-4" />
                     </button>
+                    <button
+                      onClick={() => onPayPerformer?.(performer)}
+                      className="p-2 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition-colors"
+                      title="Pago"
+                    >
+                      <DollarSign className="h-4 w-4" />
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -484,7 +494,7 @@ export default function PerformerList({
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-5 gap-2">
               <div className="flex flex-col items-center gap-1">
                 <label htmlFor={`status-select-mobile-${performer.id}`} className="sr-only">
                   Cambiar estado
@@ -523,6 +533,13 @@ export default function PerformerList({
               >
                 <Upload className="h-4 w-4" />
                 Assets
+              </button>
+              <button
+                onClick={() => onPayPerformer?.(performer)}
+                className="flex flex-col items-center gap-1 px-2 py-2 bg-gray-50 dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 rounded-lg text-xs font-medium hover:bg-gray-100 dark:hover:bg-slate-600 transition-colors"
+              >
+                <DollarSign className="h-4 w-4" />
+                Pago
               </button>
             </div>
           </div>

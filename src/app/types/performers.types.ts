@@ -1,3 +1,5 @@
+import type { FinancialAccountApiDto, PerformerFinancialAccount } from './financialAccounts.types';
+
 export enum PerformerStatusEnum {
   Pending = 0,
   Active = 1,
@@ -28,6 +30,7 @@ export interface Performer {
   studio_id?: number;
   app_user_id?: string;
   performerProfile?: PerformerProfile | null;
+  financialAccounts?: PerformerFinancialAccount[];
 }
 
 // DTO returned by backend
@@ -56,6 +59,7 @@ export interface PerformerDto {
   rating?: number | null;
   shows?: number | null;
   performerProfile?: PerformerProfile | null;
+  performerFinancialAccounts?: FinancialAccountApiDto[] | null;
 }
 
 export interface ApiPerformersResponse {

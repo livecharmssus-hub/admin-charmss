@@ -53,7 +53,7 @@ const AppRouter: React.FC = () => {
                   setOnlineStatus={mockSetOnlineStatus}
                   setSidebarOpen={setSidebarOpen}
                 />
-                <main className="flex-1 p-3 md:p-6 overflow-y-auto bg-slate-50 dark:bg-slate-900">
+                <main className="flex-1 p-3 md:p-6 overflow-y-auto bg-slate-50 dark:bg-slate-900 flex flex-col min-h-0">
                   <Routes>
                     <Route
                       path="/"
@@ -75,7 +75,14 @@ const AppRouter: React.FC = () => {
                       }
                     />
                     <Route path="/videocall" element={<VideoCall />} />
-                    <Route path="/payments" element={<Payments earnings={mockEarnings} />} />
+                    <Route
+                      path="/payments"
+                      element={
+                        <div className="md:h-full md:overflow-hidden">
+                          <Payments />
+                        </div>
+                      }
+                    />
                     <Route path="/photos" element={<Photos />} />
                     <Route path="/stories" element={<Stories />} />
                     <Route path="/customers/register" element={<CustomerRegister />} />

@@ -8,6 +8,7 @@ import {
   PerformerStatus,
   PerformerStatusEnum,
 } from '../types/performers.types';
+import { mapFinancialAccountDto } from '../types/financialAccounts.types';
 
 const BASE = '/api/performers';
 
@@ -31,9 +32,10 @@ const mapDto = (dto: PerformerDto): Performer => {
   const first = dto.firstName ?? '';
   const last = dto.lastName ?? '';
   const fullName = `${first} ${last}`.trim();
+  const performerId = String(dto.id);
 
   return {
-    id: String(dto.id),
+    id: performerId,
     full_name: fullName || dto.email || `User ${dto.id}`,
     stage_name: first || dto.email || `user-${dto.id}`,
     email: dto.email ?? '',
@@ -58,6 +60,9 @@ const mapDto = (dto: PerformerDto): Performer => {
     app_user_id: dto.appUserId ?? undefined,
     performerProfile: dto.performerProfile ?? null,
     video: dto.video ?? undefined,
+    financialAccounts: (dto.performerFinancialAccounts ?? []).map((account) =>
+      mapFinancialAccountDto(account, performerId)
+    ),
   };
 };
 
@@ -93,6 +98,10 @@ const getPerformers = async (
 
   const response = await ApiClient.get(BASE, { params: query });
   const apiData = response.data as ApiPerformersResponse;
+
+  if (import.meta.env.DEV) {
+    console.log('[Performers] List response:', apiData);
+  }
 
   const items = (apiData?.data ?? []).map(mapDto);
   const meta = apiData?.meta ?? { total: items.length, page, limit, totalPages: 1 };

@@ -1,274 +1,273 @@
-import React, { useState } from 'react';
-import { Calendar, DollarSign, TrendingUp, Download, Filter } from 'lucide-react';
-import PaymentMethodsDrillDown from '../components/payments/PaymentMethodsDrillDown';
-import ModelPayments from '../components/payments/ModelPayments';
-import PaymentConfirmationDialog from '../components/payments/PaymentConfirmationDialog';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { DollarSign, Users, Eye, Video, Building2, Calendar, ChevronDown } from 'lucide-react';
+import PaymentList from '../components/payments/PaymentList';
+import BulkPayModal from '../components/payments/BulkPayModal';
+import PaymentsService from '../app/services/payments.service';
+import {
+  PerformerPayment,
+  StudioPaymentDto,
+} from '../app/types/payments.types';
 
-interface PaymentsProps {
-  earnings: number;
+const STUDIOS = [{ id: '1', name: 'Charmss Studio' }];
+
+const AVATAR_COLORS = [
+  'bg-purple-500',
+  'bg-pink-500',
+  'bg-green-500',
+  'bg-blue-500',
+  'bg-orange-500',
+  'bg-indigo-500',
+  'bg-red-500',
+  'bg-teal-500',
+  'bg-fuchsia-500',
+  'bg-cyan-500',
+  'bg-rose-500',
+  'bg-violet-500',
+];
+
+interface WeekOption {
+  id: string;
+  week: number;
+  year: number;
+  label: string;
 }
 
-const Payments: React.FC<PaymentsProps> = ({ earnings }) => {
-  const [selectedWeek, setSelectedWeek] = useState('Semana 33, 2025');
-  interface SelectedPayment {
-    id: string | number;
-    recipient_name: string;
-    recipient_type: 'model' | 'studio' | 'other';
-    amount: number;
-    commission_amount?: number;
-    net_amount?: number;
-    commission_rate?: number;
-  }
-
-  const [selectedPayment, setSelectedPayment] = useState<SelectedPayment | null>(null);
-  const [showConfirmation, setShowConfirmation] = useState(false);
-
-  const weeklyData = [
-    { week: 12, amount: 0.09, status: 'GENERATED' },
-    { week: 11, amount: 0.09, status: 'GENERATED' },
-    { week: 10, amount: 1.98, status: 'GENERATED' },
-    { week: 3, amount: 0.09, status: 'GENERATED' },
-    { week: 17, amount: 0.09, status: 'GENERATED' },
-  ];
-
-  const recentTransactions = [
-    { date: '2025-01-15', type: 'Private Show', amount: 45.5, status: 'Completed' },
-    { date: '2025-01-14', type: 'Tips', amount: 23.75, status: 'Completed' },
-    { date: '2025-01-14', type: 'Video Call', amount: 67.2, status: 'Completed' },
-    { date: '2025-01-13', type: 'Gifts', amount: 12.3, status: 'Pending' },
-  ];
-
-  interface ModelRow {
-    id: string | number;
-    stage_name: string;
-    pending_amount: number;
-    commission_amount?: number;
-    net_amount?: number;
-    commission_rate?: number;
-  }
-
-  const handleModelPayment = (model: ModelRow) => {
-    setSelectedPayment({
-      id: model.id,
-      recipient_name: model.stage_name,
-      recipient_type: 'model',
-      amount: model.pending_amount,
-      commission_amount: model.commission_amount,
-      net_amount: model.net_amount,
-      commission_rate: model.commission_rate,
-    });
-    setShowConfirmation(true);
-  };
-
-  const handleConfirmPayment = (paymentMethod: string, notes: string) => {
-    console.log('Payment confirmed:', { ...selectedPayment, paymentMethod, notes });
-    setShowConfirmation(false);
-    setSelectedPayment(null);
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
-          Payments & Earnings
-        </h1>
-        <div className="flex items-center space-x-2 md:space-x-3">
-          <button className="bg-green-600 hover:bg-green-700 text-white px-3 md:px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors text-sm">
-            <Download className="w-4 h-4" />
-            <span className="hidden md:inline">Export Report</span>
-          </button>
-          <button className="bg-slate-700 dark:bg-slate-600 hover:bg-slate-600 dark:hover:bg-slate-500 text-white px-3 md:px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors text-sm">
-            <Filter className="w-4 h-4" />
-            <span className="hidden md:inline">Filter</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-        <div className="bg-white dark:bg-slate-800 rounded-lg p-3 md:p-6 border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm">Total Earnings</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">
-                ${earnings.toFixed(2)}
-              </p>
-            </div>
-            <div className="p-2 md:p-3 rounded-lg bg-green-600">
-              <DollarSign className="w-4 h-4 md:w-6 md:h-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-lg p-3 md:p-6 border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm">This Week</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">$234.50</p>
-            </div>
-            <div className="p-2 md:p-3 rounded-lg bg-blue-600">
-              <Calendar className="w-4 h-4 md:w-6 md:h-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-lg p-3 md:p-6 border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm">Pending</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">$45.30</p>
-            </div>
-            <div className="p-2 md:p-3 rounded-lg bg-yellow-600">
-              <TrendingUp className="w-4 h-4 md:w-6 md:h-6 text-white" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-lg p-3 md:p-6 border border-gray-200 dark:border-slate-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm">Available</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 dark:text-white">$189.20</p>
-            </div>
-            <div className="p-2 md:p-3 rounded-lg bg-purple-600">
-              <DollarSign className="w-4 h-4 md:w-6 md:h-6 text-white" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-6">
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 md:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white">
-              Weekly Payments
-            </h3>
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-gray-400" />
-              <select
-                value={selectedWeek}
-                onChange={(e) => setSelectedWeek(e.target.value)}
-                className="bg-white dark:bg-slate-700 text-gray-900 dark:text-white border border-gray-300 dark:border-slate-600 px-2 md:px-3 py-1 rounded text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="Semana 33, 2025">Semana 33, 2025</option>
-                <option value="Semana 32, 2025">Semana 32, 2025</option>
-                <option value="Semana 31, 2025">Semana 31, 2025</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="bg-gray-50 dark:bg-slate-700 p-3 md:p-4 rounded-lg">
-              <div className="grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
-                <div>Week</div>
-                <div>Amount US$</div>
-                <div className="hidden md:block">Payment method</div>
-                <div className="md:hidden">Method</div>
-                <div>Status</div>
-              </div>
-
-              {weeklyData.map((payment, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-4 gap-2 md:gap-4 text-xs md:text-sm py-2 border-t border-gray-200 dark:border-slate-600"
-                >
-                  <div className="text-gray-900 dark:text-white">{payment.week}</div>
-                  <div className="text-gray-900 dark:text-white">{payment.amount.toFixed(2)}</div>
-                  <div className="text-gray-500 dark:text-gray-400">-</div>
-                  <div className="text-green-500 text-xs">{payment.status}</div>
-                </div>
-              ))}
-
-              <div className="border-t border-gray-200 dark:border-slate-600 pt-3 mt-3">
-                <div className="flex justify-between text-xs md:text-sm">
-                  <span className="text-gray-500 dark:text-gray-400">TOTAL</span>
-                  <span className="text-gray-900 dark:text-white font-medium">
-                    {weeklyData.reduce((sum, payment) => sum + payment.amount, 0).toFixed(2)}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center text-gray-500 dark:text-gray-400 text-xs md:text-sm">
-              for this cut of payments there is no sales information
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 md:p-6">
-          <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Payment Methods - Models
-          </h3>
-          <PaymentMethodsDrillDown />
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 md:p-6">
-        <h3 className="text-base md:text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Recent Transactions
-        </h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-gray-500 dark:text-gray-400 text-xs md:text-sm border-b border-gray-200 dark:border-slate-700">
-                <th className="pb-3">Date</th>
-                <th className="pb-3">Type</th>
-                <th className="pb-3">Amount</th>
-                <th className="pb-3">Status</th>
-                <th className="pb-3 hidden md:table-cell">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentTransactions.map((transaction, index) => (
-                <tr key={index} className="border-b border-gray-200 dark:border-slate-700">
-                  <td className="py-3 text-gray-900 dark:text-white text-xs md:text-sm">
-                    {transaction.date}
-                  </td>
-                  <td className="py-3 text-gray-600 dark:text-gray-300 text-xs md:text-sm">
-                    {transaction.type}
-                  </td>
-                  <td className="py-3 text-green-600 dark:text-green-400 font-medium text-xs md:text-sm">
-                    ${transaction.amount.toFixed(2)}
-                  </td>
-                  <td className="py-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        transaction.status === 'Completed'
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                      }`}
-                    >
-                      {transaction.status}
-                    </span>
-                  </td>
-                  <td className="py-3 hidden md:table-cell">
-                    <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs md:text-sm transition-colors">
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 p-3 md:p-6">
-        <ModelPayments onTransferPayment={handleModelPayment} />
-      </div>
-
-      {showConfirmation && selectedPayment && (
-        <PaymentConfirmationDialog
-          payment={selectedPayment}
-          onConfirm={handleConfirmPayment}
-          onCancel={() => {
-            setShowConfirmation(false);
-            setSelectedPayment(null);
-          }}
-        />
-      )}
-    </div>
-  );
+const getISOWeek = (date: Date): number => {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
 };
 
-export default Payments;
+const generateRecentWeeks = (count = 8): WeekOption[] => {
+  const weeks: WeekOption[] = [];
+  const date = new Date();
+
+  for (let i = 0; i < count; i++) {
+    const week = getISOWeek(date);
+    const year = date.getFullYear();
+    weeks.push({
+      id: `${week}-${year}`,
+      week,
+      year,
+      label: `Semana ${week}, ${year}`,
+    });
+    date.setDate(date.getDate() - 7);
+  }
+
+  return weeks;
+};
+
+const getInitials = (name: string): string => {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
+};
+
+const mapDtoToPayment = (dto: StudioPaymentDto): PerformerPayment => ({
+  id: String(dto.performerid),
+  nickname: dto.nickname,
+  fullname: dto.fullname,
+  email: dto.email,
+  initials: getInitials(dto.nickname || dto.fullname),
+  avatar_color: AVATAR_COLORS[dto.performerid % AVATAR_COLORS.length],
+  total_sales: parseFloat(dto.totalsales),
+  total_payment: parseFloat(dto.totalpayment),
+  commission_percent: parseFloat(dto.percentcomission),
+  price_token: parseFloat(dto.pricetoken),
+  payment_status: dto.statuspayment,
+});
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+
+export default function Payments() {
+  const weekOptions = useMemo(() => generateRecentWeeks(), []);
+  const [payments, setPayments] = useState<PerformerPayment[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedStudio, setSelectedStudio] = useState(STUDIOS[0].id);
+  const [selectedWeek, setSelectedWeek] = useState(weekOptions[0].id);
+  const [bulkPayOpen, setBulkPayOpen] = useState(false);
+
+  const parseWeekSelection = (weekId: string) => {
+    const [week, year] = weekId.split('-').map(Number);
+    return { weekofYear: week, year };
+  };
+
+  const selectedWeekData = useMemo(
+    () => parseWeekSelection(selectedWeek),
+    [selectedWeek]
+  );
+
+  const loadPayments = useCallback(async () => {
+    const { weekofYear, year } = parseWeekSelection(selectedWeek);
+    const studioId = Number(selectedStudio);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await PaymentsService.getStudioSales({
+        weekofYear,
+        year,
+        studioId,
+      });
+      setPayments(data.map(mapDtoToPayment));
+    } catch (err) {
+      console.error('Error loading studio payments:', err);
+      setPayments([]);
+      setError('No se pudieron cargar los pagos. Verifica la conexión con el servidor.');
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedStudio, selectedWeek]);
+
+  useEffect(() => {
+    loadPayments();
+  }, [loadPayments]);
+
+  const handleConfirmBulkPay = (selectedPayments: PerformerPayment[]) => {
+    const selectedIds = new Set(selectedPayments.map((p) => p.id));
+    setPayments((prev) =>
+      prev.map((p) => (selectedIds.has(p.id) ? { ...p, payment_status: 'PAID' } : p))
+    );
+    setBulkPayOpen(false);
+  };
+
+  const stats = useMemo(() => {
+    const totalPayment = payments.reduce((sum, p) => sum + p.total_payment, 0);
+    const totalSales = payments.reduce((sum, p) => sum + p.total_sales, 0);
+    const activePerformers = payments.length;
+    const pendingPayments = payments.filter(
+      (p) => p.payment_status === 'GENERATED' || p.payment_status === 'PENDING'
+    ).length;
+
+    return [
+      {
+        label: 'Total Pagos',
+        value: formatCurrency(totalPayment),
+        icon: DollarSign,
+        color: 'bg-green-600',
+      },
+      {
+        label: 'Ventas Totales',
+        value: formatCurrency(totalSales),
+        icon: Users,
+        color: 'bg-blue-600',
+      },
+      {
+        label: 'Performers',
+        value: String(activePerformers),
+        icon: Eye,
+        color: 'bg-purple-600',
+      },
+      {
+        label: 'Pagos Pendientes',
+        value: String(pendingPayments),
+        icon: Video,
+        color: 'bg-pink-600',
+      },
+    ];
+  }, [payments]);
+
+  return (
+    <div className="md:h-full md:flex md:flex-col md:overflow-hidden md:gap-4 gap-6">
+      <div className="flex-shrink-0 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+          <div className="p-2 bg-linear-to-r from-pink-600 to-purple-600 rounded-lg">
+            <DollarSign className="h-6 w-6 text-white" />
+          </div>
+          Payments
+        </h1>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative sm:w-56">
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+            <select
+              id="studio-select"
+              value={selectedStudio}
+              onChange={(e) => setSelectedStudio(e.target.value)}
+              aria-label="Estudio"
+              className="w-full appearance-none pl-10 pr-9 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-pink-500 focus:border-transparent cursor-pointer"
+            >
+              {STUDIOS.map((studio) => (
+                <option key={studio.id} value={studio.id}>
+                  {studio.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          </div>
+
+          <div className="relative sm:w-48">
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+            <select
+              id="week-select"
+              value={selectedWeek}
+              onChange={(e) => setSelectedWeek(e.target.value)}
+              aria-label="Semana"
+              className="w-full appearance-none pl-10 pr-9 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-pink-500 focus:border-transparent cursor-pointer"
+            >
+              {weekOptions.map((week) => (
+                <option key={week.id} value={week.id}>
+                  {week.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-shrink-0 grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={stat.label}
+              className="bg-white dark:bg-slate-800 rounded-lg p-3.5 border border-gray-200 dark:border-slate-700"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-500 dark:text-gray-400 text-xs">{stat.label}</p>
+                  <p className="text-lg font-bold text-gray-900 dark:text-white mt-0.5">
+                    {loading ? '...' : stat.value}
+                  </p>
+                </div>
+                <div className={`p-2 rounded-lg ${stat.color}`}>
+                  <Icon className="w-4 h-4 text-white" />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-gray-200 dark:border-slate-700 p-4 md:p-5 md:flex-1 md:min-h-0 md:flex md:flex-col md:overflow-hidden">
+        <PaymentList
+          payments={payments}
+          loading={loading}
+          error={error}
+          onBulkPay={() => setBulkPayOpen(true)}
+        />
+      </div>
+
+      <BulkPayModal
+        payments={payments}
+        weekofYear={selectedWeekData.weekofYear}
+        open={bulkPayOpen}
+        onClose={() => setBulkPayOpen(false)}
+        onConfirm={handleConfirmBulkPay}
+      />
+    </div>
+  );
+}

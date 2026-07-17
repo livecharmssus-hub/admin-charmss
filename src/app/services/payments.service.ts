@@ -1,3 +1,8 @@
+import ApiClient from './api/axios/apiClient';
+import { GetStudioSalesParams, StudioPaymentDto } from '../types/payments.types';
+
+const FINANCIAL_BASE = '/api/financial';
+
 /**
  * Payments Service
  * Mock service - Backend endpoint pendiente de implementación
@@ -47,6 +52,14 @@ export interface PaymentSummary {
 }
 
 class PaymentsService {
+  async getStudioSales(params: GetStudioSalesParams): Promise<StudioPaymentDto[]> {
+    const response = await ApiClient.post<StudioPaymentDto[]>(
+      `${FINANCIAL_BASE}/get-sales-studio`,
+      params
+    );
+    return response.data;
+  }
+
   /**
    * Obtener resumen de pagos del performer
    * @param performerId ID del performer
