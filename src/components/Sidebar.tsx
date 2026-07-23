@@ -54,10 +54,11 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         <div className="overlay-backdrop md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar — always viewport-fixed so it never scrolls with page content */}
       <div
         className={`
-        fixed md:relative inset-y-0 left-0 z-50 w-64 bg-white dark:bg-slate-800 border-r border-gray-200 dark:border-slate-700 flex flex-col
+        fixed inset-y-0 left-0 z-50 flex h-dvh w-64 flex-col border-r border-gray-200 bg-white
+        dark:border-slate-700 dark:bg-slate-800
         transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}

@@ -43,17 +43,18 @@ const AppRouter: React.FC = () => {
       <Route
         path="/*"
         element={
-          <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white overflow-hidden transition-colors">
-            <div className="flex h-screen">
-              <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-              <div className="flex-1 flex flex-col min-w-0">
-                <Header
-                  earnings={mockEarnings}
-                  onlineStatus={mockOnlineStatus}
-                  setOnlineStatus={mockSetOnlineStatus}
-                  setSidebarOpen={setSidebarOpen}
-                />
-                <main className="flex-1 p-3 md:p-6 overflow-y-auto bg-slate-50 dark:bg-slate-900 flex flex-col min-h-0">
+          <div className="fixed inset-0 flex overflow-hidden bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white transition-colors">
+            <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+            {/* Spacer keeps content clear of the fixed sidebar on desktop */}
+            <div className="hidden w-64 shrink-0 md:block" aria-hidden="true" />
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+              <Header
+                earnings={mockEarnings}
+                onlineStatus={mockOnlineStatus}
+                setOnlineStatus={mockSetOnlineStatus}
+                setSidebarOpen={setSidebarOpen}
+              />
+              <main className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-slate-50 p-3 dark:bg-slate-900 md:p-6">
                   <Routes>
                     <Route
                       path="/"
@@ -119,8 +120,7 @@ const AppRouter: React.FC = () => {
                     />
                     <Route path="/login" element={<Login />} />
                   </Routes>
-                </main>
-              </div>
+              </main>
             </div>
           </div>
         }
