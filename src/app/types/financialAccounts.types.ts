@@ -31,6 +31,9 @@ export interface CreateFinancialAccountRequest {
   email: string;
 }
 
+/** Body for PATCH /api/financial/{id} — same shape as create */
+export type UpdateFinancialAccountRequest = CreateFinancialAccountRequest;
+
 export interface FinancialAccountApiDto {
   id?: number | string;
   accountName?: string;

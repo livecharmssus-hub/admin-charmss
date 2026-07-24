@@ -4,12 +4,13 @@ import {
   FinancialAccountApiDto,
   PerformerFinancialAccount,
   PerformerFinancialAccountInput,
+  UpdateFinancialAccountRequest,
   mapFinancialAccountDto,
 } from '../types/financialAccounts.types';
 
 const FINANCIAL_BASE = '/api/financial';
 
-/** Cache local hasta que existan endpoints de listado / edición / eliminación */
+/** Cache local hasta que existan endpoints de listado / eliminación */
 const financialAccountsStore = new Map<string, PerformerFinancialAccount[]>();
 
 class FinancialAccountsService {
@@ -18,6 +19,51 @@ class FinancialAccountsService {
    */
   seedAccounts(performerId: string, accounts: PerformerFinancialAccount[]): void {
     financialAccountsStore.set(performerId, [...accounts]);
+  }
+
+  private toUpdatePayload(
+    performerId: string,
+    data: PerformerFinancialAccountInput,
+    options?: { isDefault?: boolean; accountState?: boolean }
+  ): UpdateFinancialAccountRequest {
+    const numericPerformerId = Number(performerId);
+
+    if (!Number.isInteger(numericPerformerId) || numericPerformerId <= 0) {
+      throw new Error('El performer no tiene un identificador válido');
+    }
+
+    return {
+      accountName: data.accountName,
+      accountNumber: data.accountNumber,
+      country: data.country,
+      financialEntity: data.financialEntity,
+      currency: data.currency,
+      accountType: data.accountType,
+      paymentAccountDefault: options?.isDefault ?? data.isDefault,
+      accountState: options?.accountState ?? true,
+      performerId: numericPerformerId,
+      email: data.email,
+    };
+  }
+
+  private syncStoreAfterUpdate(
+    performerId: string,
+    accountId: string,
+    updated: PerformerFinancialAccount
+  ): PerformerFinancialAccount {
+    const existing = financialAccountsStore.get(performerId) ?? [];
+    const next = existing.map((account) =>
+      account.id === accountId ? updated : account
+    );
+    const normalized = updated.isDefault
+      ? next.map((account) => ({
+          ...account,
+          isDefault: account.id === accountId,
+        }))
+      : next;
+
+    financialAccountsStore.set(performerId, normalized);
+    return normalized.find((account) => account.id === accountId) ?? updated;
   }
 
   async getFinancialAccounts(
@@ -116,19 +162,44 @@ class FinancialAccountsService {
     accountId: string,
     data: PerformerFinancialAccountInput
   ): Promise<PerformerFinancialAccount> {
-    // TODO: Reemplazar con el endpoint de edición cuando esté disponible
     const existing = financialAccountsStore.get(performerId) ?? [];
-    const next = existing.map((account) =>
-      account.id === accountId ? { ...account, ...data, id: accountId, performerId } : account
-    );
-    const normalized = data.isDefault
-      ? next.map((account) => ({ ...account, isDefault: account.id === accountId }))
-      : next;
+    const current = existing.find((account) => account.id === accountId);
+    if (!current) throw new Error('Cuenta bancaria no encontrada');
 
-    financialAccountsStore.set(performerId, normalized);
-    const updated = normalized.find((account) => account.id === accountId);
-    if (!updated) throw new Error('Cuenta bancaria no encontrada');
-    return updated;
+    const payload = this.toUpdatePayload(performerId, data);
+
+    if (import.meta.env.DEV) {
+      console.log('[FinancialAccounts] Update request:', { id: accountId, body: payload });
+    }
+
+    const response = await ApiClient.patch<FinancialAccountApiDto>(
+      `${FINANCIAL_BASE}/${accountId}`,
+      payload
+    );
+
+    if (import.meta.env.DEV) {
+      console.log('[FinancialAccounts] Update response:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+      });
+    }
+
+    const responseData =
+      response.data && typeof response.data === 'object' ? response.data : undefined;
+    const updated = mapFinancialAccountDto(
+      responseData ?? {
+        ...payload,
+        id: accountId,
+        performerId: Number(performerId),
+      },
+      performerId
+    );
+
+    return this.syncStoreAfterUpdate(performerId, accountId, {
+      ...updated,
+      id: accountId,
+    });
   }
 
   async saveFinancialAccount(
@@ -142,10 +213,36 @@ class FinancialAccountsService {
     return this.createFinancialAccount(performerId, data);
   }
 
+  /**
+   * Soft-delete: PATCH /api/financial/{id} con accountState: false.
+   * El backend deja de devolver la cuenta en listados.
+   */
   async deleteFinancialAccount(performerId: string, accountId: string): Promise<void> {
-    // TODO: Implementar llamada a backend cuando esté disponible
-    await new Promise((resolve) => setTimeout(resolve, 300));
     const existing = financialAccountsStore.get(performerId) ?? [];
+    const current = existing.find((account) => account.id === accountId);
+    if (!current) throw new Error('Cuenta bancaria no encontrada');
+
+    const input: PerformerFinancialAccountInput = {
+      accountName: current.accountName,
+      email: current.email,
+      accountNumber: current.accountNumber,
+      financialEntity: current.financialEntity,
+      accountType: current.accountType,
+      country: current.country,
+      currency: current.currency,
+      isDefault: current.isDefault,
+    };
+    const payload = this.toUpdatePayload(performerId, input, {
+      isDefault: current.isDefault,
+      accountState: false,
+    });
+
+    if (import.meta.env.DEV) {
+      console.log('[FinancialAccounts] Soft-delete request:', { id: accountId, body: payload });
+    }
+
+    await ApiClient.patch<FinancialAccountApiDto>(`${FINANCIAL_BASE}/${accountId}`, payload);
+
     let next = existing.filter((account) => account.id !== accountId);
     if (next.length > 0 && !next.some((account) => account.isDefault)) {
       next = next.map((account, index) => ({ ...account, isDefault: index === 0 }));
@@ -153,17 +250,61 @@ class FinancialAccountsService {
     financialAccountsStore.set(performerId, next);
   }
 
+  /**
+   * Marca una cuenta como predeterminada vía PATCH /api/financial/{id}
+   * enviando paymentAccountDefault: true junto al resto de datos de la cuenta.
+   */
   async setDefaultFinancialAccount(performerId: string, accountId: string): Promise<void> {
-    // TODO: Implementar llamada a backend cuando esté disponible
-    await new Promise((resolve) => setTimeout(resolve, 200));
     const existing = financialAccountsStore.get(performerId) ?? [];
-    financialAccountsStore.set(
-      performerId,
-      existing.map((account) => ({
-        ...account,
-        isDefault: account.id === accountId,
-      }))
+    const current = existing.find((account) => account.id === accountId);
+    if (!current) throw new Error('Cuenta bancaria no encontrada');
+
+    const input: PerformerFinancialAccountInput = {
+      accountName: current.accountName,
+      email: current.email,
+      accountNumber: current.accountNumber,
+      financialEntity: current.financialEntity,
+      accountType: current.accountType,
+      country: current.country,
+      currency: current.currency,
+      isDefault: true,
+    };
+    const payload = this.toUpdatePayload(performerId, input, { isDefault: true });
+
+    if (import.meta.env.DEV) {
+      console.log('[FinancialAccounts] Set default request:', { id: accountId, body: payload });
+    }
+
+    const response = await ApiClient.patch<FinancialAccountApiDto>(
+      `${FINANCIAL_BASE}/${accountId}`,
+      payload
     );
+
+    if (import.meta.env.DEV) {
+      console.log('[FinancialAccounts] Set default response:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data,
+      });
+    }
+
+    const responseData =
+      response.data && typeof response.data === 'object' ? response.data : undefined;
+    const updated = mapFinancialAccountDto(
+      responseData ?? {
+        ...payload,
+        id: accountId,
+        performerId: Number(performerId),
+        paymentAccountDefault: true,
+      },
+      performerId
+    );
+
+    this.syncStoreAfterUpdate(performerId, accountId, {
+      ...updated,
+      id: accountId,
+      isDefault: true,
+    });
   }
 }
 

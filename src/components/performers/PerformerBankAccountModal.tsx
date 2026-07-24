@@ -68,6 +68,8 @@ export default function PerformerBankAccountModal({
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [settingDefaultId, setSettingDefaultId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const resetFormForNew = (existingCount: number) => {
@@ -186,18 +188,25 @@ export default function PerformerBankAccountModal({
   };
 
   const handleSetDefault = async (accountId: string) => {
+    if (!performer || settingDefaultId) return;
     setError(null);
+    setSettingDefaultId(accountId);
     try {
       await FinancialAccountsService.setDefaultFinancialAccount(performer.id, accountId);
-      await loadAccounts();
+      const list = await FinancialAccountsService.getFinancialAccounts(performer.id);
+      setAccounts(list);
       onSaved?.();
     } catch {
       setError('No se pudo marcar la cuenta como predeterminada');
+    } finally {
+      setSettingDefaultId(null);
     }
   };
 
   const handleDelete = async (accountId: string) => {
+    if (!performer || deletingId) return;
     setError(null);
+    setDeletingId(accountId);
     try {
       await FinancialAccountsService.deleteFinancialAccount(performer.id, accountId);
       const list = await FinancialAccountsService.getFinancialAccounts(performer.id);
@@ -213,11 +222,14 @@ export default function PerformerBankAccountModal({
       onSaved?.();
     } catch {
       setError('No se pudo eliminar la cuenta');
+    } finally {
+      setDeletingId(null);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!performer || saving) return;
     setError(null);
 
     if (
@@ -250,7 +262,11 @@ export default function PerformerBankAccountModal({
       setEditingId(null);
       onSaved?.();
     } catch {
-      setError('Error al guardar la cuenta bancaria');
+      setError(
+        editingId
+          ? 'No se pudo actualizar la cuenta bancaria'
+          : 'Error al guardar la cuenta bancaria'
+      );
     } finally {
       setSaving(false);
     }
@@ -295,13 +311,19 @@ export default function PerformerBankAccountModal({
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
                   <CreditCard className="h-4 w-4 text-gray-400" />
-                  <span>Cuentas registradas ({accounts.length})</span>
+                  <span>
+                    {showForm
+                      ? editingId
+                        ? 'Editar cuenta bancaria'
+                        : 'Nueva cuenta bancaria'
+                      : `Cuentas registradas (${accounts.length})`}
+                  </span>
                 </div>
                 {!showForm && (
                   <button
                     type="button"
                     onClick={handleAddNew}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-lg transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 rounded-lg transition-colors cursor-pointer"
                   >
                     <Plus className="h-4 w-4" />
                     Agregar cuenta
@@ -309,16 +331,12 @@ export default function PerformerBankAccountModal({
                 )}
               </div>
 
-              {accounts.length > 0 ? (
+              {!showForm && accounts.length > 0 && (
                 <div className="space-y-3">
                   {accounts.map((account) => (
                     <div
                       key={account.id}
-                      className={`rounded-lg border p-4 space-y-3 ${
-                        editingId === account.id
-                          ? 'border-emerald-400 dark:border-emerald-600 bg-emerald-50/50 dark:bg-emerald-900/10'
-                          : 'border-gray-200 dark:border-slate-600'
-                      }`}
+                      className="rounded-lg border border-gray-200 dark:border-slate-600 p-4 space-y-3"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-2 min-w-0">
@@ -366,7 +384,8 @@ export default function PerformerBankAccountModal({
                         <button
                           type="button"
                           onClick={() => handleEdit(account)}
-                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors"
+                          disabled={saving || settingDefaultId !== null || deletingId !== null}
+                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                           Editar
@@ -375,47 +394,67 @@ export default function PerformerBankAccountModal({
                           <button
                             type="button"
                             onClick={() => handleSetDefault(account.id)}
-                            className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-lg transition-colors"
+                            disabled={settingDefaultId !== null || deletingId !== null}
+                            className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-lg transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                           >
-                            <Star className="h-3.5 w-3.5" />
-                            Predeterminada
+                            {settingDefaultId === account.id ? (
+                              <>
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                Actualizando…
+                              </>
+                            ) : (
+                              <>
+                                <Star className="h-3.5 w-3.5" />
+                                Predeterminada
+                              </>
+                            )}
                           </button>
                         )}
                         <button
                           type="button"
                           onClick={() => handleDelete(account.id)}
-                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors"
+                          disabled={deletingId !== null || settingDefaultId !== null}
+                          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
                         >
-                          <Trash2 className="h-3.5 w-3.5" />
-                          Eliminar
+                          {deletingId === account.id ? (
+                            <>
+                              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              Eliminando…
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="h-3.5 w-3.5" />
+                              Eliminar
+                            </>
+                          )}
                         </button>
                       </div>
                     </div>
                   ))}
                 </div>
-              ) : (
-                !showForm && (
-                  <div className="rounded-lg border border-dashed border-gray-300 dark:border-slate-600 p-6 text-center">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Este modelo aún no tiene cuentas bancarias registradas
-                    </p>
-                  </div>
-                )
+              )}
+
+              {!showForm && accounts.length === 0 && (
+                <div className="rounded-lg border border-dashed border-gray-300 dark:border-slate-600 p-6 text-center">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Este modelo aún no tiene cuentas bancarias registradas
+                  </p>
+                </div>
               )}
 
               {showForm && (
                 <form id="bank-account-form" onSubmit={handleSubmit} className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {editingId ? 'Editar cuenta' : 'Nueva cuenta'}
+                      {editingId ? 'Actualizar datos de la cuenta' : 'Datos de la nueva cuenta'}
                     </h3>
                     {accounts.length > 0 && (
                       <button
                         type="button"
                         onClick={handleCancelForm}
-                        className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                        className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 cursor-pointer"
                       >
-                        Cancelar
+                        Volver a la lista
                       </button>
                     )}
                   </div>
@@ -571,14 +610,19 @@ export default function PerformerBankAccountModal({
                     type="submit"
                     form="bank-account-form"
                     disabled={saving}
-                    className="flex items-center justify-center gap-2 px-5 py-2 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                    className="flex items-center justify-center gap-2 px-5 py-2 bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-wait"
                   >
                     {saving ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {editingId ? 'Actualizando…' : 'Guardando…'}
+                      </>
                     ) : (
-                      <DollarSign className="h-4 w-4" />
+                      <>
+                        <DollarSign className="h-4 w-4" />
+                        {editingId ? 'Actualizar cuenta' : 'Guardar cuenta'}
+                      </>
                     )}
-                    {editingId ? 'Actualizar cuenta' : 'Guardar cuenta'}
                   </button>
                 ) : (
                   <button

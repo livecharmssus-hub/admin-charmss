@@ -32,12 +32,48 @@ interface WeekOption {
   label: string;
 }
 
-const getISOWeek = (date: Date): number => {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+const toUtcDay = (date: Date) =>
+  new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+
+const fromUtcDay = (date: Date) =>
+  new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+const getISOWeekInfo = (date: Date) => {
+  const d = toUtcDay(date);
   const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+
+  const mondayUtc = new Date(d);
+  mondayUtc.setUTCDate(d.getUTCDate() - (dayNum - 1));
+
+  const sundayUtc = new Date(mondayUtc);
+  sundayUtc.setUTCDate(mondayUtc.getUTCDate() + 6);
+
+  const thursdayUtc = new Date(mondayUtc);
+  thursdayUtc.setUTCDate(mondayUtc.getUTCDate() + 3);
+
+  const year = thursdayUtc.getUTCFullYear();
+  const yearStart = new Date(Date.UTC(year, 0, 1));
+  const week = Math.ceil(
+    ((thursdayUtc.getTime() - yearStart.getTime()) / 86400000 + 1) / 7
+  );
+
+  return {
+    week,
+    year,
+    monday: fromUtcDay(mondayUtc),
+    sunday: fromUtcDay(sundayUtc),
+  };
+};
+
+const formatDayMonth = (date: Date) =>
+  date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+
+const formatWeekRange = (monday: Date, sunday: Date) => {
+  const sameYear = monday.getFullYear() === sunday.getFullYear();
+  if (sameYear) {
+    return `${formatDayMonth(monday)} – ${formatDayMonth(sunday)} ${sunday.getFullYear()}`;
+  }
+  return `${formatDayMonth(monday)} ${monday.getFullYear()} – ${formatDayMonth(sunday)} ${sunday.getFullYear()}`;
 };
 
 const generateRecentWeeks = (count = 8): WeekOption[] => {
@@ -45,13 +81,12 @@ const generateRecentWeeks = (count = 8): WeekOption[] => {
   const date = new Date();
 
   for (let i = 0; i < count; i++) {
-    const week = getISOWeek(date);
-    const year = date.getFullYear();
+    const { week, year, monday, sunday } = getISOWeekInfo(date);
     weeks.push({
       id: `${week}-${year}`,
       week,
       year,
-      label: `Semana ${week}, ${year}`,
+      label: formatWeekRange(monday, sunday),
     });
     date.setDate(date.getDate() - 7);
   }
@@ -103,9 +138,9 @@ export default function Payments() {
     return { weekofYear: week, year };
   };
 
-  const selectedWeekData = useMemo(
-    () => parseWeekSelection(selectedWeek),
-    [selectedWeek]
+  const selectedWeekLabel = useMemo(
+    () => weekOptions.find((week) => week.id === selectedWeek)?.label ?? selectedWeek,
+    [weekOptions, selectedWeek]
   );
 
   const loadPayments = useCallback(async () => {
@@ -208,7 +243,7 @@ export default function Payments() {
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           </div>
 
-          <div className="relative sm:w-48">
+          <div className="relative sm:w-64">
             <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             <select
               id="week-select"
@@ -263,7 +298,7 @@ export default function Payments() {
 
       <BulkPayModal
         payments={payments}
-        weekofYear={selectedWeekData.weekofYear}
+        weekLabel={selectedWeekLabel}
         open={bulkPayOpen}
         onClose={() => setBulkPayOpen(false)}
         onConfirm={handleConfirmBulkPay}

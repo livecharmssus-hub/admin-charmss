@@ -4,7 +4,7 @@ import { PerformerPayment } from '../../app/types/payments.types';
 
 interface BulkPayModalProps {
   payments: PerformerPayment[];
-  weekofYear: number;
+  weekLabel: string;
   open: boolean;
   onClose: () => void;
   onConfirm: (selectedPayments: PerformerPayment[]) => void;
@@ -23,7 +23,7 @@ const isPayable = (payment: PerformerPayment) =>
 
 export default function BulkPayModal({
   payments,
-  weekofYear,
+  weekLabel,
   open,
   onClose,
   onConfirm,
@@ -94,7 +94,7 @@ export default function BulkPayModal({
                   Pago Masivo
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Semana {weekofYear} · Selecciona las modelos a pagar
+                  {weekLabel} · Selecciona las modelos a pagar
                 </p>
               </div>
             </div>

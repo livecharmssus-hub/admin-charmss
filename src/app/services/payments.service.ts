@@ -5,7 +5,6 @@ const FINANCIAL_BASE = '/api/financial';
 
 /**
  * Payments Service
- * Mock service - Backend endpoint pendiente de implementación
  */
 
 // Estructura de datos para pagos semanales
