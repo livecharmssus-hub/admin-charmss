@@ -5,6 +5,7 @@ import {
   PerformerFinancialAccount,
   PerformerFinancialAccountInput,
   UpdateFinancialAccountRequest,
+  isActiveFinancialAccount,
   mapFinancialAccountDto,
 } from '../types/financialAccounts.types';
 
@@ -70,15 +71,19 @@ class FinancialAccountsService {
     performerId: string,
     seedAccounts?: PerformerFinancialAccount[]
   ): Promise<PerformerFinancialAccount[]> {
-    if (seedAccounts && seedAccounts.length > 0 && !financialAccountsStore.has(performerId)) {
-      this.seedAccounts(performerId, seedAccounts);
+    const activeSeed = seedAccounts?.filter(isActiveFinancialAccount);
+
+    if (activeSeed && activeSeed.length > 0 && !financialAccountsStore.has(performerId)) {
+      this.seedAccounts(performerId, activeSeed);
     }
 
     // Si hay seed más reciente del listado y el store está vacío o desactualizado, preferir seed
-    if (seedAccounts) {
-      const cached = financialAccountsStore.get(performerId) ?? [];
+    if (activeSeed) {
+      const cached = (financialAccountsStore.get(performerId) ?? []).filter(
+        isActiveFinancialAccount
+      );
       const byId = new Map(cached.map((account) => [account.id, account]));
-      for (const account of seedAccounts) {
+      for (const account of activeSeed) {
         if (!byId.has(account.id)) {
           byId.set(account.id, account);
         }
@@ -88,7 +93,7 @@ class FinancialAccountsService {
       return [...merged];
     }
 
-    return [...(financialAccountsStore.get(performerId) ?? [])];
+    return (financialAccountsStore.get(performerId) ?? []).filter(isActiveFinancialAccount);
   }
 
   async getFinancialAccount(performerId: string): Promise<PerformerFinancialAccount | null> {

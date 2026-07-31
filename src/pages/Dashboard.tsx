@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Eye, Video, DollarSign, TrendingUp, RefreshCw } from 'lucide-react';
+import { Users, Eye, ShoppingBag, DollarSign, TrendingUp, RefreshCw } from 'lucide-react';
 import { useDashboardSales } from '../hooks/useDashboardSales';
 
 interface DashboardProps {
@@ -24,6 +24,8 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 2,
   })}`;
 
+const formatCount = (value: number) => value.toLocaleString('en-US');
+
 const getInitials = (name: string): string => {
   const parts = name.trim().split(/\s+/).filter(Boolean);
   if (parts.length >= 2) {
@@ -38,7 +40,9 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings: _earnings, isStreaming:
     onlinePerformers,
     customerQuantity,
     totalEarnings,
+    totalSales,
     chartBars,
+    quantityChartBars,
     loading,
     error,
     isRefreshing,
@@ -46,8 +50,15 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings: _earnings, isStreaming:
   } = useDashboardSales();
 
   const [hoveredBar, setHoveredBar] = useState<number | null>(null);
+  const [hoveredQuantityBar, setHoveredQuantityBar] = useState<number | null>(null);
 
   const stats = [
+    {
+      label: 'Total Sales',
+      value: loading ? '—' : formatCurrency(totalSales),
+      icon: ShoppingBag,
+      color: 'bg-pink-600',
+    },
     {
       label: 'Total Earnings',
       value: loading ? '—' : formatCurrency(totalEarnings),
@@ -66,7 +77,6 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings: _earnings, isStreaming:
       icon: Eye,
       color: 'bg-purple-600',
     },
-    { label: 'VideoCalls Today', value: '567', icon: Video, color: 'bg-pink-600' },
   ];
 
   return (
@@ -148,11 +158,17 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings: _earnings, isStreaming:
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between mt-2 text-xs text-gray-400 gap-1 md:gap-2">
+              <div className="mt-2 flex justify-between gap-1 md:gap-2">
                 {chartBars.map((bar) => (
-                  <span key={`${bar.key}-label`} className="flex-1 text-center">
-                    {bar.label}
-                  </span>
+                  <div
+                    key={`${bar.key}-label`}
+                    className="flex-1 min-w-0 text-center"
+                  >
+                    <p className="text-[10px] md:text-xs font-medium text-gray-200 leading-tight truncate">
+                      {bar.hasValue ? formatCurrency(bar.earnings) : '—'}
+                    </p>
+                    <p className="mt-0.5 text-[10px] md:text-xs text-gray-400">{bar.label}</p>
+                  </div>
                 ))}
               </div>
               {!chartBars.some((bar) => bar.hasValue) && (
@@ -181,7 +197,7 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings: _earnings, isStreaming:
               No hay modelos con ventas esta semana.
             </div>
           ) : (
-            <div className="space-y-3 max-h-64 md:max-h-72 overflow-y-auto pr-1">
+            <div className="space-y-3 max-h-64 md:max-h-72 overflow-y-auto scrollbar-hide pr-1">
               {performers.map((performer, index) => {
                 const displayName = (performer.nickname || performer.fullname).trim();
                 const sales = parseFloat(performer.totalsales) || 0;
@@ -216,6 +232,92 @@ const Dashboard: React.FC<DashboardProps> = ({ earnings: _earnings, isStreaming:
             </div>
           )}
         </div>
+      </div>
+
+      {/* Daily Customers & Performers Chart */}
+      <div className="bg-slate-800 rounded-lg p-3 md:p-6 border border-slate-700">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
+          <h3 className="text-base md:text-lg font-semibold">Daily Customers & Performers</h3>
+          <div className="flex items-center gap-4 text-xs text-gray-400">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-sm bg-purple-500" />
+              Customers
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-sm bg-blue-500" />
+              Performers
+            </span>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="h-32 md:h-48 flex items-center justify-center text-sm text-gray-400">
+            Cargando cantidades...
+          </div>
+        ) : error ? (
+          <div className="h-32 md:h-48 flex items-center justify-center text-sm text-red-400">
+            {error}
+          </div>
+        ) : (
+          <>
+            <div className="h-32 md:h-48 flex items-end justify-between gap-1 md:gap-3">
+              {quantityChartBars.map((bar, index) => (
+                <div
+                  key={bar.key}
+                  className="group relative flex-1 flex items-end justify-center gap-0.5 md:gap-1 h-full cursor-pointer"
+                  onMouseEnter={() => setHoveredQuantityBar(index)}
+                  onMouseLeave={() => setHoveredQuantityBar(null)}
+                >
+                  {hoveredQuantityBar === index && (
+                    <div className="absolute -top-10 z-10 whitespace-nowrap rounded bg-slate-950 px-2 py-1 text-xs font-medium text-white shadow-lg border border-slate-600">
+                      {bar.hasValue
+                        ? `Customers: ${formatCount(bar.customers)} · Performers: ${formatCount(bar.performers)}`
+                        : 'Sin datos'}
+                    </div>
+                  )}
+                  <div
+                    className={`w-full max-w-[18px] md:max-w-[28px] rounded-t transition-all ${
+                      bar.hasValue
+                        ? 'bg-purple-500 group-hover:bg-purple-400 min-h-[4px]'
+                        : 'bg-slate-700/60 min-h-[2px]'
+                    }`}
+                    style={{
+                      height: bar.hasValue ? `${Math.max(bar.customersHeight, 2)}%` : '2%',
+                    }}
+                  />
+                  <div
+                    className={`w-full max-w-[18px] md:max-w-[28px] rounded-t transition-all ${
+                      bar.hasValue
+                        ? 'bg-blue-500 group-hover:bg-blue-400 min-h-[4px]'
+                        : 'bg-slate-700/60 min-h-[2px]'
+                    }`}
+                    style={{
+                      height: bar.hasValue ? `${Math.max(bar.performersHeight, 2)}%` : '2%',
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mt-2 flex justify-between gap-1 md:gap-3">
+              {quantityChartBars.map((bar) => (
+                <div key={`${bar.key}-label`} className="flex-1 min-w-0 text-center">
+                  <p className="text-[10px] md:text-xs font-medium text-purple-300 leading-tight truncate">
+                    {bar.hasValue ? formatCount(bar.customers) : '—'}
+                  </p>
+                  <p className="text-[10px] md:text-xs font-medium text-blue-300 leading-tight truncate">
+                    {bar.hasValue ? formatCount(bar.performers) : '—'}
+                  </p>
+                  <p className="mt-0.5 text-[10px] md:text-xs text-gray-400">{bar.label}</p>
+                </div>
+              ))}
+            </div>
+            {!quantityChartBars.some((bar) => bar.hasValue) && (
+              <p className="mt-3 text-center text-xs text-gray-500">
+                No hay datos de clientes o performers esta semana.
+              </p>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

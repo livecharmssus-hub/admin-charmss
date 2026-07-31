@@ -10,6 +10,9 @@ export interface SalesDayDto {
   dayname: string;
   totalsales: string;
   totalearnings: string;
+  customerquantity: string;
+  /** API field name (typo preserved): performerquantiy */
+  performerquantiy: string;
 }
 
 export interface SalesPerformerResultDto {

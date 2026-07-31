@@ -8,7 +8,10 @@ import {
   PerformerStatus,
   PerformerStatusEnum,
 } from '../types/performers.types';
-import { mapFinancialAccountDto } from '../types/financialAccounts.types';
+import {
+  isActiveFinancialAccount,
+  mapFinancialAccountDto,
+} from '../types/financialAccounts.types';
 
 const BASE = '/api/performers';
 
@@ -60,9 +63,9 @@ const mapDto = (dto: PerformerDto): Performer => {
     app_user_id: dto.appUserId ?? undefined,
     performerProfile: dto.performerProfile ?? null,
     video: dto.video ?? undefined,
-    financialAccounts: (dto.performerFinancialAccounts ?? []).map((account) =>
-      mapFinancialAccountDto(account, performerId)
-    ),
+    financialAccounts: (dto.performerFinancialAccounts ?? [])
+      .filter(isActiveFinancialAccount)
+      .map((account) => mapFinancialAccountDto(account, performerId)),
   };
 };
 

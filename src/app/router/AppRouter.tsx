@@ -54,7 +54,7 @@ const AppRouter: React.FC = () => {
                 setOnlineStatus={mockSetOnlineStatus}
                 setSidebarOpen={setSidebarOpen}
               />
-              <main className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-slate-50 p-3 dark:bg-slate-900 md:p-6">
+              <main className="flex min-h-0 flex-1 flex-col overflow-y-auto scrollbar-hide bg-slate-50 p-3 dark:bg-slate-900 md:p-6">
                   <Routes>
                     <Route
                       path="/"

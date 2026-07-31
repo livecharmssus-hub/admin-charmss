@@ -27,6 +27,16 @@ export type DashboardChartBar = {
   hasValue: boolean;
 };
 
+export type DashboardQuantityBar = {
+  key: string;
+  label: string;
+  customers: number;
+  performers: number;
+  customersHeight: number;
+  performersHeight: number;
+  hasValue: boolean;
+};
+
 const toUtcDay = (date: Date) =>
   new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 
@@ -146,9 +156,43 @@ export const useDashboardSales = () => {
     });
   }, [salesDays]);
 
+  const quantityChartBars = useMemo<DashboardQuantityBar[]>(() => {
+    const byDaynum = new Map(
+      salesDays.map((day) => [
+        Number(day.daynum),
+        {
+          customers: parseInt(day.customerquantity, 10) || 0,
+          performers: parseInt(day.performerquantiy, 10) || 0,
+        },
+      ])
+    );
+
+    const values = WEEK_DAYS.map(({ daynum }) => byDaynum.get(daynum) ?? { customers: 0, performers: 0 });
+    const max = Math.max(...values.flatMap(({ customers, performers }) => [customers, performers]), 0);
+
+    return WEEK_DAYS.map(({ daynum, label }, index) => {
+      const { customers, performers } = values[index];
+
+      return {
+        key: `qty-day-${daynum}`,
+        label,
+        customers,
+        performers,
+        customersHeight: max > 0 ? (customers / max) * 100 : 0,
+        performersHeight: max > 0 ? (performers / max) * 100 : 0,
+        hasValue: byDaynum.has(daynum),
+      };
+    });
+  }, [salesDays]);
+
   const totalEarnings = useMemo(
-    () => performers.reduce((sum, performer) => sum + (parseFloat(performer.totalsales) || 0), 0),
-    [performers]
+    () => salesDays.reduce((sum, day) => sum + (parseFloat(day.totalearnings) || 0), 0),
+    [salesDays]
+  );
+
+  const totalSales = useMemo(
+    () => salesDays.reduce((sum, day) => sum + (parseFloat(day.totalsales) || 0), 0),
+    [salesDays]
   );
 
   const refresh = useCallback(() => loadSalesCurrent(true), [loadSalesCurrent]);
@@ -158,7 +202,9 @@ export const useDashboardSales = () => {
     onlinePerformers,
     customerQuantity,
     totalEarnings,
+    totalSales,
     chartBars,
+    quantityChartBars,
     loading,
     error,
     isRefreshing,

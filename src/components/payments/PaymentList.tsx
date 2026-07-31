@@ -18,12 +18,12 @@ interface PaymentListProps {
 }
 
 const GRID_COLS =
-  'grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.7fr)_minmax(0,0.8fr)_minmax(0,0.9fr)]';
+  'grid grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.7fr)_minmax(0,0.9fr)]';
 
 const ITEMS_PER_PAGE = 10;
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('es-ES', {
+  new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
@@ -33,13 +33,13 @@ const formatCurrency = (value: number) =>
 const getPaymentStatusLabel = (status: ApiPaymentStatus) => {
   switch (status) {
     case 'GENERATED':
-      return 'Generado';
+      return 'Generated';
     case 'PENDING':
-      return 'Pendiente';
+      return 'Pending';
     case 'PAID':
-      return 'Pagado';
+      return 'Paid';
     case 'FAILED':
-      return 'Fallido';
+      return 'Failed';
     default:
       return status;
   }
@@ -86,9 +86,6 @@ function PaymentRow({ payment }: { payment: PerformerPayment }) {
       <span className="text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">
         {payment.commission_percent}%
       </span>
-      <span className="text-sm text-gray-700 dark:text-gray-300 whitespace-nowrap">
-        ${payment.price_token.toFixed(2)}
-      </span>
       <div>
         <span
           className={`inline-flex px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap ${getPaymentStatusColor(
@@ -133,10 +130,10 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
       <div className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h2 className="text-base font-bold text-gray-900 dark:text-white">
-            Listado General de Pagos
+            General Payment List
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 hidden lg:block">
-            Gestión de pagos y estado de performers
+            Payment management and performer status
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
@@ -144,7 +141,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Buscar modelo..."
+              placeholder="Search model..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -160,7 +157,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
             className="flex items-center justify-center gap-2 px-4 py-1.5 bg-linear-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
           >
             <DollarSign className="h-4 w-4" />
-            Pagar
+            Generate Payment
             {pendingCount > 0 && (
               <span className="text-xs bg-white/20 px-1.5 py-0.5 rounded">
                 {pendingCount}
@@ -181,22 +178,19 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
           className={`flex-shrink-0 ${GRID_COLS} gap-2 px-3 py-1.5 border-b border-gray-200 dark:border-slate-700`}
         >
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Modelo
+            Model
           </span>
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Ventas
+            Sales
           </span>
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Pago
+            Payment
           </span>
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Comisión
+            Commission
           </span>
           <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Precio Token
-          </span>
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Estado
+            Status
           </span>
         </div>
 
@@ -215,11 +209,11 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
           {loading ? (
             <div className="flex items-center justify-center py-12 text-sm text-gray-500 dark:text-gray-400 gap-2">
               <Loader2 className="h-5 w-5 animate-spin" />
-              Cargando pagos...
+              Loading payments...
             </div>
           ) : paginatedPayments.length === 0 ? (
             <div className="flex items-center justify-center py-8 text-sm text-gray-500 dark:text-gray-400">
-              No se encontraron performers
+              No performers found
             </div>
           ) : (
             paginatedPayments.map((payment) => (
@@ -231,7 +225,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
         {!loading && filteredPayments.length > 0 && (
           <div className="flex-shrink-0 flex flex-col sm:flex-row items-center justify-between gap-2 pt-3 border-t border-gray-200 dark:border-slate-700">
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              Mostrando {startIndex + 1}-{Math.min(endIndex, filteredPayments.length)} de{' '}
+              Showing {startIndex + 1}-{Math.min(endIndex, filteredPayments.length)} of{' '}
               {filteredPayments.length}
             </span>
 
@@ -240,7 +234,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
                 onClick={() => goToPage(1)}
                 disabled={currentPage === 1}
                 className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                title="Primera página"
+                title="First page"
               >
                 <ChevronsLeft className="h-4 w-4" />
               </button>
@@ -248,7 +242,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
                 onClick={() => goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
                 className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                title="Página anterior"
+                title="Previous page"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
@@ -282,7 +276,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
                 onClick={() => goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
                 className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                title="Página siguiente"
+                title="Next page"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
@@ -290,7 +284,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
                 onClick={() => goToPage(totalPages)}
                 disabled={currentPage === totalPages}
                 className="p-1.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                title="Última página"
+                title="Last page"
               >
                 <ChevronsRight className="h-4 w-4" />
               </button>
@@ -303,7 +297,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
         {loading ? (
           <div className="flex items-center justify-center py-12 text-sm text-gray-500 dark:text-gray-400 gap-2">
             <Loader2 className="h-5 w-5 animate-spin" />
-            Cargando pagos...
+            Loading payments...
           </div>
         ) : (
           paginatedPayments.map((payment) => (
@@ -336,10 +330,9 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
                 </span>
               </div>
               <div className="grid grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
-                <span>Ventas: {formatCurrency(payment.total_sales)}</span>
-                <span>Pago: {formatCurrency(payment.total_payment)}</span>
-                <span>Comisión: {payment.commission_percent}%</span>
-                <span>Token: ${payment.price_token.toFixed(2)}</span>
+                <span>Sales: {formatCurrency(payment.total_sales)}</span>
+                <span>Payment: {formatCurrency(payment.total_payment)}</span>
+                <span>Commission: {payment.commission_percent}%</span>
               </div>
             </div>
           ))
@@ -349,7 +342,7 @@ export default function PaymentList({ payments, loading, error, onBulkPay }: Pay
       {!loading && filteredPayments.length > 0 && (
         <div className="md:hidden flex-shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-gray-200 dark:border-slate-700">
           <span className="text-sm text-gray-500 dark:text-gray-400">
-            Mostrando {startIndex + 1}-{Math.min(endIndex, filteredPayments.length)} de{' '}
+            Showing {startIndex + 1}-{Math.min(endIndex, filteredPayments.length)} of{' '}
             {filteredPayments.length}
           </span>
 

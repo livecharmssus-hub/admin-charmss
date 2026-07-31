@@ -11,7 +11,7 @@ interface BulkPayModalProps {
 }
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('es-ES', {
+  new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
@@ -91,17 +91,17 @@ export default function BulkPayModal({
               </div>
               <div className="min-w-0">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white truncate">
-                  Pago Masivo
+                  Bulk Payment
                 </h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {weekLabel} · Selecciona las modelos a pagar
+                  {weekLabel} · Select the models to pay
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-              aria-label="Cerrar"
+              aria-label="Close"
             >
               <X className="h-5 w-5 text-gray-500 dark:text-gray-400" />
             </button>
@@ -114,7 +114,7 @@ export default function BulkPayModal({
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Buscar modelo..."
+                placeholder="Search model..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-pink-500 focus:border-transparent"
@@ -131,18 +131,18 @@ export default function BulkPayModal({
               ) : (
                 <Square className="h-4 w-4" />
               )}
-              {allFilteredSelected ? 'Desmarcar todas' : 'Marcar todas'}
+              {allFilteredSelected ? 'Deselect all' : 'Select all'}
             </button>
           </div>
 
           <div className="flex-1 min-h-0 overflow-y-auto rounded-lg border border-gray-200 dark:border-slate-600 divide-y divide-gray-100 dark:divide-slate-700">
             {payablePayments.length === 0 ? (
               <div className="flex items-center justify-center py-12 text-sm text-gray-500 dark:text-gray-400">
-                No hay pagos pendientes para esta semana
+                No pending payments for this week
               </div>
             ) : filteredPayments.length === 0 ? (
               <div className="flex items-center justify-center py-12 text-sm text-gray-500 dark:text-gray-400">
-                No se encontraron modelos
+                No models found
               </div>
             ) : (
               filteredPayments.map((payment) => {
@@ -183,15 +183,14 @@ export default function BulkPayModal({
           <div className="flex items-center justify-between gap-3 rounded-lg bg-pink-50 dark:bg-pink-900/20 border border-pink-200 dark:border-pink-800 px-4 py-3">
             <div>
               <p className="text-xs text-pink-600 dark:text-pink-300">
-                {selectedPayments.length} modelo{selectedPayments.length !== 1 ? 's' : ''} seleccionada
-                {selectedPayments.length !== 1 ? 's' : ''}
+                {selectedPayments.length} model{selectedPayments.length !== 1 ? 's' : ''} selected
               </p>
               <p className="text-lg font-bold text-pink-700 dark:text-pink-300">
                 {formatCurrency(totalSelected)}
               </p>
             </div>
             <p className="text-xs text-pink-600/80 dark:text-pink-300/80 text-right max-w-[40%]">
-              Total a procesar en este pago masivo
+              Total to process in this bulk payment
             </p>
           </div>
         </div>
@@ -203,7 +202,7 @@ export default function BulkPayModal({
               onClick={onClose}
               className="px-5 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-600 transition-colors"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               type="button"
@@ -212,7 +211,7 @@ export default function BulkPayModal({
               className="flex items-center justify-center gap-2 px-5 py-2 bg-linear-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <DollarSign className="h-4 w-4" />
-              Confirmar Pago ({selectedPayments.length})
+              Confirm Payment ({selectedPayments.length})
             </button>
           </div>
         </div>

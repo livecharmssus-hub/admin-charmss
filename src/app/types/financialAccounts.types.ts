@@ -11,11 +11,13 @@ export interface PerformerFinancialAccount {
   country: string;
   currency: string;
   isDefault: boolean;
+  /** false = soft-deleted; no debe mostrarse en listados */
+  accountState: boolean;
 }
 
 export type PerformerFinancialAccountInput = Omit<
   PerformerFinancialAccount,
-  'id' | 'performerId'
+  'id' | 'performerId' | 'accountState'
 >;
 
 export interface CreateFinancialAccountRequest {
@@ -62,4 +64,10 @@ export const mapFinancialAccountDto = (
   accountType: (dto.accountType as FinancialAccountType) || 'Ahorros',
   isDefault: Boolean(dto.paymentAccountDefault),
   email: dto.email ?? '',
+  accountState: dto.accountState !== false,
 });
+
+/** Solo cuentas activas (accountState !== false) */
+export const isActiveFinancialAccount = (
+  account: Pick<PerformerFinancialAccount, 'accountState'> | Pick<FinancialAccountApiDto, 'accountState'>
+): boolean => account.accountState !== false;

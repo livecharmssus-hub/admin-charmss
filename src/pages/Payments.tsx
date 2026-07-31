@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { DollarSign, Users, Eye, Video, Building2, Calendar, ChevronDown } from 'lucide-react';
+import { DollarSign, Users, TrendingUp, Clock, Building2, Calendar, ChevronDown } from 'lucide-react';
 import PaymentList from '../components/payments/PaymentList';
 import BulkPayModal from '../components/payments/BulkPayModal';
 import PaymentsService from '../app/services/payments.service';
@@ -66,7 +66,7 @@ const getISOWeekInfo = (date: Date) => {
 };
 
 const formatDayMonth = (date: Date) =>
-  date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  date.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
 
 const formatWeekRange = (monday: Date, sunday: Date) => {
   const sameYear = monday.getFullYear() === sunday.getFullYear();
@@ -117,7 +117,7 @@ const mapDtoToPayment = (dto: StudioPaymentDto): PerformerPayment => ({
 });
 
 const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('es-ES', {
+  new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 2,
@@ -143,6 +143,11 @@ export default function Payments() {
     [weekOptions, selectedWeek]
   );
 
+  const priceToken = useMemo(() => {
+    const value = payments.find((p) => Number.isFinite(p.price_token))?.price_token;
+    return value ?? null;
+  }, [payments]);
+
   const loadPayments = useCallback(async () => {
     const { weekofYear, year } = parseWeekSelection(selectedWeek);
     const studioId = Number(selectedStudio);
@@ -160,7 +165,7 @@ export default function Payments() {
     } catch (err) {
       console.error('Error loading studio payments:', err);
       setPayments([]);
-      setError('No se pudieron cargar los pagos. Verifica la conexión con el servidor.');
+      setError('Could not load payments. Please check your connection to the server.');
     } finally {
       setLoading(false);
     }
@@ -188,27 +193,27 @@ export default function Payments() {
 
     return [
       {
-        label: 'Total Pagos',
+        label: 'Total Payments',
         value: formatCurrency(totalPayment),
         icon: DollarSign,
         color: 'bg-green-600',
       },
       {
-        label: 'Ventas Totales',
+        label: 'Total Sales',
         value: formatCurrency(totalSales),
-        icon: Users,
+        icon: TrendingUp,
         color: 'bg-blue-600',
       },
       {
         label: 'Performers',
         value: String(activePerformers),
-        icon: Eye,
+        icon: Users,
         color: 'bg-purple-600',
       },
       {
-        label: 'Pagos Pendientes',
+        label: 'Pending Payments',
         value: String(pendingPayments),
-        icon: Video,
+        icon: Clock,
         color: 'bg-pink-600',
       },
     ];
@@ -221,7 +226,18 @@ export default function Payments() {
           <div className="p-2 bg-linear-to-r from-pink-600 to-purple-600 rounded-lg">
             <DollarSign className="h-6 w-6 text-white" />
           </div>
-          Payments
+          <span className="flex items-baseline gap-2">
+            Payments
+            {priceToken !== null && (
+              <span className="text-sm font-normal text-gray-400 dark:text-gray-500">
+                (Price Token: {priceToken.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}{' '}
+                US)
+              </span>
+            )}
+          </span>
         </h1>
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -231,7 +247,7 @@ export default function Payments() {
               id="studio-select"
               value={selectedStudio}
               onChange={(e) => setSelectedStudio(e.target.value)}
-              aria-label="Estudio"
+              aria-label="Studio"
               className="w-full appearance-none pl-10 pr-9 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-pink-500 focus:border-transparent cursor-pointer"
             >
               {STUDIOS.map((studio) => (
@@ -249,7 +265,7 @@ export default function Payments() {
               id="week-select"
               value={selectedWeek}
               onChange={(e) => setSelectedWeek(e.target.value)}
-              aria-label="Semana"
+              aria-label="Week"
               className="w-full appearance-none pl-10 pr-9 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-pink-500 focus:border-transparent cursor-pointer"
             >
               {weekOptions.map((week) => (
